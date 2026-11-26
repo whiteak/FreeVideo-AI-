@@ -1,6 +1,6 @@
 // Resolution presentation; source dimensions remain authoritative for preview.
 import * as model from './editor_model.js';
-import {frameShapes, frameSize} from './frame_sizes.js';
+import {allFrameShapes, frameSize} from './frame_sizes.js';
 import {plan} from './editor_geometry.js';
 import {pictureSession} from './editor_picture_session.js';
 import {applyTip} from './editor_tracks_tips.js';
@@ -94,7 +94,7 @@ export function creationPictureSizes(record, capabilities, t) {
     const sizes = (capabilities?.sizes || []).filter(validPictureSize);
     const tier = sizes.reduce((best, size) => !best || Math.abs(size.width * size.height - record.width * record.height)
         < Math.abs(best.width * best.height - record.width * record.height) ? size : best, null);
-    return frameShapes(t).map(([id, label, ratio]) => {
+    return allFrameShapes(t).map(([id, label, ratio]) => {
         const size = tier && frameSize(tier.pixels || tier.width * tier.height / 1024 ** 2, ratio);
         return {id, label, size: size && size.width >= 256 && size.height >= 256 && size.width <= 4096 && size.height <= 4096 ? size : null};
     });
