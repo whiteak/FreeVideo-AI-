@@ -513,16 +513,37 @@ export async function openSetup(options) {
         catch { /* The switch returns to the saved state. */ }
         finally { imageSwitch.checked = imageSaved; imageSwitch.disabled = false; }
     };
+    // Extras every new video is asked to leave out. H3 has no negative prompt, so each switch adds a short instruction
+    // in front of the prompt; the model usually follows it, not always.
+    const avoidSaved = {}, avoidSwitches = {};
+    const avoidRows = [
+        ['avoid_subtitles', t('No subtitles or on-screen text', '不要字幕和画面文字'), t('Asks the model to leave out captions and written text', '要求模型不生成字幕和画面文字')],
+        ['avoid_music', t('No background music', '不要背景音乐'), t('Asks the model to leave out music under the scene', '要求模型不生成背景音乐')],
+        ['avoid_narration', t('No narration', '不要旁白'), t('Asks the model to leave out voice-over; lines you write are still spoken', '要求模型不生成旁白；你写的台词照常说出')],
+    ].map(([name, title, sub]) => {
+        const box = switchify(el('input')); box.type = 'checkbox'; box.setAttribute('aria-label', title);
+        tip(box, title, sub); avoidSwitches[name] = box; avoidSaved[name] = false;
+        box.onchange = async () => {
+            const wanted = box.checked; box.disabled = true;
+            try { avoidSaved[name] = (await request('output-settings', {[name]: wanted}))[name] === true; }
+            catch { /* The switch returns to the saved state. */ }
+            finally { box.checked = avoidSaved[name]; box.disabled = false; }
+        };
+        return row({iconName: 'x', title, sub, end: [box]}).element;
+    });
+    const avoidNote = el('div', 'st-foot'); avoidNote.append(el('span', 'st-slot', t('Applies to new videos. The words are added in front of your prompt; the model usually follows them, not always.', '对新视频生效。这些要求会加在提示词前面；模型通常会遵守，但不保证。')));
     (async () => {
         try {
             const response = await api.fetchApi('/freevideo/output-settings');
             const value = response.ok ? await response.json() : null;
+            if (value) for (const name of Object.keys(avoidSwitches)) { avoidSaved[name] = value[name] === true; avoidSwitches[name].checked = avoidSaved[name]; }
             if (value) { imageSaved = value.image_copy !== false; imageSwitch.checked = imageSaved; }
             if (value?.available === true) { tenSaved = value.ten_bit === true; tenSwitch.checked = tenSaved; tenRow.element.hidden = false; }
         } catch { /* Without an answer the picture row shows its default and the 10-bit row stays hidden. */ }
     })();
     const previewFoot = el('div', 'st-foot'); previewFoot.append(previewStatus);
-    generation.append(groupHead(t('Preview during generation', '生成中的预览')), card(choices, previewFoot), outputHead, outputCard);
+    generation.append(groupHead(t('Preview during generation', '生成中的预览')), card(choices, previewFoot), outputHead, outputCard,
+        groupHead(t('Leave out of new videos', '新视频中不要')), card(...avoidRows, avoidNote));
 
     // ════════════ Appearance ════════════
     const appearance = pane('appearance', t('Appearance', '外观'));
