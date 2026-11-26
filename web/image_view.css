@@ -477,6 +477,11 @@ dialog.fv-studio.fv-image:not([open]){display:none!important}
 :is(.fv-iv,.fv-work-column) .fv-iv-tile-star{position:absolute;right:4px;top:4px;width:20px;height:20px;border-radius:var(--fv-r-pill);display:none;place-items:center;background:rgb(0 0 0 / .45);color:#ffd166;pointer-events:none}
 :is(.fv-iv,.fv-work-column) .fv-iv-tile-star .fv-iv-icon{width:12px;height:12px;fill:currentColor}
 :is(.fv-iv,.fv-work-column) .fv-iv-tile.fv-iv-fav .fv-iv-tile-star{display:grid}
+/* Model and size of a picture, shown while the tile is hovered or focused. */
+:is(.fv-iv,.fv-work-column) .fv-iv-tile-facts{position:absolute;left:4px;right:4px;bottom:4px;padding:1px 6px;border-radius:var(--fv-r-sm,6px);background:rgb(0 0 0 / .6);color:#fff;font-size:10px;line-height:13px;text-align:center;white-space:pre-line;overflow:hidden;overflow-wrap:anywhere;pointer-events:none;opacity:0;transition:opacity .12s}
+:is(.fv-iv,.fv-work-column) .fv-iv-tile-facts:empty{display:none}
+:is(.fv-iv,.fv-work-column) .fv-iv-tile:is(:hover,:focus-within) .fv-iv-tile-facts{opacity:1}
+@media (prefers-reduced-motion: reduce){:is(.fv-iv,.fv-work-column) .fv-iv-tile-facts{transition:none}}
 :is(.fv-iv,.fv-work-column) .fv-iv-tile-run{display:grid;place-items:center;background:#161a22}
 :is(.fv-iv,.fv-work-column) .fv-iv-tile-run::before{content:"";position:absolute;inset:0;background:rgb(0 0 0 / .32);z-index:1}
 :is(.fv-iv,.fv-work-column) .fv-iv-ring{position:relative;z-index:2;width:30px;height:30px;border-radius:var(--fv-r-pill);background:conic-gradient(#fff calc(var(--p,0) * 360deg),rgb(255 255 255 / .3) 0);

@@ -6,6 +6,14 @@
 // today the engine deletes at once, so a deleted picture waits here for a short undo window before it is gone.
 import { listenDialogKey } from './dialog_keys.js';
 import { el, icon, t, tip, button, readStore, writeStore, mod } from './image_view_ui.js';
+import { IMAGE_MODELS } from './image_view_models.js';
+
+// What a tile shows about how it was made: the model's short name and the picture's size, when they are known.
+export function tileFacts(m) {
+    const model = m?.model ? (IMAGE_MODELS.find(row => row.id === m.model)?.short || m.model) : '';
+    const size = m?.width > 0 && m?.height > 0 ? `${m.width} × ${m.height}` : '';
+    return [model, size].filter(Boolean).join(' · ');
+}
 
 export const META_KEY = 'freevideo.imageView.meta';
 const META_LIMIT = 600;
@@ -252,7 +260,8 @@ export function historyPanel({pictureURL, thumbURL = pictureURL, queue = null, o
         const check = el('button', 'fv-iv-tile-check'); check.type = 'button'; check.append(icon('check'));
         tip(check, t('Select', '选择'), t('Add to the selection; Shift picks a run', '加入多选；按住 Shift 连选'));
         const star = el('span', 'fv-iv-tile-star'); star.append(icon('star'));
-        tile.append(open, check, star);
+        const facts = el('span', 'fv-iv-tile-facts'); facts.setAttribute('aria-hidden', 'true');
+        tile.append(open, check, star, facts);
         open.addEventListener('click', event => {
             if (event.shiftKey || event.metaKey || event.ctrlKey || root.dataset.selecting === 'true') { pickTile(row.file, event.shiftKey); return; }
             lastClicked = row.file; onShow(row.file);
@@ -319,9 +328,13 @@ export function historyPanel({pictureURL, thumbURL = pictureURL, queue = null, o
                     tile.classList.toggle('fv-iv-current', row.file === state.shownFile && !state.selecting);
                     tile.classList.toggle('fv-iv-picked', state.picked.has(row.file));
                     tile.classList.toggle('fv-iv-fav', state.meta.isFav(row.file));
-                    const open = tile.firstChild, words = promptOfRow(row);
-                    tip(open, words ? (words.length > 40 ? words.slice(0, 40) + '…' : words) : t('Image', '图片'),
-                        state.selecting ? t('Click to pick; Shift picks a run', '点选；按住 Shift 连选') : t('Show it on the stage; pick several to compare', '在中间显示；多选即可对比'));
+                    const open = tile.firstChild, words = promptOfRow(row), made = tileFacts(state.meta.get(row.file));
+                    const factsNode = tile.querySelector('.fv-iv-tile-facts');
+                    // Small tiles are about 80 px wide: the model and the size go on two lines, the size without spaces.
+                    const shown = made.replace(' · ', '\n').replace(' × ', '×');
+                    if (factsNode && factsNode.textContent !== shown) factsNode.textContent = shown;
+                    const use = state.selecting ? t('Click to pick; Shift picks a run', '点选；按住 Shift 连选') : t('Show it on the stage; pick several to compare', '在中间显示；多选即可对比');
+                    tip(open, words ? (words.length > 40 ? words.slice(0, 40) + '…' : words) : t('Image', '图片'), made ? `${made}. ${use}` : use);
                     open.setAttribute('aria-pressed', String(state.selecting ? state.picked.has(row.file) : row.file === state.shownFile));
                     open.setAttribute('aria-selected', String(state.selecting ? state.picked.has(row.file) : row.file === state.shownFile));
                     nodes.push(tile);
