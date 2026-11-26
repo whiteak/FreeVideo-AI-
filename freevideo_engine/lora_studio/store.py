@@ -32,6 +32,7 @@ DEFAULT_SETTINGS = dict(
     trainer='ai-toolkit',      # or 'musubi'
     rank=16, alpha=16, steps=1500, learning_rate=1e-4, resolution=512, repeats=10, save_every=250,
     caption_dropout=0.05, use_regularisation=False, vary_clothes=False,
+    offload='auto',            # share of the H3 transformer kept in system memory while training, or 'auto'
     test_prompt='', test_strengths=[0.6, 0.8, 1.0, 1.2], test_seconds=3.0,
 )
 SETTING_LIMITS = dict(rank=(4, 128), alpha=(1, 128), steps=(100, 20000), learning_rate=(1e-6, 1e-2),
@@ -202,6 +203,10 @@ class Store:
             elif key in ('use_regularisation', 'vary_clothes'):
                 if type(item) is not bool:
                     raise ValueError('invalid_settings')
+            elif key == 'offload':
+                if item != 'auto' and (type(item) not in (int, float) or not 0 <= item <= 1):
+                    raise ValueError('invalid_settings')
+                item = item if item == 'auto' else round(float(item), 2)
             elif key == 'trainer':
                 if item not in ('ai-toolkit', 'musubi'):
                     raise ValueError('invalid_settings')

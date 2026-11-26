@@ -107,6 +107,19 @@ class PlanAndCaptionTests(unittest.TestCase):
         self.assertTrue(captions.suggest_trigger('Maya Lopez').isalpha())
 
 
+class TrainingConfigTests(unittest.TestCase):
+    def test_offload(self):
+        # A 16 GB card can't hold the 21 GB int8 DiT: about half of it waits in system memory.
+        self.assertTrue(.45 <= training.offload_share(15.9) <= .6)
+        self.assertEqual(training.offload_share(48), 0.)
+        self.assertEqual(training.offload_share(15.9, .8), .8)
+        dataset = dict(id='d1', name='Scarlett', kind='character', trigger='scrlttv', class_word='woman')
+        config = training.ai_toolkit_config(dataset, 'C:/i', '', {}, output_dir='C:/o', vram_gb=15.9)
+        self.assertIn('layer_offloading: true', config)
+        self.assertIn(training.H3_TRAINING_ADAPTER, config)
+        self.assertNotIn('layer_offloading', training.ai_toolkit_config(dataset, 'C:/i', '', {}, output_dir='C:/o', vram_gb=80))
+
+
 class StoreTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.mkdtemp()
