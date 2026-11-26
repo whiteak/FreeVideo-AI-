@@ -96,7 +96,8 @@ export function creationPictureSizes(record, capabilities, t) {
     const megapixels = size => size.pixels || size.width * size.height / 1024 ** 2;
     // Prefer the tier that produced this exact size (so picking 4:3 keeps 4:3 checked), else the nearest area.
     // Edit asks for capabilities at the clip's own size, so also try Create's standard pixel tiers.
-    const candidates = [...sizes, ...[.5, .75, .98, 1, 1.5, 2].map(pixels => ({pixels, ...frameSize(pixels, 16 / 9)}))];
+    // Create's own tiers come first, with its default 1M first, so the clip's own area (often 0.99M) never wins a tie.
+    const candidates = [...[.98, .5, .75, 1.5, 2].map(pixels => ({pixels, ...frameSize(pixels, 16 / 9)})), ...sizes];
     const exact = candidates.find(size => shapes.some(([, , ratio]) => {
         const shaped = frameSize(megapixels(size), ratio);
         return shaped.width === record.width && shaped.height === record.height;
