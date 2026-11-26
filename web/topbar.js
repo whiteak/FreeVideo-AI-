@@ -392,6 +392,21 @@ function buildActivity(t) {
             big.append(value, unit);
             const fraction = state.memory_used / state.memory_total, bar = el('span', `fv-tb-bar${fraction >= 0.95 ? ' is-warn' : ''}`), fill = el('i'); fill.style.setProperty('--p', String(Math.min(1, fraction))); bar.append(fill);
             computer.append(big, bar);
+            // FreeVideo keeps the video model on the card between runs, so the next video skips the reload. When another
+            // program needs the card (a game, another app), this gives it back now; ComfyUI's own unload command reaches
+            // FreeVideo's idle worker too. Only offered when nothing runs.
+            const idle = !state.busy && !jobs.list().some(row => row.status === 'running' || row.status === 'cancelling');
+            if (idle && state.memory_used > 2 * 2 ** 30) {
+                const row = el('div', 'fv-tb-act-row'), free = el('button', 'fv-tb-act-btn', t('Free video memory', '释放显存')); free.type = 'button';
+                tip(free, t('Free video memory', '释放显存'), t('Unload the idle models now; the next video loads them again (about 10 s)', '现在卸载空闲的模型；下一个视频会重新加载（约 10 秒）'));
+                free.onclick = async () => {
+                    free.disabled = true; free.textContent = t('Freeing…', '正在释放…');
+                    try { await api.fetchApi('/free', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({unload_models: true, free_memory: true})}); }
+                    catch { /* Read again below. */ }
+                    setTimeout(readNow, 1500);
+                };
+                row.append(el('span', 'fv-tb-grow'), free); computer.append(row);
+            }
         }
         const meters = [];
         const meter = (name, value, warn = false) => { const row = el('div', `fv-tb-meter${warn ? ' is-warn' : ''}`); row.append(el('span', '', name), el('b', '', value)); meters.push(row); };
