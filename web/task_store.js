@@ -439,6 +439,19 @@ export function queueSource(store, {fetchJson, clientId = () => null, interval =
             else void close(id, was.promptId);
         }
         known = now;
+        // A row the progress stream opened but the queue never listed (keyed by its node before the request was known,
+        // or one whose start this page missed) would say "Generating 0%" until a reload. Once the engine runs nothing,
+        // close it from its history, or drop a node-keyed one (the request's own row carries the result).
+        if (!allRunning.length) {
+            const waiting = new Set((queue?.queue_pending || []).map(row => row?.[1]));
+            const at = typeof store.now === 'function' ? store.now() : Date.now();
+            for (const row of store.active({source: 'video'})) {
+                if (row.status === 'submitting' || now.has(row.id) || waiting.has(row.prompt_id)) continue;
+                if (Number.isFinite(row.started_at) && at - row.started_at < 10000) continue;
+                if (row.prompt_id) void close(row.id, row.prompt_id);
+                else if (row.id.startsWith('video:node:')) store.drop(row.id);
+            }
+        }
     }
     function schedule() {
         clearTimer(timer); timer = 0;
