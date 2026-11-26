@@ -802,7 +802,7 @@ export function openStudio(node, {extendFrom = null} = {}) {
         const foldLeft = fold('left'); body.foldLeft = foldLeft; body.settingsRail = settingsRail; works.append(worksRail);
         body.dataset.cols = '3';
         controls.classList.add('fv-glass', 'fv-g2'); works.classList.add('fv-glass', 'fv-g2');
-        panelShell.api = createPanelShell({body, left: controls, right: works, stage: output, panels, save: () => writeLocal('freevideo.studio.panels', panels)});
+        panelShell.api = createPanelShell({body, left: controls, right: works, stage: output, panels, save: () => writeLocal('freevideo.studio.panels', panels), resizable: true});
         panelShell.api.paint();
         body.studioPanels = panelShell.api;
     }
