@@ -32,7 +32,9 @@ from .system import windows
 
 ed25519, keys = load('freevideo_ed25519'), load('freevideo_update_keys')
 
-REPOSITORY = 'FlashML-org/FreeVideo'
+# Personal fork: update checks look at this fork's releases only, so an upstream release can't
+# replace local changes. The fork publishes no releases, so no update is ever offered.
+REPOSITORY = 'whiteak/FreeVideo-AI-'
 # Mirror repository on the ModelScope domestic site; the release script uploads each release there.
 MIRROR_BASE = 'https://modelscope.cn/models/BowenXue/FreeVideo-releases/resolve/master'
 # ModelScope redirects large files to its regional CDN: cdn-lfs-cn-<n>.modelscope.cn.
@@ -55,7 +57,8 @@ def source_order(language=None):
     # 'auto' (follow the system) and nothing both mean the system's language.
     language = (default_language() if language is None or str(language).strip().lower() in ('', 'auto') else language).lower()
     # Windows names its locales in words ('Chinese (Simplified)_China'), not 'zh_CN'.
-    return ('mirror', 'github') if language.startswith(('zh', 'chinese')) else ('github', 'mirror')
+    # Personal fork: the ModelScope mirror carries upstream's releases, so it is never used.
+    return ('github',)
 
 
 # The channel names the platform; launchers from before combined releases read
