@@ -81,7 +81,16 @@ class Context:
         except Exception:
             return False
 
-    def release_gpu(self):
+    def free_for_pictures(self, body=None):
+        """Make room for the picture model: the video model, ComfyUI's idle models and the prompt model let go (a picture
+        failed with no_memory on Jason's PC while the video model was still resident). Nothing running is touched."""
+        if self.runner.status().get('phase') == 'running':
+            raise ValueError('training_running')
+        if self.gpu_busy():
+            raise ValueError('gpu_busy')
+        return dict(released=self.release_gpu(skip=('image',)))
+
+    def release_gpu(self, skip=()):
         """Hand the card to the trainer: ComfyUI's idle models, the image worker, the prompt model, the video model."""
         released = []
         def comfy():
@@ -102,6 +111,8 @@ class Context:
 
         steps = (('comfy', comfy), ('image', image), ('prompt', prompt), ('video', video))
         for name, step in steps:
+            if name in skip:
+                continue
             try:
                 step()
                 released.append(name)
@@ -504,6 +515,7 @@ def register():
         'train-plan': context.train_plan,
         'train-start': context.train_start,
         'train-status': lambda body: context.runner.status(),
+        'free-gpu': context.free_for_pictures,
         'train-cancel': lambda body: context.runner.cancel(),
         'checkpoints': context.checkpoint_list,
         'promote': context.promote,
