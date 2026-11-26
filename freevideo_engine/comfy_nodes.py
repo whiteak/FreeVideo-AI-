@@ -259,6 +259,12 @@ class FreeVideoGenerate(io.ComfyNode):
             two_pass, preview, base_steps, refine_steps, step_cache = True, False, 8, 3, 'none'
             refine_from = continue_from = ''
             frames = 0
+        if not refine_from and not upscale_from:
+            # The "leave out" choices in Settings (subtitles, music, narration); a second pass or upscale keeps the
+            # prompt its first pass was made with.
+            from .comfy_bridge import installation_root
+            from .output_settings import avoid_prompt
+            text = avoid_prompt(installation_root(), text)
         try:   # LoRA Studio (fork addition): a cast card mentioned with @ brings the LoRA linked to it.
             from .lora_studio.cast_loras import extend as cast_loras
             from .lora_check import require_usable
