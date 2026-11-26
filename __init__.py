@@ -91,6 +91,13 @@ async def comfy_entrypoint():
     except Exception as error:
         import logging
         logging.warning('[FreeVideo] Agent routes not registered: %s', error)
+    try:
+        # LoRA Studio: training sets, H3 LoRA training and @Name LoRAs (fork addition).
+        from .freevideo_engine.lora_studio.routes import register as lora_studio_routes
+        lora_studio_routes()
+    except Exception as error:
+        import logging
+        logging.warning('[FreeVideo] LoRA Studio routes not registered: %s', error)
     from .freevideo_engine.comfy_nodes import FreeVideoExtension, register_prompt_cleanup
     register_prompt_cleanup()
     from .freevideo_engine.comfy_nodes import schedule_startup_prefetch
