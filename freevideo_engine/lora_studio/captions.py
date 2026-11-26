@@ -75,18 +75,31 @@ def clean(text):
     return text.rstrip('.').strip()
 
 
-_FRAMING = re.compile(r'^\s*(?:a\s+)?(?:full[- ]body(?:\s+(?:shot|view|portrait))?|full[- ]length(?:\s+shot)?|'
-                      r'wide shot|long shot|medium shot|close-up(?: shot)?|chest-up shot)\s*,\s*', re.IGNORECASE)
+# Shot words a crop's caption must not keep from how the prompt model saw it: "full body" on a head-and-shoulders crop
+# teaches the trigger word the wrong thing. Angles ("three-quarter view") are kept: a crop has the same angle.
+_SHOT = re.compile(r'\b(?:an?\s+)?(?:(?:extreme\s+)?close[- ]up(?:\s+(?:shot|portrait|view))?|full[- ]body(?:\s+(?:shot|view|portrait))?|'
+                   r'full[- ]length(?:\s+(?:shot|view|portrait))?|(?:medium|wide|long|establishing)\s+shot|'
+                   r'chest[- ]up(?:\s+shot)?|waist[- ]up(?:\s+shot)?|head[- ]to[- ]toe|from head to (?:toe|feet)|'
+                   r'(?:both\s+)?(?:feet|shoes)\s+visible|whole body(?:\s+visible)?)\b', re.IGNORECASE)
 CROP_FRAMING = {'face': 'Close-up portrait, head and shoulders', 'half': 'Medium shot from the waist up'}
 
 
 def fix_framing(caption, crop):
-    """A face crop's caption names its own framing: the prompt model often still calls a crop of a full-body
-    picture "Full body" (29 of Scarlett's 32 crops)."""
+    """A face crop's caption names its own framing and drops the shot words the prompt model gave it, which often
+    still calls a crop of a full-body picture "full body" (29 of Scarlett's 32 crops)."""
     lead = CROP_FRAMING.get(crop)
     if not lead or not caption:
         return caption
-    return '%s, %s' % (lead, _FRAMING.sub('', caption))
+    for known in CROP_FRAMING.values():  # already fixed once: fixing again changes nothing
+        if caption.lower().startswith(known.lower()):
+            caption = caption[len(known):].lstrip(' ,')
+    phrases = []
+    for phrase in caption.split(','):
+        phrase = ' '.join(_SHOT.sub(' ', phrase).split())
+        phrase = re.sub(r'^(?:of|with|in)\s+', '', phrase, flags=re.IGNORECASE)
+        if phrase and phrase.lower() not in ('shot', 'view', 'portrait'):
+            phrases.append(phrase[0].lower() + phrase[1:] if phrase[1:2].islower() else phrase)
+    return ', '.join([lead] + phrases)
 
 
 def with_trigger(caption, trigger, class_word='', kind='character', mode='subject'):

@@ -21,6 +21,10 @@ def safe_name(text):
 
 def caption_for(dataset, item):
     text = item.get('caption') or ''
+    notes = item.get('notes') or ()
+    if 'face_crop' in notes and not item.get('caption_edited'):
+        # Captions saved before crops named their own framing are put right on the way out.
+        text = captions.fix_framing(text, next((label for label in captions.CROP_FRAMING if label in notes), None))
     return captions.with_trigger(text, dataset.get('trigger'), dataset.get('class_word'), dataset.get('kind'),
                                  dataset.get('mode'))
 
