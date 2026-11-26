@@ -12,6 +12,9 @@ load it by writing `@Name` in a prompt. Open it from the **LoRA** entry in FreeV
    *Add face close-ups* (characters) cuts head-and-shoulders and half-length crops from the pictures, so the face
    is big in part of the set; without them a set of full-body shots teaches the outfit better than the face.
    Pick the clearest picture as the **reference**.
+   **Your own pictures come first.** With 8 or more of your own pictures (a character pack), training uses only
+   those and close-ups cut from them, and generated coverage pictures are left out: real pictures teach the face
+   better. Change it under Train → *Train on*.
 2. **Coverage.** A grid of slots for what a good set covers: angles, close-ups, expressions, poses, places and light
    for characters (29 slots); sides, details, places, in-use and light for objects (21); varied subjects for a style
    (18). *Fill empty slots* makes each one with H3 Image as an edit of the reference, so the subject stays the

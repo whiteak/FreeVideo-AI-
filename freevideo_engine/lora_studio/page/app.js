@@ -359,6 +359,9 @@ function renderCoverage() {
         el('button', {class: 'btn', text: 'Regenerate drifted', disabled: !ref || !model, onclick: () => fillSlots(plan.filter(s => (bySlot.get(s.id)?.drift?.score ?? 10) < state.info.drift_limit).map(s => s.id))}),
         el('button', {class: 'btn ghost', text: 'Stop', onclick: stopQueue})),
         el('p', {class: 'muted', text: 'Each slot takes about half a minute to a minute with H3 Image. Pictures you don\'t like: Regenerate makes a new one in the same slot (the old one is kept, excluded).'}),
+        (() => { const own = ds.items.filter(i => i.source === 'import' && !i.excluded && !(i.notes || []).includes('face_crop')).length, choice = ds.settings?.pictures || 'auto';
+            const ownOnly = choice === 'mine' || (choice === 'auto' && own >= 8);
+            return ownOnly ? el('p', {style: 'color:var(--warn)', text: `You gave ${own} pictures of your own, so training uses those (and close-ups cut from them) and leaves generated pictures out. Real pictures teach the face better. To train on generated ones too, set Train on to "My pictures and generated ones" on the Train tab.`}) : null; })(),
         Object.entries(groups).map(([group, slots]) => el('div', {class: 'slot-group'}, el('h3', {text: group}),
             el('div', {class: 'grid'}, slots.map(slot => slotTile(slot, bySlot.get(slot.id), Boolean(ref && model)))))));
     host.replaceChildren(header, controls, regularisationCard());
@@ -509,8 +512,11 @@ async function renderTrain() {
         field('resolution', 'Resolution', {min: 256, max: 1536, step: 64}), field('save_every', 'Save every (steps)', {min: 25, max: 5000, step: 25}),
         field('repeats', 'Repeats (kohya/Musubi)', {min: 1, max: 100}), field('caption_dropout', 'Caption dropout', {min: 0, max: 0.5}),
         field('offload', 'Offload to RAM (0-1, blank = auto)', {min: 0, max: 1, step: 0.05, value: s.offload === 'auto' || s.offload == null ? '' : s.offload, placeholder: 'auto'}));
+    const pictures = el('select', {}, [['auto', 'Auto: my pictures only when I gave 8 or more'], ['mine', 'My pictures only (and crops of them)'], ['all', 'My pictures and generated ones']]
+        .map(([value, label]) => el('option', {value, text: label, selected: (s.pictures || 'auto') === value})));
+    form.append(el('label', {class: 'f'}, 'Train on', pictures));
     const save = async () => {
-        const settings = {};
+        const settings = {pictures: pictures.value};
         for (const input of form.querySelectorAll('input')) settings[input.dataset.key] = input.dataset.key === 'offload' && input.value.trim() === '' ? 'auto' : Number(input.value);
         setDataset(await studio('update', {dataset: ds.id, settings}));
     };
@@ -541,7 +547,7 @@ async function renderTrain() {
     try {
         const plan = await studio('train-plan', {dataset: ds.id});
         planBox.replaceChildren(
-            el('div', {text: `${plan.pictures} pictures${plan.reg ? ` + ${plan.reg} regularisation` : ''}. Estimated ${plan.estimate_hours < 1.5 ? `${Math.round(plan.estimate_hours * 60)} minutes` : `${plan.estimate_hours} hours`}${plan.vram_gb ? ` on this ${Math.round(plan.vram_gb)} GB card` : ''}${plan.offload ? `, with ${Math.round(plan.offload * 100)}% of the model waiting in system memory` : ''} (first run also downloads about 40 GB of H3 files).`}),
+            el('div', {text: `${plan.pictures} pictures${plan.reg ? ` + ${plan.reg} regularisation` : ''}. ${plan.own_only && plan.generated_left_out ? `Training on your own pictures and crops of them; ${plan.generated_left_out} generated pictures are left out (change under Train on). ` : ''}Estimated ${plan.estimate_hours < 1.5 ? `${Math.round(plan.estimate_hours * 60)} minutes` : `${plan.estimate_hours} hours`}${plan.vram_gb ? ` on this ${Math.round(plan.vram_gb)} GB card` : ''}${plan.offload ? `, with ${Math.round(plan.offload * 100)}% of the model waiting in system memory` : ''} (first run also downloads about 40 GB of H3 files).`}),
             plan.warnings.length ? el('ul', {class: 'warns'}, plan.warnings.map(w => el('li', {text: w}))) : null,
             el('div', {class: 'row'},
                 el('button', {class: 'btn primary', text: 'Start training', disabled: !plan.trainer.ready || plan.training.phase === 'running', onclick: async event => {

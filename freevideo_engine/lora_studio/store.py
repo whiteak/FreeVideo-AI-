@@ -32,12 +32,30 @@ DEFAULT_SETTINGS = dict(
     trainer='ai-toolkit',      # or 'musubi'
     rank=16, alpha=16, steps=1500, learning_rate=1e-4, resolution=512, repeats=10, save_every=125,
     caption_dropout=0.05, use_regularisation=False, vary_clothes=False,
-    offload='auto',            # share of the H3 transformer kept in system memory while training, or 'auto'
+    offload='auto',
+    pictures='auto',           # train on 'mine' (own photos and crops of them), 'all', or 'auto'            # share of the H3 transformer kept in system memory while training, or 'auto'
     test_prompt='', test_strengths=[0.6, 0.8, 1.0, 1.2], test_seconds=3.0,
 )
 SETTING_LIMITS = dict(rank=(4, 128), alpha=(1, 128), steps=(100, 20000), learning_rate=(1e-6, 1e-2),
                       resolution=(256, 1536), repeats=(1, 100), save_every=(25, 5000), caption_dropout=(0., .5),
                       test_seconds=(1.625, 10.))
+
+
+OWN_PICTURES_ENOUGH = 8  # own photos from which a set trains on them alone by default
+
+
+def own_count(value):
+    return sum(1 for r in value.get('items', []) if r.get('source') == 'import' and not r.get('excluded')
+               and 'face_crop' not in (r.get('notes') or ()))
+
+
+def own_pictures_only(value):
+    """Whether generated pictures stay out of training. A character pack of real pictures is the training data;
+    mixing in ~50 generated angles held Scarlett's face at 0.48 against the 0.72 Jason wanted."""
+    choice = (value.get('settings') or {}).get('pictures', 'auto')
+    if choice in ('mine', 'all'):
+        return choice == 'mine'
+    return own_count(value) >= OWN_PICTURES_ENOUGH
 
 
 def now():
@@ -207,6 +225,9 @@ class Store:
                 if item != 'auto' and (type(item) not in (int, float) or not 0 <= item <= 1):
                     raise ValueError('invalid_settings')
                 item = item if item == 'auto' else round(float(item), 2)
+            elif key == 'pictures':
+                if item not in ('auto', 'mine', 'all'):
+                    raise ValueError('invalid_settings')
             elif key == 'trainer':
                 if item not in ('ai-toolkit', 'musubi'):
                     raise ValueError('invalid_settings')
@@ -346,7 +367,10 @@ class Store:
     def training_items(self, identity):
         value = self._load(identity)
         kept = [row for row in value['items'] if not row.get('excluded')]
-        return value, [r for r in kept if r.get('source') != 'reg'], [r for r in kept if r.get('source') == 'reg']
+        pictures = [r for r in kept if r.get('source') != 'reg']
+        if own_pictures_only(value):
+            pictures = [r for r in pictures if r.get('source') != 'generated']
+        return value, pictures, [r for r in kept if r.get('source') == 'reg']
 
     # Settings and links ----------------------------------------------------------------------------------
     def settings(self):
