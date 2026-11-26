@@ -17,10 +17,11 @@ load it by writing `@Name` in a prompt. Open it from the **LoRA** entry in FreeV
    and make the reference from it. Optional **regularisation** pictures (generic pictures of the class) are made with
    MOSS-Image.
 3. **Captions & check.** The installed prompt model (Qwen3-VL) writes a caption for every picture. In subject mode
-   the caption describes everything *except* the subject (pose, angle, clothes, place, light), so the trigger word
-   learns the subject; in style mode it describes the content and never the style. Every caption is editable.
+   the caption describes everything *except* the subject (pose, angle, place, light), so the trigger word learns
+   the subject. A character's outfit counts as part of the character and is left out unless
+   *Clothes change between pictures* is ticked. In style mode it describes the content and never the style. Every caption is editable.
    *Check likeness* compares each picture with the reference and scores it 0-10; drifted ones (below 6) are
-   flagged for regenerating or excluding.
+   flagged for regenerating or excluding. A picture where the face can't be seen (from behind) scores 7 at most.
 4. **Train.** Trains with [ai-toolkit](https://github.com/ostris/ai-toolkit) (arch `minimax_h3`) in its own Python:
    pruned int8 ConvRot H3 transformer, nvfp4 text encoder, `low_vram`, single-frame image training at 512 px,
    rank 16, 1500 steps by default. A published run on a 12 GB card took about 6-7 hours for 1000 steps; a 16 GB

@@ -102,6 +102,8 @@ class PlanAndCaptionTests(unittest.TestCase):
         self.assertEqual(captions.parse_drift({'json': {'score': 8, 'differences': 'none'}})['score'], 8.0)
         self.assertEqual(captions.parse_drift({'text': '```json\n{"score": 3, "differences": "different nose"}\n```'})['score'], 3.0)
         self.assertNotIn('hair', captions.caption_question('object', 'subject', 'mug'))
+        self.assertIn('Do NOT describe the clothes', captions.caption_question('character', 'subject', 'woman'))
+        self.assertIn('the clothes, the background', captions.caption_question('character', 'subject', 'woman', True))
         self.assertTrue(captions.suggest_trigger('Maya Lopez').isalpha())
 
 
