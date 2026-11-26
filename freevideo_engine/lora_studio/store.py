@@ -30,7 +30,7 @@ _LOCK = threading.RLock()
 
 DEFAULT_SETTINGS = dict(
     trainer='ai-toolkit',      # or 'musubi'
-    rank=16, alpha=16, steps=1500, learning_rate=1e-4, resolution=512, repeats=10, save_every=250,
+    rank=16, alpha=16, steps=1500, learning_rate=1e-4, resolution=512, repeats=10, save_every=125,
     caption_dropout=0.05, use_regularisation=False, vary_clothes=False,
     offload='auto',            # share of the H3 transformer kept in system memory while training, or 'auto'
     test_prompt='', test_strengths=[0.6, 0.8, 1.0, 1.2], test_seconds=3.0,

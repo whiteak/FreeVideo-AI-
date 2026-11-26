@@ -102,6 +102,12 @@ class PlanAndCaptionTests(unittest.TestCase):
         self.assertNotIn('same clothes', plans.slot_prompt('character', plans.find('character', 'new_outfit')))
         self.assertEqual(len(plans.regularisation_prompts('character', 'woman', 10)), 10)
 
+    def test_crop_framing(self):
+        self.assertEqual(captions.fix_framing('Full body, woman standing, plain grey backdrop', 'face'),
+                         'Close-up portrait, head and shoulders, woman standing, plain grey backdrop')
+        self.assertTrue(captions.fix_framing('woman smiling, soft light', 'half').startswith('Medium shot from the waist up, woman'))
+        self.assertEqual(captions.fix_framing('Full body, woman', None), 'Full body, woman')
+
     def test_captions(self):
         self.assertEqual(captions.with_trigger('"The woman walking in a park."', 'mya', 'woman'), 'mya woman walking in a park')
         self.assertEqual(captions.with_trigger('Caption: close-up, soft light', 'mya', 'woman'), 'mya woman, close-up, soft light')

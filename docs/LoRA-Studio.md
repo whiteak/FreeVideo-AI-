@@ -26,7 +26,8 @@ load it by writing `@Name` in a prompt. Open it from the **LoRA** entry in FreeV
    flagged for regenerating or excluding. A picture where the face can't be seen (from behind) scores 7 at most.
 4. **Train.** Trains with [ai-toolkit](https://github.com/ostris/ai-toolkit) (arch `minimax_h3`) in its own Python:
    pruned int8 ConvRot H3 transformer, nvfp4 text encoder, `low_vram`, ostris's H3 training adapter (keeps the
-   distilled model intact), single-frame image training at 512 px, rank 16, 1500 steps by default. The 21 GB
+   distilled model intact), single-frame image training at 512 px, rank 16, 1500 steps by default, with a checkpoint saved
+   every 125 steps (the best one is often well before the last; test a few). The 21 GB
    transformer doesn't fit a 16 GB card, so part of it waits in system memory and is streamed in layer by layer
    (*Offload to RAM*, worked out from the card's size; about 80% on 16 GB, since the 5 GB video VAE also sits on the card). On an RTX 5080 (16 GB) the default 1500 steps took about 35 minutes (1.4 s a
    step) plus about 10 minutes of loading. The first run downloads about 40 GB of H3 files from
