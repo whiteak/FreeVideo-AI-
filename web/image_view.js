@@ -1114,7 +1114,7 @@ export function openImageView(node, {studio = null, client: given = null, poll =
             goSub.textContent = pendingGenerate ? t('then generates', '完成后生成') : '';
             tip(go, pendingGenerate ? t('Generates when installed', '安装完自动生成') : t('Generate when installed', '安装完再生成'), pendingGenerate ? t('Press to not generate after it', '再按一次取消自动生成') : t('Press to generate as soon as it is installed', '按下后，安装完成即自动生成'));
         } else if (s.state === 'missing' || s.state === 'failed') {
-            goLabel.textContent = t('Install and generate', '安装并生成'); goSub.textContent = s.total ? t('about {size} GB', '约 {size} GB', { size: (s.total / 1e9).toFixed(1) }) : '';
+            goLabel.textContent = t('Install and generate', '安装并生成'); const toFetch = s.needed ?? s.total; goSub.textContent = s.needed === 0 ? t('files already here', '文件已在本机') : toFetch ? t('about {size} GB', '约 {size} GB', { size: (toFetch / 1e9).toFixed(1) }) : '';
             tip(go, t('Install and generate', '安装并生成'), t('Downloads {short}, then makes the image', '先下载 {short}，再生成图片', { short: model.short }), `${mod}+Enter`);
         } else {
             // The size is said once, on its own chip; Generate says only how long it may take.

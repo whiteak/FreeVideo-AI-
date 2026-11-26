@@ -1052,7 +1052,9 @@ export async function openSetup(options) {
             chip.hidden = act.hidden = meter.hidden = true; r.sub.className = '';
             r.sub.textContent = IMAGE_WORDS[id] || '';
             r.element.querySelector('.st-ic').classList.toggle('is-ok', s.state === 'ready');
-            size.textContent = s.total && s.state !== 'ready' ? t('About {total} GiB', '约 {total} GiB', { total: gb(s.total) }) : '';
+            size.textContent = s.total && s.state !== 'ready' ? (s.state === 'missing' && !s.resume && s.needed < s.total
+                ? t('About {total} GiB · {needed} GiB to download', '约 {total} GiB · 需下载 {needed} GiB', { total: gb(s.total), needed: gb(s.needed) })
+                : t('About {total} GiB', '约 {total} GiB', { total: gb(s.total) })) : '';
             // Installed is the normal case and says nothing on the row; its size is on hover.
             const kept = s.row?.bytes_total || s.total || 0;
             if (s.state === 'ready' && kept) tip(r.title, item.model.short, t('Installed · {size} GiB', '已安装 · {size} GiB', { size: gb(kept) }));
