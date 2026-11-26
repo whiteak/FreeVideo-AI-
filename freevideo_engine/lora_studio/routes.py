@@ -4,6 +4,7 @@ The page is served from this package (not from the node's web folder) so ComfyUI
 Every write needs the page token from /api/info in the X-FreeVideo-Lora header, like the image and prompt routes.
 """
 import asyncio
+import io
 import json
 import logging
 import os
@@ -109,6 +110,11 @@ class Context:
             best = max(faces, key=lambda f: (f['box'][2] - f['box'][0]) * (f['box'][3] - f['box'][1]))
             image = images.open_image(path.read_bytes())
             for label, crop in images.face_crops(image, best['box']):
+                buffer = io.BytesIO()
+                crop.save(buffer, format='PNG')
+                if not find_faces(buffer.getvalue()):
+                    skipped += 1  # the source's face was a false find: a crop with no face teaches nothing
+                    continue
                 result = self.store.add_image(dataset['id'], images.fit(crop), source=row.get('source') or 'import',
                                               notes=('face_crop', label, 'from:' + row['id']), dedupe=True)
                 if not result.get('duplicate_of'):
@@ -235,7 +241,10 @@ class Context:
             raise ValueError('invalid_item')
         if item.get('caption_edited') and not body.get('overwrite'):
             return dataset
-        return self.store.update_item(dataset['id'], item['id'], dict(caption=captions.clean(body.get('text')), edited=False))
+        notes = item.get('notes') or ()
+        crop = next((label for label in captions.CROP_FRAMING if 'face_crop' in notes and label in notes), None)
+        text = captions.fix_framing(captions.clean(body.get('text')), crop)
+        return self.store.update_item(dataset['id'], item['id'], dict(caption=text, edited=False))
 
     def finish_drift(self, body):
         return self.store.update_item(body.get('dataset'), body.get('item'), dict(drift=captions.parse_drift(body.get('answer') or {})))
@@ -271,9 +280,9 @@ class Context:
             pass
         steps = int(settings.get('steps', 1500))
         # The published 12 GB run took ~6.5 h for 1000 steps at 512 px; a 16 GB card swaps less.
-        # Measured on Jason's RTX 5080 (16 GB, offload 0.8): 1.41 s a step at 512 px, about 10 minutes of loading and
-        # caching before the first step. Steps scale with the pixels.
-        hours = (600 + steps * 1.45 * (int(settings.get('resolution', 512)) / 512) ** 2) / 3600
+        # Measured on Jason's RTX 5080 (16 GB, offload 0.8): 1.30-1.41 s a step at 512 px, 1.59 at 768, about 10
+        # minutes of loading and caching before the first step. A step barely grows with the picture.
+        hours = (600 + steps * 1.35 * (1 + .1 * ((int(settings.get('resolution', 512)) / 512) ** 2 - 1))) / 3600
         destination = self.output_root() / ('%s-ai-toolkit' % export.safe_name(dataset['name']))
         config = training.ai_toolkit_config(
             dataset, str(destination / 'images'), str(destination / 'reg') if settings.get('use_regularisation') and reg else '',

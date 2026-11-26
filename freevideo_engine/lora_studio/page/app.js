@@ -523,7 +523,7 @@ async function renderTrain() {
     host.replaceChildren(
         el('div', {class: 'card'}, el('h2', {text: 'Training settings'}), form,
             el('div', {class: 'row'}, act('Save settings', async () => { await save(); toast('Saved.'); renderTrain(); }),
-                el('span', {class: 'muted', text: 'Defaults suit a character or object on a 16 GB card: 1500 steps, rank 16, 512 px. Overcooked (stiff, same face in every shot)? Use an earlier checkpoint below.'}))),
+                el('span', {class: 'muted', text: 'Defaults suit a character or object on a 16 GB card: 1500 steps, rank 16, 512 px, a checkpoint every 125 steps. The best one is often well before the end (a 768 px run peaked at step 1000 of 2500), so test a few checkpoints below and use the best.'}))),
         el('div', {class: 'card'}, el('h2', {text: 'Train on this PC (MiniMax H3 video LoRA)'}), planBox, progressBox),
         el('div', {class: 'card'}, el('h2', {text: 'Export instead'}),
             el('p', {class: 'muted', text: 'Pictures with matching .txt captions in the layout each trainer expects, with a ready config for ai-toolkit and Musubi.'}),

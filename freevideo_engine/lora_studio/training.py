@@ -110,8 +110,8 @@ config:
           ignore_if_contains: ["adaln_proj"]
       save:
         dtype: float16
-        save_every: {int(s.get('save_every', 250))}
-        max_step_saves_to_keep: 8
+        save_every: {int(s.get('save_every', 125))}
+        max_step_saves_to_keep: 30
       datasets:
         - folder_path: {_q(images_dir)}
           caption_ext: "txt"

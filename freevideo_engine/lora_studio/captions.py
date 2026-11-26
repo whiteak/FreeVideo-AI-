@@ -75,6 +75,20 @@ def clean(text):
     return text.rstrip('.').strip()
 
 
+_FRAMING = re.compile(r'^\s*(?:a\s+)?(?:full[- ]body(?:\s+(?:shot|view|portrait))?|full[- ]length(?:\s+shot)?|'
+                      r'wide shot|long shot|medium shot|close-up(?: shot)?|chest-up shot)\s*,\s*', re.IGNORECASE)
+CROP_FRAMING = {'face': 'Close-up portrait, head and shoulders', 'half': 'Medium shot from the waist up'}
+
+
+def fix_framing(caption, crop):
+    """A face crop's caption names its own framing: the prompt model often still calls a crop of a full-body
+    picture "Full body" (29 of Scarlett's 32 crops)."""
+    lead = CROP_FRAMING.get(crop)
+    if not lead or not caption:
+        return caption
+    return '%s, %s' % (lead, _FRAMING.sub('', caption))
+
+
 def with_trigger(caption, trigger, class_word='', kind='character', mode='subject'):
     """The caption as written to the .txt file: the trigger word first, then the class word for a subject set."""
     caption = clean(caption)
