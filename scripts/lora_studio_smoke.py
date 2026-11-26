@@ -95,6 +95,12 @@ def main():
     parser.add_argument('--keep', action='store_true')
     parser.add_argument('--only', default='', help='comma-separated slot ids to make instead of the first --slots')
     args = parser.parse_args()
+    # A Windows console is cp1252 by default; the side and back prompts are Chinese.
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding='utf-8', errors='replace')
+        except (AttributeError, ValueError):
+            pass
     client = Client(args.url)
 
     t = step('LoRA Studio info')

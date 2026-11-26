@@ -62,5 +62,7 @@ Tests: `python -m unittest freevideo_engine.lora_studio.tests.test_lora_studio` 
 
 - H3 Image and MOSS-Image in FreeVideo don't take LoRAs, so the finished LoRA is a **video** LoRA; test it with the
   test grid or the creation panel.
+- Pictures made for a set also appear in the Images view's **Creations**, like every picture FreeVideo makes; the set
+  keeps its own copies under `input/lora-studio/`, so you can delete them from Creations without losing anything.
 - The likeness check is the prompt model's judgement, not a face-recognition score: use it to find outliers.
 - Musubi's H3 recipe is new; check `train.cmd` against `docs/minimax_h3.md` in your Musubi version.
