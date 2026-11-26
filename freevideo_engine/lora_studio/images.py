@@ -81,6 +81,29 @@ def subject_box(width, height, face, kind='character'):
     return box
 
 
+def face_crops(image, face):
+    """A head-and-shoulders and a half-length crop around `face` ([left, top, right, bottom]), as (label, image) pairs.
+
+    A set of mostly full-body pictures leaves the face a few dozen pixels tall at 512 px training, and the LoRA learns
+    the clothes but not the face (Scarlett's first LoRA). Crops that would be smaller than MIN_SIDE are left out."""
+    left, top, right, bottom = face
+    face_w, face_h = max(1., right - left), max(1., bottom - top)
+    centre_x, centre_y = (left + right) / 2, (top + bottom) / 2
+    out = []
+    for label, width, above, below in (('face', face_w * 2.4, face_h * .9, face_h * 1.5),
+                                       ('half', face_w * 4.5, face_h * 1.0, face_h * 5.0)):
+        box_w, box_h = min(width, image.width), min(above + below, image.height)
+        box_left = min(max(0., centre_x - box_w / 2), image.width - box_w)
+        box_top = min(max(0., centre_y - above), image.height - box_h)
+        box = (round(box_left), round(box_top), round(box_left + box_w), round(box_top + box_h))
+        if min(box[2] - box[0], box[3] - box[1]) < MIN_SIDE:
+            continue
+        if (box[2] - box[0]) * (box[3] - box[1]) > image.width * image.height * .7:
+            continue  # Already about that framing.
+        out.append((label, image.crop(box)))
+    return out
+
+
 def fit(image, max_side=MAX_SIDE):
     from PIL import Image
     longest = max(image.size)

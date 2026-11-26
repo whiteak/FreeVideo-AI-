@@ -90,6 +90,31 @@ class Context:
         except Exception:
             return False
 
+    def add_face_crops(self, body):
+        """Close-ups cut from the set's own pictures, so the face is large in some training pictures."""
+        dataset = self.store.get(body.get('dataset'))
+        if dataset['kind'] != 'character':
+            raise ValueError('invalid_kind')
+        done = {note[5:] for row in dataset['items'] for note in row.get('notes') or () if note.startswith('from:')}
+        added, skipped = 0, 0
+        for row in list(dataset['items']):
+            if (row.get('source') == 'reg' or row.get('excluded') or row['id'] in done
+                    or 'face_crop' in (row.get('notes') or ())):
+                continue
+            path = self.store.item_path(dataset['id'], row)
+            faces = find_faces(path.read_bytes())
+            if not faces:
+                skipped += 1
+                continue
+            best = max(faces, key=lambda f: (f['box'][2] - f['box'][0]) * (f['box'][3] - f['box'][1]))
+            image = images.open_image(path.read_bytes())
+            for label, crop in images.face_crops(image, best['box']):
+                result = self.store.add_image(dataset['id'], images.fit(crop), source=row.get('source') or 'import',
+                                              notes=('face_crop', label, 'from:' + row['id']), dedupe=True)
+                if not result.get('duplicate_of'):
+                    added += 1
+        return dict(added=added, no_face=skipped, dataset=self.store.get(dataset['id']))
+
     def free_for_pictures(self, body=None):
         """Make room for the picture model: the video model, ComfyUI's idle models and the prompt model let go (a picture
         failed with no_memory on Jason's PC while the video model was still resident). Nothing running is touched."""
@@ -254,7 +279,7 @@ class Context:
             dataset, str(destination / 'images'), str(destination / 'reg') if settings.get('use_regularisation') and reg else '',
             settings, output_dir=str(destination / 'output'), models_dir=trainer['models_dir'], vram_gb=self.vram_gb())
         vram = self.vram_gb()
-        offload = training.offload_share(vram, settings.get('offload'))
+        offload = training.offload_share(vram, settings.get('offload'), settings.get('resolution', 512))
         return dict(trainer=trainer, warnings=warnings, pictures=len(kept), offload=offload, vram_gb=round(vram or 0, 1), reg=len(reg), estimate_hours=round(hours, 2),
                     config=config, gpu_busy=self.gpu_busy(), training=self.runner.status())
 
@@ -271,8 +296,10 @@ class Context:
         run_id = store_module.new_id('d').replace('d', 'r', 1)
         run_dir = self.store.root / dataset['id'] / 'runs' / run_id
         run_dir.mkdir(parents=True)
-        output = destination / 'output'
-        output.mkdir(exist_ok=True)
+        # Each run writes to its own folder: ai-toolkit resumes from any checkpoint it finds under its name, so a
+        # second run of the same set (other settings, more pictures) would otherwise carry on from the first one.
+        output = destination / 'output' / run_id
+        output.mkdir(parents=True, exist_ok=True)
         config = run_dir / 'config.yaml'
         use_reg = (destination / 'reg').is_dir()
         config.write_text(training.ai_toolkit_config(
@@ -290,14 +317,20 @@ class Context:
                    steps=int(settings.get('steps', 1500)), trainer='ai-toolkit', exported=exported['files'],
                    name=training.run_name(dataset), released=released)
         self.store.record(dataset['id'], 'runs', dict(id=run_id, started_at=store_module.now(), phase='running',
-                                                     steps=run['steps'], settings=settings))
+                                                     steps=run['steps'], settings=settings, output=str(output)))
         return self.runner.start(run, [trainer['python'], 'run.py', str(config)], trainer['folder'], env, self.finished)
 
     def finished(self, result):
         """When a run ends: record it, and install the final LoRA so the creation panel and @Name can use it."""
         dataset_id = result.get('dataset')
         entry = dict(id=result.get('id'), phase=result.get('phase'), ended_at=store_module.now(),
-                     error=result.get('error'), steps=result.get('steps'))
+                     error=result.get('error'), steps=result.get('steps'), output=result.get('output'))
+        try:
+            earlier = self.store.get(dataset_id).get('runs') or []
+            entry.update({k: v for k, v in next((r for r in earlier if r.get('id') == entry['id']), {}).items()
+                          if k in ('started_at', 'settings')})
+        except ValueError:
+            earlier = []
         if result.get('phase') == 'complete':
             rows = training.checkpoints(result['output'])
             final = next((row for row in reversed(rows) if row['final']), rows[-1] if rows else None)
@@ -305,7 +338,10 @@ class Context:
                 result.update(phase='failed', error='no_output', message='The trainer ended without writing a LoRA file.')
                 entry.update(phase='failed', error='no_output')
             else:
-                lora = self.install(dataset_id, final['path'], None)
+                # A later run of the same set gets its own file (_v2, _v3...), so the earlier LoRA stays to compare.
+                version = 1 + sum(1 for r in earlier if r.get('lora') and r.get('id') != entry['id'])
+                lora = self.install(dataset_id, final['path'], None, version)
+                entry['version'] = version
                 result['lora'] = lora
                 entry['lora'] = lora['name']
         try:
@@ -314,9 +350,10 @@ class Context:
             pass
         return result
 
-    def install(self, dataset_id, source, step):
+    def install(self, dataset_id, source, step, version=1):
         dataset = self.store.get(dataset_id)
-        file_name = '%s%s.safetensors' % (training.run_name(dataset), '' if step is None else '_step%d' % step)
+        file_name = '%s%s%s.safetensors' % (training.run_name(dataset), '_v%d' % version if version > 1 else '',
+                                            '' if step is None else '_step%d' % step)
         listed, path = training.install_lora(source, self.loras_root(), file_name)
         name = self.lora_listed_name(file_name)
         try:
@@ -336,21 +373,27 @@ class Context:
     def promote(self, body):
         """Use an earlier checkpoint of the last run (when the final one overfits)."""
         dataset = self.store.get(body.get('dataset'))
-        status = self.runner.status()
-        output = status.get('output') if status.get('dataset') == dataset['id'] else None
-        if not output:
-            destination = self.output_root() / ('%s-ai-toolkit' % export.safe_name(dataset['name'])) / 'output'
-            output = str(destination)
-        row = next((c for c in training.checkpoints(output) if c['name'] == body.get('checkpoint')), None)
+        output, version = self.last_output(dataset)
+        row = next((c for c in training.checkpoints(output) if c['name'] == body.get('checkpoint')), None) if output else None
         if row is None:
             raise ValueError('unknown_checkpoint')
-        return dict(lora=self.install(dataset['id'], row['path'], row['step']), dataset=self.store.get(dataset['id']))
+        return dict(lora=self.install(dataset['id'], row['path'], row['step'], version), dataset=self.store.get(dataset['id']))
+
+    def last_output(self, dataset):
+        """The folder of the set's latest run that wrote checkpoints, and that run's LoRA version."""
+        runs = dataset.get('runs') or []
+        for index in range(len(runs) - 1, -1, -1):
+            folder = runs[index].get('output')
+            if folder and Path(folder).is_dir() and training.checkpoints(folder):
+                return folder, max(1, sum(1 for r in runs[:index + 1] if r.get('lora')))
+        legacy = self.output_root() / ('%s-ai-toolkit' % export.safe_name(dataset['name'])) / 'output'
+        return (str(legacy) if legacy.is_dir() else None), 1  # runs from before each had its own folder
 
     def checkpoint_list(self, body):
         dataset = self.store.get(body.get('dataset'))
-        output = self.output_root() / ('%s-ai-toolkit' % export.safe_name(dataset['name'])) / 'output'
+        output, _ = self.last_output(dataset)
         return dict(checkpoints=[dict(name=c['name'], step=c['step'], final=c['final'], bytes=c['bytes'])
-                                 for c in training.checkpoints(output)] if output.is_dir() else [])
+                                 for c in training.checkpoints(output)] if output else [])
 
     def link(self, body):
         """Tie the dataset's LoRA to a cast card (or untie it with cast_id null)."""
@@ -529,6 +572,7 @@ def register():
         'train-start': context.train_start,
         'train-status': lambda body: context.runner.status(),
         'free-gpu': context.free_for_pictures,
+        'face-crops': context.add_face_crops,
         'train-cancel': lambda body: context.runner.cancel(),
         'checkpoints': context.checkpoint_list,
         'promote': context.promote,

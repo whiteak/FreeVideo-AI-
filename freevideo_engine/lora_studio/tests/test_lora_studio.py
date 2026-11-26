@@ -73,6 +73,13 @@ class ImageTests(unittest.TestCase):
         self.assertTrue(box[0] < 1900 < 2000 < box[2] and box[1] < 400)
         self.assertEqual(max(images.fit(Image.new('RGB', (5000, 2500))).size), images.MAX_SIDE)
 
+    def test_face_crops(self):
+        picture = Image.new('RGB', (1600, 2400), (200, 200, 200))
+        crops = dict(images.face_crops(picture, [700, 300, 900, 550]))
+        self.assertEqual(set(crops), {'face', 'half'})
+        self.assertGreaterEqual(min(crops['face'].size), images.MIN_SIDE)
+        self.assertEqual(images.face_crops(picture, [790, 300, 830, 350]), [])  # too small to be worth a crop
+
     def test_cutout(self):
         image = Image.new('RGB', (400, 400), (255, 0, 0))
         mask = Image.new('L', (400, 400), 0)
@@ -113,6 +120,7 @@ class TrainingConfigTests(unittest.TestCase):
         self.assertEqual(training.offload_share(15.9), .8)
         self.assertEqual(training.offload_share(48), 0.)
         self.assertEqual(training.offload_share(15.9, .8), .8)
+        self.assertGreater(training.offload_share(15.9, None, 768), training.offload_share(15.9))
         dataset = dict(id='d1', name='Scarlett', kind='character', trigger='scrlttv', class_word='woman')
         config = training.ai_toolkit_config(dataset, 'C:/i', '', {}, output_dir='C:/o', vram_gb=15.9)
         self.assertIn('layer_offloading: true', config)
@@ -133,6 +141,23 @@ class StoreTests(unittest.TestCase):
     def add(self, dataset, seed, **kwargs):
         image, notes = images.prepare(picture(seed), dataset['kind'])
         return self.store.add_image(dataset['id'], image, notes=notes, **kwargs)
+
+    def test_runs_keep_their_own_folder_and_version(self):
+        dataset = self.store.create(dict(name='Scarlett', kind='character', trigger='scrlttv', class_word='woman'))
+        names = []
+        for run_id in ('r1', 'r2'):
+            folder = Path(self.tmp) / 'output' / 'lora-studio' / 'Scarlett-ai-toolkit' / 'output' / run_id / 'Scarlett_scrlttv'
+            folder.mkdir(parents=True)
+            (folder / 'Scarlett_scrlttv.safetensors').write_bytes(b'x')
+            (folder / 'Scarlett_scrlttv_000000250.safetensors').write_bytes(b'x')
+            self.store.record(dataset['id'], 'runs', dict(id=run_id, phase='running', output=str(folder.parent)))
+            result = self.context.finished(dict(id=run_id, dataset=dataset['id'], phase='complete', output=str(folder.parent), steps=1500))
+            names.append(result['lora']['name'])
+        self.assertEqual(names, ['lora-studio/Scarlett_scrlttv.safetensors', 'lora-studio/Scarlett_scrlttv_v2.safetensors'])
+        listed = self.context.checkpoint_list(dict(dataset=dataset['id']))['checkpoints']
+        self.assertEqual(len(listed), 2)  # the latest run's files only
+        promoted = self.context.promote(dict(dataset=dataset['id'], checkpoint='Scarlett_scrlttv_000000250.safetensors'))
+        self.assertEqual(promoted['lora']['name'], 'lora-studio/Scarlett_scrlttv_v2_step250.safetensors')
 
     def test_dataset_flow(self):
         ds = self.store.create(dict(name='Maya', kind='character', class_word='woman'))
