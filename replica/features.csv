@@ -1,0 +1,58 @@
+feature,area,priority,original,clone,notes
+Text to video (prompt -> clip),Create,must,yes,no,Core loop. Tutorial ch. quick-start / text-to-video
+Frame shape / size / length controls,Create,must,yes,no,Landscape/portrait; larger = more VRAM and time
+Four quality levels (Light/Medium/High/Max),Create,must,yes,no,Time estimate on Generate button
+Preview first then second pass,Create,must,yes,no,Half-res preview; full pass matches direct run
+Generation queue (one job per GPU),Create,must,yes,no,Others wait in queue
+Progress + cancel generation,Create,must,yes,no,Run status panel can stop a job
+Creations library (history),Library,must,yes,no,Find + export earlier videos
+Download / export video,Library,must,yes,no,Export dialog: content + quality + frame rate (48/60 if supported)
+Reuse settings from an earlier video,Library,should,yes,no,Prompt/size/duration/seed back into Create
+Workflow embedded in video file,Library,should,yes,no,Drop video on ComfyUI canvas to restore settings
+Hardware-adaptive execution (int8/FP8; attention kernel probe),Engine,must,yes,no,The product's real moat; 8 GB VRAM / 16 GB RAM floor
+Low-memory inference (weight streaming; prefetch; chunking),Engine,must,yes,no,Engine core
+Apple silicon preview,Engine,could,yes,no,Some features unavailable on Mac
+Prompt enhancement (local rewrite),Create,should,yes,no,Local VLM rewrites prompt
+Timed lines and cuts in prompt,Create,should,yes,no,"Cut:" syntax with timestamps
+First and last frames,Create,must,yes,no,Center-cropped to shape
+Middle frames (up to 3),Create,could,yes,no,Needs first + last frame
+Reference images / video / audio,Create,should,yes,no,Experimental; ref video doubles time
+Characters (save; @mention; max 3),Cast,should,yes,no,Character sheets
+Scenes and props (@mention),Cast,could,yes,no,1 scene + 2 props per request
+Replace person (1 or 2 people),Create,could,yes,no,~80 MB model downloaded on first use
+Community LoRAs (up to 32),Create,should,yes,no,.safetensors only
+Batch / one prompt per line / loop,Create,should,yes,no,Single-part videos only
+Long video in parts (up to 60 s; 8 parts),Create,should,yes,no,NVIDIA or Mac only
+Extend an existing video,Create,should,yes,no,
+Upscale a finished video (1.5x / 4K),Library,could,yes,no,Keeps original sound
+Library tags / filters / compare / recently deleted,Library,could,yes,no,Tags stored in browser only
+Images view: text to image (H3 Image; Qwen; MOSS layout),Images,should,yes,no,Up to 16 MP; up to 16 reference images
+Image editor: crop / retouch / text / local AI edit,Images,could,yes,no,Click-select needs SAM2 download
+Edit view: timeline with clips and tracks,Edit,should,yes,no,Crop / describe / extend per part
+Per-part prompts on the timeline,Edit,could,yes,no,
+Save current frame as image,Edit,could,yes,no,
+Separate sound into dialogue / music / ambience,Edit,could,yes,no,Not available on all machines
+Generate music for a range (ACE-Step),Edit,could,yes,no,Music model downloaded on first use
+Cut to the beat (snap to beats),Edit,could,yes,no,Audio 2 track only
+Voice recording / redub,Edit,could,yes,no,Mic permission
+Narration (TTS; CosyVoice3),Edit,could,yes,no,
+Generate video from sound,Edit,could,yes,no,
+Text overlays and SRT subtitles,Edit,could,yes,no,SRT import up to 500 lines
+Autopilot: chat-driven multi-shot film,Autopilot,should,yes,no,Needs an external AI assistant connected
+Short drama outline + auto edit,Autopilot,could,yes,no,
+AI agent control (MCP; Claude Code / Codex skill),Agents,could,yes,no,freevideo_engine/agent/mcp.py + skill
+Node view (raw ComfyUI graph),Nodes,should,yes,no,Inherited from ComfyUI
+System status (VRAM; GPU temp),Shell,should,yes,no,Red at 95% VRAM / 85 C
+First-run guide; feature tour; tutorial book; what's new,Shell,could,yes,no,EN + zh-CN (+ zh-Hant locale)
+Settings room,Shell,must,yes,no,Model paths; AI assistant; privacy toggles
+Diagnostics report + error cards,Shell,should,yes,no,Paths anonymized
+LAN access / server mode,Shell,could,yes,no,freevideo server --listen 0.0.0.0
+Share image/video with gen time + GPU,Library,could,yes,no,
+Desktop launcher (Win .exe / Mac .dmg / Linux AppImage),Launcher,must,yes,no,Qt/QML; installs ComfyUI + env + models
+Reuse existing ComfyUI + model folders,Launcher,should,yes,no,
+Offline install / repair by re-import,Launcher,could,yes,no,
+Signed auto-update notices,Launcher,should,yes,no,ed25519 key belongs to upstream; must be replaced in a fork
+Model download mirrors (HF / hf-mirror / ModelScope),Launcher,should,yes,no,
+MiniMax H3 / VDN-H3 model weights,Engine,must,yes,skip,Third-party weights under MiniMax H3 Community License; download only; cannot relicense
+Community: Discord / QQ / WeChat / gallery site,Community,could,yes,skip,Their network and users
+Code-signing certificate for Windows exe,Launcher,should,yes,skip,Owned by upstream; you need your own
