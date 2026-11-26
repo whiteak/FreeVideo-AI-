@@ -109,8 +109,8 @@ class PlanAndCaptionTests(unittest.TestCase):
 
 class TrainingConfigTests(unittest.TestCase):
     def test_offload(self):
-        # A 16 GB card can't hold the 21 GB int8 DiT: about half of it waits in system memory.
-        self.assertTrue(.45 <= training.offload_share(15.9) <= .6)
+        # A 16 GB card holds neither the 21 GB int8 DiT nor it beside the 5 GB VAE: 0.53 still ran out of memory.
+        self.assertEqual(training.offload_share(15.9), .8)
         self.assertEqual(training.offload_share(48), 0.)
         self.assertEqual(training.offload_share(15.9, .8), .8)
         dataset = dict(id='d1', name='Scarlett', kind='character', trigger='scrlttv', class_word='woman')

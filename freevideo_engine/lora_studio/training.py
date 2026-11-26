@@ -11,6 +11,7 @@ or without a ``diffusion_model.`` prefix), so the finished file works in the cre
 The trainer runs as its own process with its own Python; this process only starts it, reads its log and stops it.
 """
 import json
+import math
 import os
 import re
 import shutil
@@ -51,6 +52,9 @@ def run_name(dataset):
 H3_TRAINING_ADAPTER = 'ostris/minimax_h3_training_adapter/minimax_h3_training_adapter_v3.safetensors'
 H3_TRANSFORMER_GB = 21.  # the pre-quantized int8 ConvRot DiT
 H3_WORKING_GB = 5.  # LoRA, optimiser, activations at 512 px and CUDA's own room, measured loosely
+# accelerate's prepare() puts the fp16 video VAE on the card whole, beside the resident share of the DiT (0.53 ran out
+# of memory there on a 16 GB card with 15.02 GiB allocated).
+H3_VAE_GB = 5.2
 
 
 def offload_share(vram_gb, setting=None):
@@ -60,10 +64,10 @@ def offload_share(vram_gb, setting=None):
         return max(0., min(1., float(setting)))
     if not vram_gb:
         return .5
-    room = vram_gb - H3_WORKING_GB
+    room = vram_gb - H3_WORKING_GB - H3_VAE_GB
     if room >= H3_TRANSFORMER_GB:
         return 0.
-    return min(1., round((1 - room / H3_TRANSFORMER_GB) + .05, 2))
+    return min(1., math.ceil(((1 - room / H3_TRANSFORMER_GB) + .05) * 20) / 20)  # up to the next 5%
 
 
 def ai_toolkit_config(dataset, images_dir, reg_dir, settings, *, output_dir, models_dir='', vram_gb=None):
@@ -111,6 +115,7 @@ config:
         - folder_path: {_q(images_dir)}
           caption_ext: "txt"
           caption_dropout_rate: {float(s.get('caption_dropout', .05))}
+          cache_latents_to_disk: true
           num_frames: 1
           auto_frame_count: false
           resolution: {json.dumps(resolutions)}
