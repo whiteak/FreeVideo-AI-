@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LoRA Studio · FreeVideo</title>
+<link rel="stylesheet" href="/freevideo/lora-studio/static/app.css">
+</head>
+<body>
+<header class="bar">
+  <div class="brand"><span class="logo">◆</span> LoRA Studio <span class="muted">for FreeVideo</span></div>
+  <div class="bar-right">
+    <span id="gpu-note" class="pill" hidden></span>
+    <a class="btn ghost" href="/" target="_blank" rel="noopener">Open FreeVideo</a>
+  </div>
+</header>
+<div class="layout">
+  <aside class="side">
+    <button class="btn primary wide" id="new-btn">+ New LoRA</button>
+    <div id="dataset-list" class="list"></div>
+  </aside>
+  <main id="main">
+    <section id="welcome" class="welcome">
+      <h1>Make a LoRA of a character, an object or a style</h1>
+      <ol class="steps">
+        <li><b>Pictures.</b> Bring your own photos (cropped, de-duplicated, backgrounds removed for objects) or start from a description.</li>
+        <li><b>Coverage.</b> The image model fills the gaps: angles, close-ups, expressions, poses, places and light, all from one reference so the subject stays the same.</li>
+        <li><b>Check.</b> A likeness check flags pictures that drifted from the reference; regenerate them in their slot.</li>
+        <li><b>Captions.</b> The prompt model writes a caption per picture with your trigger word; edit any of them.</li>
+        <li><b>Train.</b> Train a MiniMax H3 video LoRA on this PC with ai-toolkit, or export for kohya, ai-toolkit or Musubi.</li>
+        <li><b>Use.</b> Link the LoRA to a cast card: writing <code>@Name</code> in a prompt loads it. Compare strengths in a test grid.</li>
+      </ol>
+      <button class="btn primary" id="welcome-new">Start a new LoRA</button>
+    </section>
+    <section id="editor" hidden>
+      <div class="ds-head">
+        <div>
+          <h1 id="ds-title"></h1>
+          <div class="muted" id="ds-sub"></div>
+        </div>
+        <div class="ds-actions">
+          <button class="btn ghost" id="ds-edit">Details</button>
+          <button class="btn ghost danger" id="ds-delete">Delete</button>
+        </div>
+      </div>
+      <nav class="tabs" id="tabs">
+        <button data-tab="pictures" class="on">1 · Pictures</button>
+        <button data-tab="coverage">2 · Coverage</button>
+        <button data-tab="captions">3 · Captions &amp; check</button>
+        <button data-tab="train">4 · Train</button>
+        <button data-tab="use">5 · Use &amp; test</button>
+      </nav>
+      <div id="tab-pictures" class="tab"></div>
+      <div id="tab-coverage" class="tab" hidden></div>
+      <div id="tab-captions" class="tab" hidden></div>
+      <div id="tab-train" class="tab" hidden></div>
+      <div id="tab-use" class="tab" hidden></div>
+    </section>
+  </main>
+</div>
+<div id="toast" class="toast" hidden></div>
+<dialog id="dialog"></dialog>
+<script type="module" src="/freevideo/lora-studio/static/app.js"></script>
+</body>
+</html>

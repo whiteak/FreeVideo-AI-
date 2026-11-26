@@ -9,7 +9,8 @@ import { LANGUAGE, LANGUAGE_PARAM, askedLanguage, translator } from './i18n.js';
 import { localized } from './i18n_tables.js';
 
 // Every platform downloads from one release: the latest vX.Y.Z.
-const releasePage = 'https://github.com/FlashML-org/FreeVideo/releases/latest';
+// Personal fork: release notes and downloads come from your own repository, not upstream's.
+const releasePage = 'https://github.com/whiteak/FreeVideo-AI-/releases/latest';
 const storageKey = 'freevideo.dismissed-update';
 const CANCEL_FAILURE = {en: 'Cancellation failed. Please use the launcher.', zh: '取消没成功，请在启动器里操作'};
 const listeners = new Set();
