@@ -1,0 +1,66 @@
+# LoRA Studio (fork addition)
+
+Make a LoRA of a **character**, an **object** or a **style**, train it on this PC as a MiniMax H3 video LoRA, and
+load it by writing `@Name` in a prompt. Open it from the **LoRA** entry in FreeVideo's top bar, or go to
+`http://127.0.0.1:8188/freevideo/lora-studio/`.
+
+## The steps
+
+1. **Pictures.** Drop in your own photos. Each one is straightened, black bars are trimmed, a person who is small in
+   a big photo is cropped to (using the engine's face finder), and near-duplicates are skipped. For objects,
+   *Remove background* cuts the object out with the SAM 2 selection model and puts it on plain grey.
+   Pick the clearest picture as the **reference**.
+2. **Coverage.** A grid of slots for what a good set covers: angles, close-ups, expressions, poses, places and light
+   for characters (29 slots); sides, details, places, in-use and light for objects (21); varied subjects for a style
+   (18). *Fill empty slots* makes each one with H3 Image as an edit of the reference, so the subject stays the
+   same. *Regenerate* makes a new picture in one slot (the old one is kept, excluded). No photo? Write a description
+   and make the reference from it. Optional **regularisation** pictures (generic pictures of the class) are made with
+   MOSS-Image.
+3. **Captions & check.** The installed prompt model (Qwen3-VL) writes a caption for every picture. In subject mode
+   the caption describes everything *except* the subject (pose, angle, clothes, place, light), so the trigger word
+   learns the subject; in style mode it describes the content and never the style. Every caption is editable.
+   *Check likeness* compares each picture with the reference and scores it 0-10; drifted ones (below 6) are
+   flagged for regenerating or excluding.
+4. **Train.** Trains with [ai-toolkit](https://github.com/ostris/ai-toolkit) (arch `minimax_h3`) in its own Python:
+   pruned int8 ConvRot H3 transformer, nvfp4 text encoder, `low_vram`, single-frame image training at 512 px,
+   rank 16, 1500 steps by default. A published run on a 12 GB card took about 6-7 hours for 1000 steps; a 16 GB
+   card should be faster. The first run downloads about 40 GB of H3 files from
+   [Comfy-Org/MiniMax-H3](https://huggingface.co/Comfy-Org/MiniMax-H3) (accept the licence there first).
+   Progress, loss and the trainer log show on the page; each saved checkpoint can be used instead of the final one.
+   The finished LoRA is copied to `models/loras/lora-studio/` and its trigger words are saved, so the creation panel
+   adds them for you. FreeVideo can't make videos while training runs.
+   **Export instead** writes kohya, ai-toolkit or Musubi Tuner layouts (pictures + `.txt` captions, plus a config
+   for ai-toolkit and a `dataset.toml` / `train.cmd` for Musubi) to `output/lora-studio/`, or as a zip.
+5. **Use & test.** Link the LoRA to a cast card (or make a new card from the set). When that card is mentioned with
+   `@` in a prompt, its LoRA is added to the request at the strength you set and its trigger words go in front of the
+   prompt; the panel's own LoRA list is not changed. The **strength test grid** makes short videos with the same
+   prompt and seed without the LoRA and at several strengths.
+
+## Installing the trainer
+
+```
+powershell -ExecutionPolicy Bypass -File scripts\install-lora-trainer.ps1
+```
+
+It clones ai-toolkit to `C:\Projects\ai-toolkit`, makes its own `venv`, and installs PyTorch for CUDA 13 and the
+requirements. LoRA Studio finds that folder by itself; another folder can be set under Train → Trainer setup, with
+an optional models folder (`MODELS_PATH`) for the 40 GB of training files.
+
+## Where things are
+
+| What | Where |
+|---|---|
+| Datasets (pictures, captions, settings, runs) | `ComfyUI/input/lora-studio/<id>/` |
+| Cast card → LoRA links | `ComfyUI/input/lora-studio/links.json` |
+| Exports and the training copy of the set | `ComfyUI/output/lora-studio/` |
+| Finished LoRAs | `ComfyUI/models/loras/lora-studio/` |
+| Code | `freevideo_engine/lora_studio/`, `web/lora_studio_link.js`, the `@Name` hook in `FreeVideoGenerate.execute` |
+
+Tests: `python -m unittest freevideo_engine.lora_studio.tests.test_lora_studio` (no GPU or models needed).
+
+## Limits
+
+- H3 Image and MOSS-Image in FreeVideo don't take LoRAs, so the finished LoRA is a **video** LoRA; test it with the
+  test grid or the creation panel.
+- The likeness check is the prompt model's judgement, not a face-recognition score: use it to find outliers.
+- Musubi's H3 recipe is new; check `train.cmd` against `docs/minimax_h3.md` in your Musubi version.
