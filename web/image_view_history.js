@@ -330,7 +330,9 @@ export function historyPanel({pictureURL, thumbURL = pictureURL, queue = null, o
                     tile.classList.toggle('fv-iv-fav', state.meta.isFav(row.file));
                     const open = tile.firstChild, words = promptOfRow(row), made = tileFacts(state.meta.get(row.file));
                     const factsNode = tile.querySelector('.fv-iv-tile-facts');
-                    if (factsNode && factsNode.textContent !== made) factsNode.textContent = made;
+                    // Small tiles are about 80 px wide: the model and the size go on two lines, the size without spaces.
+                    const shown = made.replace(' · ', '\n').replace(' × ', '×');
+                    if (factsNode && factsNode.textContent !== shown) factsNode.textContent = shown;
                     const use = state.selecting ? t('Click to pick; Shift picks a run', '点选；按住 Shift 连选') : t('Show it on the stage; pick several to compare', '在中间显示；多选即可对比');
                     tip(open, words ? (words.length > 40 ? words.slice(0, 40) + '…' : words) : t('Image', '图片'), made ? `${made}. ${use}` : use);
                     open.setAttribute('aria-pressed', String(state.selecting ? state.picked.has(row.file) : row.file === state.shownFile));
