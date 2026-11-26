@@ -142,6 +142,23 @@ class StoreTests(unittest.TestCase):
         image, notes = images.prepare(picture(seed), dataset['kind'])
         return self.store.add_image(dataset['id'], image, notes=notes, **kwargs)
 
+    def test_runs_keep_their_own_folder_and_version(self):
+        dataset = self.store.create(dict(name='Scarlett', kind='character', trigger='scrlttv', class_word='woman'))
+        names = []
+        for run_id in ('r1', 'r2'):
+            folder = Path(self.tmp) / 'output' / 'lora-studio' / 'Scarlett-ai-toolkit' / 'output' / run_id / 'Scarlett_scrlttv'
+            folder.mkdir(parents=True)
+            (folder / 'Scarlett_scrlttv.safetensors').write_bytes(b'x')
+            (folder / 'Scarlett_scrlttv_000000250.safetensors').write_bytes(b'x')
+            self.store.record(dataset['id'], 'runs', dict(id=run_id, phase='running', output=str(folder.parent)))
+            result = self.context.finished(dict(id=run_id, dataset=dataset['id'], phase='complete', output=str(folder.parent), steps=1500))
+            names.append(result['lora']['name'])
+        self.assertEqual(names, ['lora-studio/Scarlett_scrlttv.safetensors', 'lora-studio/Scarlett_scrlttv_v2.safetensors'])
+        listed = self.context.checkpoint_list(dict(dataset=dataset['id']))['checkpoints']
+        self.assertEqual(len(listed), 2)  # the latest run's files only
+        promoted = self.context.promote(dict(dataset=dataset['id'], checkpoint='Scarlett_scrlttv_000000250.safetensors'))
+        self.assertEqual(promoted['lora']['name'], 'lora-studio/Scarlett_scrlttv_v2_step250.safetensors')
+
     def test_dataset_flow(self):
         ds = self.store.create(dict(name='Maya', kind='character', class_word='woman'))
         self.assertTrue(ds['trigger'])
