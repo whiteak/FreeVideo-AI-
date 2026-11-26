@@ -77,6 +77,14 @@ def make_picture(client, model, plan, images):
             last = line
 
 
+def plan_impostor(client, ds):
+    """The reference's size and wording, with someone else in the same clothes."""
+    plan = client.studio('slot-prompt', dict(dataset=ds, slot='anchor'))
+    prompt = plan['prompt'].replace('a woman in her thirties with short curly red hair and freckles',
+                                    'a woman in her fifties with long straight black hair and no freckles')
+    return dict(prompt=prompt, width=plan['width'], height=plan['height'])
+
+
 def ask(client, questions, **options):
     started = client.vlm('ask', dict(questions=questions, **options))
     while True:
@@ -93,6 +101,8 @@ def main():
     parser.add_argument('--url', default='http://127.0.0.1:8188')
     parser.add_argument('--slots', type=int, default=2)
     parser.add_argument('--keep', action='store_true')
+    parser.add_argument('--impostor', action='store_true',
+                        help='also make a different person in the same clothes and check the likeness check flags them')
     parser.add_argument('--only', default='', help='comma-separated slot ids to make instead of the first --slots')
     args = parser.parse_args()
     # A Windows console is cp1252 by default; the side and back prompts are Chinese.
@@ -157,6 +167,15 @@ def main():
                 saved = client.studio('drift', dict(dataset=ds, item=row['id'], answer=answer))
                 drift = next(r for r in saved['items'] if r['id'] == row['id'])['drift']
                 print('   %s: %s' % (row['slot'], drift))
+            done(t)
+
+        if args.impostor:
+            t = step('Likeness check on a different person (should score below 6)')
+            other = make_picture(client, model, dict(plan_impostor(client, ds)), [])
+            answers = ask(client, [dict(text=questions['drift'], images=[dict(file=reference['input'], label='reference'),
+                                                                        dict(file=other, label='candidate')])],
+                          system=questions['drift_system'], format='json', max_tokens=200)
+            print('   %s: %s' % (other, answers[0].get('json') or answers[0].get('text')))
             done(t)
 
         t = step('Export ai-toolkit layout')
