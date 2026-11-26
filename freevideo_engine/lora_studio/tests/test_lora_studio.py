@@ -107,6 +107,10 @@ class PlanAndCaptionTests(unittest.TestCase):
                          'Close-up portrait, head and shoulders, woman standing, plain grey backdrop')
         self.assertTrue(captions.fix_framing('woman smiling, soft light', 'half').startswith('Medium shot from the waist up, woman'))
         self.assertEqual(captions.fix_framing('Full body, woman', None), 'Full body, woman')
+        self.assertEqual(captions.fix_framing('Three-quarter view, full body, woman standing', 'half'),
+                         'Medium shot from the waist up, three-quarter view, woman standing')
+        self.assertEqual(captions.fix_framing('Three-quarter view close-up of the woman, smiling', 'face'),
+                         'Close-up portrait, head and shoulders, three-quarter view of the woman, smiling')
 
     def test_captions(self):
         self.assertEqual(captions.with_trigger('"The woman walking in a park."', 'mya', 'woman'), 'mya woman walking in a park')
