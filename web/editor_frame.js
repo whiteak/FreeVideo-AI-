@@ -92,10 +92,19 @@ const evenSize = size => validPictureSize(size) && size.width <= 8193 && size.he
 export function creationPictureSizes(record, capabilities, t) {
     // Use the available pixel tier nearest this edit, with exactly studio's rounding.
     const sizes = (capabilities?.sizes || []).filter(validPictureSize);
-    const tier = sizes.reduce((best, size) => !best || Math.abs(size.width * size.height - record.width * record.height)
+    const shapes = allFrameShapes(t);
+    const megapixels = size => size.pixels || size.width * size.height / 1024 ** 2;
+    // Prefer the tier that produced this exact size (so picking 4:3 keeps 4:3 checked), else the nearest area.
+    // Edit asks for capabilities at the clip's own size, so also try Create's standard pixel tiers.
+    const candidates = [...sizes, ...[.5, .75, .98, 1, 1.5, 2].map(pixels => ({pixels, ...frameSize(pixels, 16 / 9)}))];
+    const exact = candidates.find(size => shapes.some(([, , ratio]) => {
+        const shaped = frameSize(megapixels(size), ratio);
+        return shaped.width === record.width && shaped.height === record.height;
+    }));
+    const tier = exact || sizes.reduce((best, size) => !best || Math.abs(size.width * size.height - record.width * record.height)
         < Math.abs(best.width * best.height - record.width * record.height) ? size : best, null);
-    return allFrameShapes(t).map(([id, label, ratio]) => {
-        const size = tier && frameSize(tier.pixels || tier.width * tier.height / 1024 ** 2, ratio);
+    return shapes.map(([id, label, ratio]) => {
+        const size = tier && frameSize(megapixels(tier), ratio);
         return {id, label, size: size && size.width >= 256 && size.height >= 256 && size.width <= 4096 && size.height <= 4096 ? size : null};
     });
 }
