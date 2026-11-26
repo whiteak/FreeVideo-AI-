@@ -138,6 +138,7 @@ def main():
     ds = dataset['id']
     done(t, ds)
     try:
+        client.studio('free-gpu')  # the picture model needs the room an idle video model holds
         t = step('Reference from the description (%s)' % model)
         plan = client.studio('slot-prompt', dict(dataset=ds, slot='anchor'))
         file = make_picture(client, model, plan, [])
@@ -154,13 +155,22 @@ def main():
             t = step('Slot %s' % slot)
             plan = client.studio('slot-prompt', dict(dataset=ds, slot=slot))
             print('   prompt: ' + plan['prompt'][:300], flush=True)
-            staged = client.studio('stage', dict(dataset=ds, item=reference['id']))['file']
-            try:
-                file = make_picture(client, model, plan, [staged])
-            except RuntimeError as error:
-                if not args.train:
-                    raise
-                print('   skipped: %s' % error, flush=True)  # one failed picture shouldn't stop a long unattended run
+            file = None
+            for attempt in range(2):
+                staged = client.studio('stage', dict(dataset=ds, item=reference['id']))['file']
+                try:
+                    file = make_picture(client, model, plan, [staged])
+                    break
+                except RuntimeError as error:
+                    if attempt == 0 and 'memory' in str(error):
+                        print('   out of graphics memory; freeing the video model and trying again', flush=True)
+                        client.studio('free-gpu')
+                        continue
+                    if not args.train:
+                        raise
+                    print('   skipped: %s' % error, flush=True)  # one failed picture shouldn't stop a long unattended run
+                    break
+            if file is None:
                 continue
             result = client.studio('adopt', dict(dataset=ds, file=file, slot=slot, prompt=plan['prompt'], model=model))
             done(t, result['item']['input'])

@@ -388,14 +388,25 @@ async function generateSlot(slotId, datasetId = state.ds.id) {
     const ref = reference();
     const model = plan.references ? imageGen.editModel() : (imageGen.editModel() || imageGen.textModel());
     if (!model) throw new Failure('no_model', {message: 'No picture model is installed. Install H3 Image in FreeVideo\'s Images view.'});
-    const images = plan.references ? [(await studio('stage', {dataset: datasetId, item: ref.id})).file] : [];
     const seed = randomSeed();
     state.abort = new AbortController();
-    const file = await imageGen.run({model, prompt: plan.prompt, width: plan.width, height: plan.height, images, seed}, progress => {
-        state.jobs.set(slotId, {...state.jobs.get(slotId), ...progress});
-        const cell = document.querySelector(`.slot[data-slot="${slotId}"]`);
-        if (cell && state.tab === 'coverage') cell.replaceWith(slotTile(state.info.plans[state.ds.kind].find(s => s.id === slotId), null, true));
-    }, state.abort.signal);
+    let file;
+    for (let attempt = 0; ; attempt++) {
+        // The service removes a staged reference when its job ends, so each attempt stages its own.
+        const images = plan.references ? [(await studio('stage', {dataset: datasetId, item: ref.id})).file] : [];
+        try {
+            file = await imageGen.run({model, prompt: plan.prompt, width: plan.width, height: plan.height, images, seed}, progress => {
+                state.jobs.set(slotId, {...state.jobs.get(slotId), ...progress});
+                const cell = document.querySelector(`.slot[data-slot="${slotId}"]`);
+                if (cell && state.tab === 'coverage') cell.replaceWith(slotTile(state.info.plans[state.ds.kind].find(s => s.id === slotId), null, true));
+            }, state.abort.signal);
+            break;
+        } catch (error) {
+            // Out of graphics memory (the video model still held the card): free it once and try again.
+            if (attempt > 0 || !/memory/.test(error.code || '')) throw error;
+            await studio('free-gpu').catch(() => {});
+        }
+    }
     const result = await studio('adopt', {dataset: datasetId, file, slot: slotId === 'anchor' ? null : slotId, prompt: plan.prompt, seed, model, source: 'generated'});
     setDataset(result.dataset);
     return result.item;
