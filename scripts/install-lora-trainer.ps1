@@ -3,7 +3,7 @@
 #   powershell -ExecutionPolicy Bypass -File scripts\install-lora-trainer.ps1 [-Target C:\Projects\ai-toolkit]
 # It needs git and Python 3.10+ (3.12 recommended). It does not touch FreeVideo's own Python.
 # After it finishes: accept the MiniMax H3 licence at https://huggingface.co/Comfy-Org/MiniMax-H3 and run
-#   C:\Projects\ai-toolkit\venv\Scripts\huggingface-cli.exe login
+#   C:\Projects\ai-toolkit\venv\Scripts\hf.exe auth login
 # if the download asks for it. LoRA Studio finds C:\Projects\ai-toolkit on its own; for another folder set it
 # in LoRA Studio > Train > Trainer setup.
 param(
@@ -57,4 +57,7 @@ if (-not (Test-Path (Join-Path $Target 'extensions_built_in\diffusion_models\min
     Write-Warning 'This ai-toolkit has no MiniMax H3 support yet. Run this script again later to update it.'
 }
 Write-Host ''
-Write-Host "Done. ai-toolkit is in $Target. Open LoRA Studio (the LoRA entry in FreeVideo's top bar) > Train."
+Write-Host "Done. ai-toolkit is in $Target."
+Write-Host 'Next: accept the licence at https://huggingface.co/Comfy-Org/MiniMax-H3, then log in with a Read token:'
+Write-Host "  $(Join-Path $Target 'venv\Scripts\hf.exe') auth login"
+Write-Host "Then open LoRA Studio (the LoRA entry in FreeVideo's top bar) > Train."

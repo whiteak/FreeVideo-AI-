@@ -40,8 +40,12 @@ load it by writing `@Name` in a prompt. Open it from the **LoRA** entry in FreeV
 ## Installing the trainer
 
 ```
+cd C:\Projects\FreeVideo-AI
 powershell -ExecutionPolicy Bypass -File scripts\install-lora-trainer.ps1
 ```
+
+Then accept the licence at https://huggingface.co/Comfy-Org/MiniMax-H3 and log in with a Read token from
+https://huggingface.co/settings/tokens: `C:\Projects\ai-toolkit\venv\Scripts\hf.exe auth login`.
 
 It clones ai-toolkit to `C:\Projects\ai-toolkit`, makes its own `venv`, and installs PyTorch for CUDA 13 and the
 requirements. LoRA Studio finds that folder by itself; another folder can be set under Train → Trainer setup, with
