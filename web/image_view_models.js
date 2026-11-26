@@ -32,7 +32,9 @@ export function modelState(info, id) {
             locked: install.state === 'paused_for_generation' && install.reason === 'busy_setup'};
     if (install.state === 'failed')
         return {state: 'failed', row, total, done, fraction, reason: localized({en: install.message_en || '', zh: install.message_zh || ''}, t) || install.reason || ''};
-    return {state: 'missing', row, total, done, fraction, resume: done > 0};
+    // What is still to fetch: files already on disk (another install's, linked in) don't count.
+    const needed = Number.isFinite(row.bytes_needed) && row.bytes_needed >= 0 ? Math.min(row.bytes_needed, total || row.bytes_needed) : total;
+    return {state: 'missing', row, total, done, fraction, needed, resume: done > 0};
 }
 
 const gb = bytes => (bytes / 1e9).toFixed(1);
@@ -52,7 +54,8 @@ export const verifyText = state => state.unknown ? t('Verifying', '正在校验'
 export function downloadText(state) {
     if (!state.total) return t('Download needed', '需下载');
     if (state.resume) return t('{done} of {total} GB', '已下载 {done} / {total} GB', { done: gb(state.done), total: gb(state.total) });
-    return t('Download needed · {total} GB', '需下载 · {total} GB', { total: gb(state.total) });
+    if (state.needed === 0) return t('Files already here · install to check them', '文件已在本机 · 安装时校验');
+    return t('Download needed · {total} GB', '需下载 · {total} GB', { total: gb(state.needed ?? state.total) });
 }
 export function statusLine(state) {
     switch (state.state) {

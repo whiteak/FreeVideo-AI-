@@ -10,8 +10,8 @@ KINDS = ('character', 'object', 'style')
 ASPECTS = {'3:4': (1536, 2048), '1:1': (2048, 2048), '4:3': (2048, 1536), '16:9': (2368, 1344), '9:16': (1344, 2368)}
 
 _C = 'the same person as in <Picture 1>'
-_KEEP_C = ('Keep exactly the same face, facial features, skin tone, age, hairstyle, hair colour and body shape as the '
-           'person in <Picture 1>. One photograph of one person, sharp focus, no text, no collage.')
+_KEEP_C = ('It is the same person as in <Picture 1>: the same face, facial features, skin tone, age, hairstyle, hair '
+           'colour and build. One photograph of one person, sharp focus, no text, no collage.')
 _KEEP_CLOTHES = ' Keep the same clothes and accessories as in <Picture 1>.'
 _O = 'the same object as in <Picture 1>'
 _KEEP_O = ('Keep exactly the same shape, proportions, colours, materials, markings and details as the object in '
@@ -25,41 +25,64 @@ def _slot(identity, group, label, prompt, aspect='3:4', clothes=True):
     return dict(id=identity, group=group, label=label, prompt=prompt, aspect=aspect, keep_clothes=clothes)
 
 
+# Character slots are written as edit commands for H3 Image: what to change first, then what to keep. Prompts that
+# described the finished photo made H3 return the reference almost unchanged (tested on an RTX 5080, 2026-11-26),
+# so each one names the change outright and says the old pose, framing or expression must not be copied. The turns
+# reuse the cast cards' measured view words (image_gen.cast_views), which H3 follows.
+# "Left" alone was read as the person's own left on Jason's PC (the picture turned to the right of the frame), so the
+# turns name the picture's edge and where the nose, chest and toes point, as the measured side view does.
+_TURN_45 = ('将<Picture 1>中的同一个人向画面左边转45度，呈现四分之三侧面。鼻尖、胸口、脚尖朝向画面左边（观看者的左边），'
+            '两只眼睛都能看见。头和身体一起转。全身站立，双脚入画，浅灰纯色背景。')
+_TURN_45R = ('将<Picture 1>中的同一个人向画面右边转45度，呈现四分之三侧面。鼻尖、胸口、脚尖朝向画面右边（观看者的右边），'
+             '两只眼睛都能看见。头和身体一起转。全身站立，双脚入画，浅灰纯色背景。')
+_SIDE = ('将<Picture 1>中的同一个人完全转向画面左边，呈现90度正侧面。鼻尖、胸口、脚尖朝向画面左边，只能看见一只眼睛，'
+         '近侧肩膀遮住远侧肩膀。全身站立，双脚入画，浅灰纯色背景。')
+_BACK = ('将<Picture 1>中的同一个人整个身体转过180度，完全背对镜头。头、肩膀、躯干、臀部和双脚一起转过去，后脑勺、背部和'
+         '脚后跟朝向镜头。看不到脸。全身，浅灰纯色背景。')
+_NEW = ' Do not copy the pose, framing or expression of <Picture 1>; only the person stays the same.'
+_FACE = (' Reframe as a close portrait: crop from the top of the head to the shoulders, the face fills about half of '
+         'the picture.')
+
+
+def _edit(identity, group, label, change, aspect='3:4', clothes=True, new=True):
+    return _slot(identity, group, label, change + (_NEW if new else ''), aspect, clothes)
+
+
 CHARACTER = [
     # Angles
-    _slot('front', 'angles', 'Front, full body', f'A full-body photograph of {_C}, standing and facing the camera, arms relaxed, plain light grey studio backdrop, soft even light.'),
-    _slot('three_quarter_left', 'angles', 'Three-quarter left', f'A full-body photograph of {_C}, body and head turned 45 degrees to the left, plain light grey studio backdrop, soft even light.'),
-    _slot('three_quarter_right', 'angles', 'Three-quarter right', f'A full-body photograph of {_C}, body and head turned 45 degrees to the right, plain light grey studio backdrop, soft even light.'),
-    _slot('profile_left', 'angles', 'Side profile', f'A full-body photograph of {_C} in exact side profile facing the left edge of the picture, one eye visible, plain light grey studio backdrop.'),
-    _slot('back', 'angles', 'From behind', f'A full-body photograph of {_C} seen from directly behind: back of the head, shoulders and back face the camera, plain light grey studio backdrop.'),
-    _slot('low_angle', 'angles', 'Low angle', f'A low-angle photograph looking up at {_C}, standing outdoors under an open sky, dramatic perspective.'),
-    _slot('high_angle', 'angles', 'High angle', f'A high-angle photograph looking down at {_C}, standing on a city pavement, camera above head height.'),
+    _edit('front', 'angles', 'Front, full body', 'Show the person in <Picture 1> standing straight and facing the camera, the whole body from head to feet, arms relaxed at the sides, plain light grey studio backdrop, soft even light.', new=False),
+    _edit('three_quarter_left', 'angles', 'Three-quarter left', _TURN_45, new=False),
+    _edit('three_quarter_right', 'angles', 'Three-quarter right', _TURN_45R, new=False),
+    _edit('profile_left', 'angles', 'Side profile', _SIDE, new=False),
+    _edit('back', 'angles', 'From behind', _BACK, new=False),
+    _edit('low_angle', 'angles', 'Low angle', 'Move the camera down to knee height and tilt it up at the person in <Picture 1>, who stands outdoors under an open blue sky. Strong upward perspective, the sky fills the background.'),
+    _edit('high_angle', 'angles', 'High angle', 'Move the camera high above the person in <Picture 1> and look down at them standing on a city pavement; the top of the head is closest to the camera.'),
     # Close-ups
-    _slot('face_front', 'close-ups', 'Face, front', f'A tight head-and-shoulders portrait of {_C}, facing the camera at eye level, neutral expression, soft light, shallow depth of field.', '1:1'),
-    _slot('face_three_quarter', 'close-ups', 'Face, three-quarter', f'A close-up portrait of {_C}, head turned three-quarters to the right, eyes toward the camera, soft window light.', '1:1'),
-    _slot('face_profile', 'close-ups', 'Face, profile', f'A close-up portrait of {_C} in side profile, clean background, rim light outlining the face.', '1:1'),
-    _slot('eyes', 'close-ups', 'Extreme close-up', f'An extreme close-up of the eyes and upper face of {_C}, sharp detail of the eyes, eyebrows and skin.', '16:9'),
-    _slot('half_body', 'close-ups', 'Half body', f'A waist-up portrait of {_C}, natural pose, softly blurred indoor background.'),
+    _edit('face_front', 'close-ups', 'Face, front', 'Make a tight close-up portrait of the face of the person in <Picture 1>, facing the camera at eye level, neutral expression, soft light, blurred background.' + _FACE, '1:1', new=False),
+    _edit('face_three_quarter', 'close-ups', 'Face, three-quarter', 'Make a close-up portrait of the person in <Picture 1> with the head turned three-quarters so the nose points toward the right edge of the picture (seen from the camera) and the eyes looking at the camera, soft window light.' + _FACE, '1:1'),
+    _edit('face_profile', 'close-ups', 'Face, profile', 'Make a close-up portrait of the person in <Picture 1> in exact side profile facing the left edge, one eye visible, rim light outlining the face.' + _FACE, '1:1'),
+    _edit('eyes', 'close-ups', 'Extreme close-up', 'Make an extreme close-up of the eyes and upper face of the person in <Picture 1>: the eyes and eyebrows fill the frame, sharp skin detail.', '16:9'),
+    _edit('half_body', 'close-ups', 'Half body', 'Reframe <Picture 1> as a waist-up portrait of the same person, one hand in a pocket, turned slightly to the side, softly blurred indoor background.'),
     # Expressions
-    _slot('smile', 'expressions', 'Smiling', f'A portrait of {_C} smiling warmly at the camera.', '1:1'),
-    _slot('laugh', 'expressions', 'Laughing', f'A candid portrait of {_C} laughing out loud, eyes creased.', '1:1'),
-    _slot('serious', 'expressions', 'Serious', f'A portrait of {_C} with a serious, focused expression, looking straight at the camera.', '1:1'),
-    _slot('surprised', 'expressions', 'Surprised', f'A portrait of {_C} looking surprised, eyebrows raised, mouth slightly open.', '1:1'),
-    _slot('angry', 'expressions', 'Angry', f'A portrait of {_C} looking angry, brows drawn together.', '1:1'),
-    _slot('sad', 'expressions', 'Sad', f'A portrait of {_C} looking sad and thoughtful, eyes lowered.', '1:1'),
+    _edit('smile', 'expressions', 'Smiling', 'Change the expression of the person in <Picture 1> to a big warm smile showing the teeth, eyes crinkled. Reframe as a head-and-shoulders portrait.', '1:1'),
+    _edit('laugh', 'expressions', 'Laughing', 'Make the person in <Picture 1> laugh out loud with the mouth wide open and the head tilted back slightly. Head-and-shoulders portrait.', '1:1'),
+    _edit('serious', 'expressions', 'Serious', 'Give the person in <Picture 1> a serious, intense expression: brows lowered, lips pressed together, staring into the camera. Head-and-shoulders portrait, dramatic side light.', '1:1'),
+    _edit('surprised', 'expressions', 'Surprised', 'Make the person in <Picture 1> look shocked: eyebrows raised high, eyes wide, mouth open in an O. Head-and-shoulders portrait.', '1:1'),
+    _edit('angry', 'expressions', 'Angry', 'Make the person in <Picture 1> look furious: brows drawn together, teeth clenched, nostrils flared. Head-and-shoulders portrait.', '1:1'),
+    _edit('sad', 'expressions', 'Sad', 'Make the person in <Picture 1> look sad: eyes lowered and glistening, mouth turned down. Head-and-shoulders portrait, soft grey light.', '1:1'),
     # Poses
-    _slot('sitting', 'poses', 'Sitting', f'A full-body photograph of {_C} sitting on a wooden chair in a bright room.'),
-    _slot('walking', 'poses', 'Walking', f'A full-body photograph of {_C} walking toward the camera along a city street, mid-stride.'),
-    _slot('arms_crossed', 'poses', 'Arms crossed', f'A three-quarter-length photograph of {_C} standing with arms crossed, confident pose, office background.'),
-    _slot('running', 'poses', 'Running', f'A dynamic full-body photograph of {_C} running in a park, motion in the hair and clothes.', '4:3'),
-    _slot('leaning', 'poses', 'Leaning', f'A photograph of {_C} leaning against a brick wall, relaxed pose.'),
-    _slot('waving', 'poses', 'Waving', f'A photograph of {_C} waving at the camera with one hand raised, outdoors.'),
+    _edit('sitting', 'poses', 'Sitting', 'Show the person in <Picture 1> sitting on a wooden chair in a bright room, legs crossed, hands resting on the knee, whole body visible.'),
+    _edit('walking', 'poses', 'Walking', 'Show the person in <Picture 1> walking toward the camera along a city street in mid-stride, one foot in front of the other, arms swinging.'),
+    _edit('arms_crossed', 'poses', 'Arms crossed', 'Show the person in <Picture 1> standing with the arms firmly crossed over the chest and a confident look, in a modern office.'),
+    _edit('running', 'poses', 'Running', 'Show the person in <Picture 1> running fast through a park, body leaning forward, one knee high, hair and clothes moving.', '4:3'),
+    _edit('leaning', 'poses', 'Leaning', 'Show the person in <Picture 1> leaning one shoulder against a red brick wall, ankles crossed, hands in pockets.'),
+    _edit('waving', 'poses', 'Waving', 'Show the person in <Picture 1> waving at the camera with the right hand raised high above the shoulder, smiling, outdoors.'),
     # Places and light
-    _slot('cafe', 'places & light', 'Café, warm light', f'A photograph of {_C} sitting at a table in a cosy café, warm evening light.', '4:3'),
-    _slot('golden_hour', 'places & light', 'Golden hour', f'A photograph of {_C} on a beach at golden hour, warm low sunlight from the side.', '4:3'),
-    _slot('night_neon', 'places & light', 'Night, neon', f'A photograph of {_C} on a city street at night lit by colourful neon signs.', '3:4'),
-    _slot('overcast', 'places & light', 'Overcast forest', f'A photograph of {_C} on a forest path on an overcast day, soft diffuse light.', '3:4'),
-    _slot('new_outfit', 'places & light', 'Different outfit', f'A full-body photograph of {_C} wearing a completely different casual outfit, in a living room.', '3:4', clothes=False),
+    _edit('cafe', 'places & light', 'Café, warm light', 'Place the person from <Picture 1> at a table in a cosy café holding a cup, warm evening light, medium shot.', '4:3'),
+    _edit('golden_hour', 'places & light', 'Golden hour', 'Place the person from <Picture 1> on a beach at golden hour, warm low sunlight from the side, long shadows, medium shot.', '4:3'),
+    _edit('night_neon', 'places & light', 'Night, neon', 'Place the person from <Picture 1> on a city street at night lit by pink and blue neon signs, reflections on wet pavement.'),
+    _edit('overcast', 'places & light', 'Overcast forest', 'Place the person from <Picture 1> on a forest path on an overcast day, soft diffuse light, trees behind.'),
+    _edit('new_outfit', 'places & light', 'Different outfit', 'Dress the person from <Picture 1> in a completely different outfit (a knitted sweater and dark trousers) and show them full body in a living room.', '3:4', clothes=False),
 ]
 
 OBJECT = [
@@ -145,10 +168,13 @@ def size(aspect):
 def slot_prompt(kind, slot, description='', keep_clothes=True):
     """The full edit prompt of a slot: the change it asks for plus the words that hold the subject still."""
     text = slot['prompt']
+    if kind == 'object' and slot['id'] != 'front':
+        text = 'Make a new photograph of the object in <Picture 1>. ' + text + (
+            ' Do not copy the camera angle, background or lighting of <Picture 1>; only the object stays the same.')
     keep = KEEP[kind]
     if kind == 'character' and slot.get('keep_clothes', True) and keep_clothes:
         keep += _KEEP_CLOTHES
-    if description and kind != 'style':
+    if description and kind != 'style' and (kind != 'character' or slot.get('keep_clothes', True)):
         keep += ' The subject: %s.' % description.strip().rstrip('.')[:400]
     return '%s %s' % (text, keep)
 

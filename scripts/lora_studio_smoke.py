@@ -93,7 +93,14 @@ def main():
     parser.add_argument('--url', default='http://127.0.0.1:8188')
     parser.add_argument('--slots', type=int, default=2)
     parser.add_argument('--keep', action='store_true')
+    parser.add_argument('--only', default='', help='comma-separated slot ids to make instead of the first --slots')
     args = parser.parse_args()
+    # A Windows console is cp1252 by default; the side and back prompts are Chinese.
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding='utf-8', errors='replace')
+        except (AttributeError, ValueError):
+            pass
     client = Client(args.url)
 
     t = step('LoRA Studio info')
@@ -121,9 +128,10 @@ def main():
         client.studio('update', dict(dataset=ds, reference=reference['id']))
         done(t, reference['input'])
 
-        for slot in SLOTS[:args.slots]:
+        for slot in ([s.strip() for s in args.only.split(',') if s.strip()] or SLOTS[:args.slots]):
             t = step('Slot %s' % slot)
             plan = client.studio('slot-prompt', dict(dataset=ds, slot=slot))
+            print('   prompt: ' + plan['prompt'][:300], flush=True)
             staged = client.studio('stage', dict(dataset=ds, item=reference['id']))['file']
             file = make_picture(client, model, plan, [staged])
             result = client.studio('adopt', dict(dataset=ds, file=file, slot=slot, prompt=plan['prompt'], model=model))
