@@ -540,7 +540,7 @@ async function renderTrain() {
     try {
         const plan = await studio('train-plan', {dataset: ds.id});
         planBox.replaceChildren(
-            el('div', {text: `${plan.pictures} pictures${plan.reg ? ` + ${plan.reg} regularisation` : ''}. Estimated ${plan.estimate_hours} hours${plan.vram_gb ? ` on this ${Math.round(plan.vram_gb)} GB card` : ''}${plan.offload ? `, with ${Math.round(plan.offload * 100)}% of the model waiting in system memory` : ''} (first run also downloads about 40 GB of H3 files).`}),
+            el('div', {text: `${plan.pictures} pictures${plan.reg ? ` + ${plan.reg} regularisation` : ''}. Estimated ${plan.estimate_hours < 1.5 ? `${Math.round(plan.estimate_hours * 60)} minutes` : `${plan.estimate_hours} hours`}${plan.vram_gb ? ` on this ${Math.round(plan.vram_gb)} GB card` : ''}${plan.offload ? `, with ${Math.round(plan.offload * 100)}% of the model waiting in system memory` : ''} (first run also downloads about 40 GB of H3 files).`}),
             plan.warnings.length ? el('ul', {class: 'warns'}, plan.warnings.map(w => el('li', {text: w}))) : null,
             el('div', {class: 'row'},
                 el('button', {class: 'btn primary', text: 'Start training', disabled: !plan.trainer.ready || plan.training.phase === 'running', onclick: async event => {

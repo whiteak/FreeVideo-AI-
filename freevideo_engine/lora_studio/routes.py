@@ -246,16 +246,16 @@ class Context:
             pass
         steps = int(settings.get('steps', 1500))
         # The published 12 GB run took ~6.5 h for 1000 steps at 512 px; a 16 GB card swaps less.
-        hours = steps / 1000 * (4.0 if int(settings.get('resolution', 512)) <= 512 else 7.0)
+        # Measured on Jason's RTX 5080 (16 GB, offload 0.8): 1.41 s a step at 512 px, about 10 minutes of loading and
+        # caching before the first step. Steps scale with the pixels.
+        hours = (600 + steps * 1.45 * (int(settings.get('resolution', 512)) / 512) ** 2) / 3600
         destination = self.output_root() / ('%s-ai-toolkit' % export.safe_name(dataset['name']))
         config = training.ai_toolkit_config(
             dataset, str(destination / 'images'), str(destination / 'reg') if settings.get('use_regularisation') and reg else '',
             settings, output_dir=str(destination / 'output'), models_dir=trainer['models_dir'], vram_gb=self.vram_gb())
         vram = self.vram_gb()
         offload = training.offload_share(vram, settings.get('offload'))
-        if offload:
-            hours *= 1 + offload / 2  # layers streamed from system memory each step
-        return dict(trainer=trainer, warnings=warnings, pictures=len(kept), offload=offload, vram_gb=round(vram or 0, 1), reg=len(reg), estimate_hours=round(hours, 1),
+        return dict(trainer=trainer, warnings=warnings, pictures=len(kept), offload=offload, vram_gb=round(vram or 0, 1), reg=len(reg), estimate_hours=round(hours, 2),
                     config=config, gpu_busy=self.gpu_busy(), training=self.runner.status())
 
     def train_start(self, body):
