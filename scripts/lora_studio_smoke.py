@@ -1,6 +1,7 @@
 """LoRA Studio check against a running FreeVideo (fork addition). Uses the real picture and prompt models.
 
     envs\\unified\\python.exe scripts\\lora_studio_smoke.py [--url http://127.0.0.1:8188] [--keep] [--slots 2]
+    envs\\unified\\python.exe scripts\\lora_studio_smoke.py --slots all --name Ava --train   (a whole set, then training)
 
 Creates a character set from a description, makes the reference with H3 Image, fills a few coverage slots as edits of
 it, captions every picture and runs the likeness check with the prompt model, then exports the ai-toolkit layout.
@@ -99,12 +100,17 @@ def ask(client, questions, **options):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--url', default='http://127.0.0.1:8188')
-    parser.add_argument('--slots', type=int, default=2)
+    parser.add_argument('--slots', default='2', help='how many coverage slots to fill, or "all"')
+    parser.add_argument('--name', default='Smoke test')
+    parser.add_argument('--train', action='store_true',
+                        help='after the checks, leave out drifted pictures and start training (keeps the set)')
     parser.add_argument('--keep', action='store_true')
     parser.add_argument('--impostor', action='store_true',
                         help='also make a different person in the same clothes and check the likeness check flags them')
     parser.add_argument('--only', default='', help='comma-separated slot ids to make instead of the first --slots')
     args = parser.parse_args()
+    if args.train:
+        args.keep = True
     # A Windows console is cp1252 by default; the side and back prompts are Chinese.
     for stream in (sys.stdout, sys.stderr):
         try:
@@ -116,6 +122,8 @@ def main():
     t = step('LoRA Studio info')
     info = client.call('GET', '/freevideo/lora-studio/api/info')
     done(t, 'trainer ready=%s h3=%s' % (info['trainer']['ready'], info['trainer']['h3']))
+    if args.train and not info['trainer']['ready']:
+        sys.exit('--train needs the trainer: run scripts\\install-lora-trainer.ps1 first. %s' % json.dumps(info['trainer']))
     t = step('Picture models')
     models = {row['id']: row.get('ready') for row in client.call('GET', '/freevideo/image-gen').get('models', [])}
     model = 'minimax-h3-image' if models.get('minimax-h3-image') else 'qwen-image-2.1-turbo' if models.get('qwen-image-2.1-turbo') else None
@@ -124,7 +132,7 @@ def main():
         sys.exit('No picture model that edits from a reference is ready.')
 
     t = step('Create a character set')
-    dataset = client.studio('create', dict(name='Smoke test', kind='character', class_word='woman',
+    dataset = client.studio('create', dict(name=args.name, kind='character', class_word='woman',
                                            description='a woman in her thirties with short curly red hair and freckles, '
                                                        'green parka, blue jeans, white trainers'))
     ds = dataset['id']
@@ -138,20 +146,32 @@ def main():
         client.studio('update', dict(dataset=ds, reference=reference['id']))
         done(t, reference['input'])
 
-        for slot in ([s.strip() for s in args.only.split(',') if s.strip()] or SLOTS[:args.slots]):
+        if args.slots == 'all':
+            every = [row['id'] for row in info['plans']['character']]
+        else:
+            every = SLOTS[:int(args.slots)]
+        for slot in ([s.strip() for s in args.only.split(',') if s.strip()] or every):
             t = step('Slot %s' % slot)
             plan = client.studio('slot-prompt', dict(dataset=ds, slot=slot))
             print('   prompt: ' + plan['prompt'][:300], flush=True)
             staged = client.studio('stage', dict(dataset=ds, item=reference['id']))['file']
-            file = make_picture(client, model, plan, [staged])
+            try:
+                file = make_picture(client, model, plan, [staged])
+            except RuntimeError as error:
+                if not args.train:
+                    raise
+                print('   skipped: %s' % error, flush=True)  # one failed picture shouldn't stop a long unattended run
+                continue
             result = client.studio('adopt', dict(dataset=ds, file=file, slot=slot, prompt=plan['prompt'], model=model))
             done(t, result['item']['input'])
 
         items = [row for row in client.studio('get', dict(dataset=ds))['items'] if not row['excluded']]
         questions = client.studio('questions', dict(dataset=ds))
         t = step('Captions for %d pictures' % len(items))
-        answers = ask(client, [dict(text=questions['caption'], images=[dict(file=row['input'])]) for row in items[:8]],
-                      system=questions['caption_system'], max_tokens=160)
+        answers = []
+        for start in range(0, len(items), 8):  # the prompt model takes 8 questions at a time
+            answers += ask(client, [dict(text=questions['caption'], images=[dict(file=row['input'])])
+                                    for row in items[start:start + 8]], system=questions['caption_system'], max_tokens=160)
         for row, answer in zip(items, answers):
             client.studio('caption', dict(dataset=ds, item=row['id'], text=answer.get('text', '')))
             print('   %s: %s' % (row.get('slot') or 'reference', answer.get('text', answer)))
@@ -160,13 +180,19 @@ def main():
         others = [row for row in items if row['id'] != reference['id']]
         if others:
             t = step('Likeness check for %d pictures' % len(others))
-            answers = ask(client, [dict(text=questions['drift'], images=[dict(file=reference['input'], label='reference'),
-                                                                        dict(file=row['input'], label='candidate')])
-                                   for row in others[:8]], system=questions['drift_system'], format='json', max_tokens=200)
+            answers = []
+            for start in range(0, len(others), 8):
+                answers += ask(client, [dict(text=questions['drift'], images=[dict(file=reference['input'], label='reference'),
+                                                                             dict(file=row['input'], label='candidate')])
+                                        for row in others[start:start + 8]], system=questions['drift_system'],
+                               format='json', max_tokens=200)
             for row, answer in zip(others, answers):
                 saved = client.studio('drift', dict(dataset=ds, item=row['id'], answer=answer))
                 drift = next(r for r in saved['items'] if r['id'] == row['id'])['drift']
                 print('   %s: %s' % (row['slot'], drift))
+                if args.train and drift.get('score') is not None and drift['score'] < info['drift_limit']:
+                    client.studio('item-update', dict(dataset=ds, item=row['id'], excluded=True))
+                    print('      left out of training (likeness below %s)' % info['drift_limit'])
             done(t)
 
         if args.impostor:
@@ -183,7 +209,12 @@ def main():
         done(t, exported['path'])
         t = step('Training plan')
         plan = client.studio('train-plan', dict(dataset=ds))
-        done(t, 'warnings: %s' % plan['warnings'])
+        done(t, '%d pictures, about %s h, warnings: %s' % (plan['pictures'], plan['estimate_hours'], plan['warnings']))
+        if args.train:
+            t = step('Start training')
+            started = client.studio('train-start', dict(dataset=ds))
+            done(t, json.dumps(started)[:400])
+            print('Training runs inside FreeVideo; watch it in LoRA Studio > Train. Set %s.' % ds)
         print('\nALL STEPS PASSED')
     finally:
         if not args.keep:
