@@ -13,6 +13,7 @@ The other folder can be the install folder, its models folder or its models\\vdn
 import argparse
 import os
 from pathlib import Path
+import shutil
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -119,6 +120,22 @@ def main(argv=None):
                 print(f'  linked {gb(row["bytes"]):>8}  prompt-vlm/{row["file"]}')
             linked += 1
             saved += row['bytes']
+        # The app trusts the folder only with its receipt (verified.json: revision and each file's modified time).
+        # Hardlinks share the files' times, so the other install's receipt holds here too, once every file is the
+        # very same file; anything else is left for the app to check and download.
+        receipt = theirs_dir / 'verified.json'
+        try:
+            same = all(os.path.samefile(mine_dir / row['file'], theirs_dir / row['file']) for row in spec['files'])
+        except OSError:
+            same = False
+        if not args.dry_run and same and receipt.is_file() and not (mine_dir / 'verified.json').exists():
+            try:
+                import json
+                if json.loads(receipt.read_text(encoding='utf-8')).get('revision') == spec['revision']:
+                    shutil.copy2(receipt, mine_dir / 'verified.json')
+                    print('  copied the prompt model\'s receipt (verified.json): it is ready without checking again')
+            except (OSError, ValueError) as error:
+                print(f'  could not copy the prompt model\'s receipt: {error}')
 
     verb = 'Would link' if args.dry_run else 'Linked'
     print(f'\n{verb} {linked} files ({gb(saved)}). Already here: {present}. Not in the other install: {missing}.'
