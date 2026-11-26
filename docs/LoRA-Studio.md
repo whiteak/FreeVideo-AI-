@@ -26,7 +26,7 @@ load it by writing `@Name` in a prompt. Open it from the **LoRA** entry in FreeV
    pruned int8 ConvRot H3 transformer, nvfp4 text encoder, `low_vram`, ostris's H3 training adapter (keeps the
    distilled model intact), single-frame image training at 512 px, rank 16, 1500 steps by default. The 21 GB
    transformer doesn't fit a 16 GB card, so part of it waits in system memory and is streamed in layer by layer
-   (*Offload to RAM*, worked out from the card's size; about half on 16 GB). A published run on a 12 GB card took about 6-7 hours for 1000 steps; a 16 GB
+   (*Offload to RAM*, worked out from the card's size; about 80% on 16 GB, since the 5 GB video VAE also sits on the card). A published run on a 12 GB card took about 6-7 hours for 1000 steps; a 16 GB
    card should be faster. The first run downloads about 40 GB of H3 files from
    [Comfy-Org/MiniMax-H3](https://huggingface.co/Comfy-Org/MiniMax-H3) (accept the licence there first).
    Progress, loss and the trainer log show on the page; each saved checkpoint can be used instead of the final one.
