@@ -148,6 +148,18 @@ class StoreTests(unittest.TestCase):
         image, notes = images.prepare(picture(seed), dataset['kind'])
         return self.store.add_image(dataset['id'], image, notes=notes, **kwargs)
 
+    def test_own_pictures_only(self):
+        dataset = self.store.create(dict(name='Pack', kind='character', trigger='pckv', class_word='woman'))
+        for seed in range(3):
+            self.add(dataset, 100 + seed, source='generated', dedupe=False)
+        for seed in range(7):
+            self.add(dataset, seed, dedupe=False)
+        self.assertEqual(len(self.store.training_items(dataset['id'])[1]), 10)  # 7 own: generated ones still train
+        self.add(dataset, 50, dedupe=False)
+        self.assertEqual(len(self.store.training_items(dataset['id'])[1]), 8)  # 8 own: the pack is the training data
+        self.store.update(dataset['id'], dict(settings=dict(pictures='all')))
+        self.assertEqual(len(self.store.training_items(dataset['id'])[1]), 11)
+
     def test_runs_keep_their_own_folder_and_version(self):
         dataset = self.store.create(dict(name='Scarlett', kind='character', trigger='scrlttv', class_word='woman'))
         names = []

@@ -259,7 +259,9 @@ class Context:
         dataset = self.store.get(body.get('dataset'))
         settings = dataset.get('settings') or {}
         trainer = self.trainer()
-        _, kept, reg = self.store.training_items(dataset['id'])
+        value, kept, reg = self.store.training_items(dataset['id'])
+        own_only = store_module.own_pictures_only(value)
+        generated_left_out = sum(1 for r in dataset['items'] if own_only and r.get('source') == 'generated' and not r.get('excluded'))
         warnings = []
         if len(kept) < 10:
             warnings.append('Only %d pictures: 15 to 40 varied pictures train a far better LoRA.' % len(kept))
@@ -289,7 +291,8 @@ class Context:
             settings, output_dir=str(destination / 'output'), models_dir=trainer['models_dir'], vram_gb=self.vram_gb())
         vram = self.vram_gb()
         offload = training.offload_share(vram, settings.get('offload'), settings.get('resolution', 512))
-        return dict(trainer=trainer, warnings=warnings, pictures=len(kept), offload=offload, vram_gb=round(vram or 0, 1), reg=len(reg), estimate_hours=round(hours, 2),
+        return dict(trainer=trainer, warnings=warnings, pictures=len(kept), own_only=own_only,
+                    own=store_module.own_count(value), generated_left_out=generated_left_out, offload=offload, vram_gb=round(vram or 0, 1), reg=len(reg), estimate_hours=round(hours, 2),
                     config=config, gpu_busy=self.gpu_busy(), training=self.runner.status())
 
     def train_start(self, body):
