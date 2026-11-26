@@ -57,9 +57,9 @@ import { canvasDimensions, imageSizeSelection } from './studio_size.js';
 import { createCapabilityView, capabilityContext, setupNote } from './capability_view.js';
 import { createOtherUsageNotice } from './other_usage.js';
 import { openEditorView } from './editor_loader.js';
-import { frameShapes, frameSize } from './frame_sizes.js';
+import { allFrameShapes, frameSize } from './frame_sizes.js';
 // The creation panel's frames: the shared three, then the other common ratios (named by their ratio).
-const studioShapes = t => [...frameShapes(t), ...[[4, 3], [3, 4], [3, 2], [2, 3], [21, 9]].map(([a, b]) => [`${a}:${b}`, `${a}:${b}`, a / b])];
+const studioShapes = allFrameShapes;
 import { createFirstRunGuide, createFirstStart } from './first_run_guide.js';
 import { SHOWCASE_SCENE } from './entry_showcase.js';
 import { registerTourWorkspace, triggerFeatureTour, offerVersionTour } from './feature_tour.js';
