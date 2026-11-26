@@ -90,6 +90,9 @@ def fix_framing(caption, crop):
     lead = CROP_FRAMING.get(crop)
     if not lead or not caption:
         return caption
+    for known in CROP_FRAMING.values():  # already fixed once: fixing again changes nothing
+        if caption.lower().startswith(known.lower()):
+            caption = caption[len(known):].lstrip(' ,')
     phrases = []
     for phrase in caption.split(','):
         phrase = ' '.join(_SHOT.sub(' ', phrase).split())
