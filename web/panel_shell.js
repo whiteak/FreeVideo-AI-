@@ -1,3 +1,4 @@
+import {listenDialogKey} from './dialog_keys.js';
 // The three-column shell shared by the picture view and the creation panel: a left panel (settings), the stage in the
 // middle, a right panel (works). Both panels fold to a rail; under 1280 wide they rest as rails and open as drawers over
 // the stage, one at a time; on a tall window (portrait, wider than a phone) the settings open as a drawer over the works
@@ -68,7 +69,12 @@ function resizeHandles({body, panels, save, paint}) {
         handle.title = 'Drag to resize; double-click to reset';
         const set = (width, keep = true) => {
             if (width === null) delete panels[side + 'Width']; else panels[side + 'Width'] = clamp(width);
-            apply(side); if (keep) save(); paint();
+            apply(side); if (keep) save(); paint(); describe();
+        };
+        const describe = () => {
+            handle.setAttribute('aria-valuemin', String(MIN_WIDTH));
+            handle.setAttribute('aria-valuemax', String(Math.round(Math.min(MAX_WIDTH, body.getBoundingClientRect().width * .4))));
+            handle.setAttribute('aria-valuenow', String(Math.round(Number.isFinite(panels[side + 'Width']) ? panels[side + 'Width'] : current())));
         };
         // The column's width as drawn: the handle sits centred on its inner edge.
         const current = () => {
@@ -90,14 +96,16 @@ function resizeHandles({body, panels, save, paint}) {
             handle.addEventListener('pointerup', end, {once: true}); handle.addEventListener('pointercancel', end, {once: true});
         });
         handle.addEventListener('dblclick', () => set(null));
-        handle.addEventListener('keydown', event => {
+        // Inside the Create dialog, keys are routed only to handlers registered through listenDialogKey.
+        listenDialogKey(handle, 'keydown', event => {
             const step = event.shiftKey ? 64 : 16, grow = side === 'left' ? 'ArrowRight' : 'ArrowLeft', shrink = side === 'left' ? 'ArrowLeft' : 'ArrowRight';
             if (event.key === grow) set(current() + step);
             else if (event.key === shrink) set(current() - step);
             else if (event.key === 'Home') set(null);
             else return;
-            event.preventDefault();
+            event.preventDefault(); event.stopPropagation();   // don't also step Create's history
         });
         body.append(handle);
+        handle.addEventListener('focus', describe);
     }
 }
