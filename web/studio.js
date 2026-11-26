@@ -3312,6 +3312,10 @@ export function openStudio(node, {extendFrom = null} = {}) {
         const shell = el('div', null, 'fv-studio fv-create fv-borrowed'), shellBody = el('div', null, 'fv-body');
         shell.append(shellBody); shellBody.append(controls); mount.append(shell); outer.append(popHolder);
         const lockedNow = []; let secondsLocked = false;
+        // The size handlers also write the shape and pixel tier to node.properties, outside the shadow copy.
+        const ownShape = {freevideo_aspect: node.properties?.freevideo_aspect, freevideo_pixels: node.properties?.freevideo_pixels};
+        // And the panel's own shape state: a fresh project has no saved aspect, and the panel infers 16:9 from the size.
+        const ownState = {selected, ratio, pixels};
         const lock = (element, name) => {
             if (!element) return;
             for (const control of [element, ...element.querySelectorAll('button, input, select')]) {
@@ -3332,6 +3336,8 @@ export function openStudio(node, {extendFrom = null} = {}) {
                 borrowed = null; shadow = null;
                 placeReverse();
                 unlock(); updateFirstFrame();
+                if (node.properties) for (const [key, kept] of Object.entries(ownShape)) { if (kept === undefined) delete node.properties[key]; else node.properties[key] = kept; }
+                if (!disposing) showOwnSize(ownState);
                 shell.remove();
                 if (!disposing) {
                     if (home.next?.parentNode === home.parent) home.parent.insertBefore(controls, home.next); else home.parent.append(controls);
@@ -3378,6 +3384,19 @@ export function openStudio(node, {extendFrom = null} = {}) {
     }});
     rangeMount.append(capabilityView.element); cleanup.push(capabilityView.dispose);
     controls.addEventListener('change', () => capabilityView.update());
+    // Edit prefills size and length into the shadow copy only; when it gives the bar back, the inputs still show its
+    // values. Show Create's own again, so switching Create > Edit > Create doesn't carry Edit's 15 s or 1472x832 over.
+    function showOwnSize(own) {
+        seconds.value = savedSeconds(node, value(node, 'seconds'));
+        if (!extension.source) {
+            ({selected, ratio, pixels} = own);
+            if (![...mp.options].some(option => Number(option.value) === pixels)) {
+                const option = el('option', `${pixels.toFixed(2)} MP`); option.value = pixels; mp.append(option);
+            }
+            mp.value = String(pixels);
+        }
+        syncCanvasSize(); stepper?.sync?.(); seconds.dispatchEvent(new Event('input'));
+    }
     function syncExtension() {
         releaseExtendThumbnail(); extendMount.replaceChildren();
         const source = extension.source;
