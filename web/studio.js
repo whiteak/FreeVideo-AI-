@@ -57,9 +57,9 @@ import { canvasDimensions, imageSizeSelection } from './studio_size.js';
 import { createCapabilityView, capabilityContext, setupNote } from './capability_view.js';
 import { createOtherUsageNotice } from './other_usage.js';
 import { openEditorView } from './editor_loader.js';
-import { frameShapes, frameSize } from './frame_sizes.js';
+import { allFrameShapes, frameSize } from './frame_sizes.js';
 // The creation panel's frames: the shared three, then the other common ratios (named by their ratio).
-const studioShapes = t => [...frameShapes(t), ...[[4, 3], [3, 4], [3, 2], [2, 3], [21, 9]].map(([a, b]) => [`${a}:${b}`, `${a}:${b}`, a / b])];
+const studioShapes = allFrameShapes;
 import { createFirstRunGuide, createFirstStart } from './first_run_guide.js';
 import { SHOWCASE_SCENE } from './entry_showcase.js';
 import { registerTourWorkspace, triggerFeatureTour, offerVersionTour } from './feature_tour.js';
@@ -802,7 +802,7 @@ export function openStudio(node, {extendFrom = null} = {}) {
         const foldLeft = fold('left'); body.foldLeft = foldLeft; body.settingsRail = settingsRail; works.append(worksRail);
         body.dataset.cols = '3';
         controls.classList.add('fv-glass', 'fv-g2'); works.classList.add('fv-glass', 'fv-g2');
-        panelShell.api = createPanelShell({body, left: controls, right: works, stage: output, panels, save: () => writeLocal('freevideo.studio.panels', panels)});
+        panelShell.api = createPanelShell({body, left: controls, right: works, stage: output, panels, save: () => writeLocal('freevideo.studio.panels', panels), resizable: true});
         panelShell.api.paint();
         body.studioPanels = panelShell.api;
     }
@@ -3257,7 +3257,7 @@ export function openStudio(node, {extendFrom = null} = {}) {
     // Left and right step through the history when no field, slider or video has the keys.
     const historyKeys = e => {
         if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey || !['ArrowLeft', 'ArrowRight'].includes(e.key)) return;
-        if (e.target?.closest?.('input,textarea,select,video,[contenteditable],[role=slider],[role=radiogroup],.fvs-tray,.fvs-library,.fvs-compare')) return;
+        if (e.target?.closest?.('input,textarea,select,video,[contenteditable],[role=slider],[role=separator],[role=radiogroup],.fvs-tray,.fvs-library,.fvs-compare')) return;
         e.preventDefault(); stepHistory(e.key === 'ArrowLeft' ? -1 : 1);
     };
     cleanup.push(listenDialogKey(dialog, 'keydown', historyKeys));

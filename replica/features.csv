@@ -56,3 +56,10 @@ Model download mirrors (HF / hf-mirror / ModelScope),Launcher,should,yes,no,
 MiniMax H3 / VDN-H3 model weights,Engine,must,yes,skip,Third-party weights under MiniMax H3 Community License; download only; cannot relicense
 Community: Discord / QQ / WeChat / gallery site,Community,could,yes,skip,Their network and users
 Code-signing certificate for Windows exe,Launcher,should,yes,skip,Owned by upstream; you need your own
+Update from upstream on demand (script),Fork,should,no,no,X1 - fixes.md
+No-subtitles / no-music / no-narration switches,Create,should,no,no,X2 - experiment; ~21 issues
+Sticky LoRAs / references / seed across runs,Create,should,no,no,X3 - ~9 issues
+Memory setting: free VRAM or keep models loaded,Engine,should,no,no,X4 - ~59 issues
+More aspect ratios (4:3 3:4 3:2 2:3 21:9),Create,could,no,no,X5 - thin evidence
+Creation details on cards + copy path + images to output,Library,could,no,no,X6 - ~60 issues
+Wide Create layout + Creations always visible,Create,could,no,no,X7 - ~16 issues
