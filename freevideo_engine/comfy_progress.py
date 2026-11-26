@@ -556,7 +556,8 @@ def register():
             from .output_settings import available, read
             value = dict(read(installation_root()), available=await asyncio.to_thread(available))
         except Exception:
-            value = dict(ten_bit=False, image_copy=True, available=False)
+            value = dict(ten_bit=False, image_copy=True, avoid_subtitles=False, avoid_music=False, avoid_narration=False,
+                         available=False)
         return web.json_response(value, headers={'Cache-Control': 'no-store'})
 
     @server.routes.post('/freevideo/node-view-opened')
