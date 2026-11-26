@@ -802,7 +802,7 @@ export function openStudio(node, {extendFrom = null} = {}) {
         const foldLeft = fold('left'); body.foldLeft = foldLeft; body.settingsRail = settingsRail; works.append(worksRail);
         body.dataset.cols = '3';
         controls.classList.add('fv-glass', 'fv-g2'); works.classList.add('fv-glass', 'fv-g2');
-        panelShell.api = createPanelShell({body, left: controls, right: works, stage: output, panels, save: () => writeLocal('freevideo.studio.panels', panels)});
+        panelShell.api = createPanelShell({body, left: controls, right: works, stage: output, panels, save: () => writeLocal('freevideo.studio.panels', panels), resizable: true});
         panelShell.api.paint();
         body.studioPanels = panelShell.api;
     }
@@ -3257,7 +3257,7 @@ export function openStudio(node, {extendFrom = null} = {}) {
     // Left and right step through the history when no field, slider or video has the keys.
     const historyKeys = e => {
         if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey || !['ArrowLeft', 'ArrowRight'].includes(e.key)) return;
-        if (e.target?.closest?.('input,textarea,select,video,[contenteditable],[role=slider],[role=radiogroup],.fvs-tray,.fvs-library,.fvs-compare')) return;
+        if (e.target?.closest?.('input,textarea,select,video,[contenteditable],[role=slider],[role=separator],[role=radiogroup],.fvs-tray,.fvs-library,.fvs-compare')) return;
         e.preventDefault(); stepHistory(e.key === 'ArrowLeft' ? -1 : 1);
     };
     cleanup.push(listenDialogKey(dialog, 'keydown', historyKeys));
