@@ -25,8 +25,8 @@ H3_REPO = 'Comfy-Org/MiniMax-H3'
 PROGRESS = re.compile(r'(\d+)/(\d+)\s*\[')
 LOSS = re.compile(r'loss[:=]\s*([0-9.]+(?:e[-+]?\d+)?)', re.IGNORECASE)
 ERROR_HINTS = (
-    ('CUDA out of memory', 'oom', 'The graphics card ran out of memory. Close other GPU programs, lower the resolution to 512 or the rank to 8, and try again.'),
-    ('OutOfMemoryError', 'oom', 'The graphics card ran out of memory. Close other GPU programs, lower the resolution to 512 or the rank to 8, and try again.'),
+    ('CUDA out of memory', 'oom', 'The graphics card ran out of memory. Close other GPU programs and try again; if it happens again, raise "Offload to RAM" under Train settings (more of the model waits in system memory, slower but smaller), or lower the resolution or rank.'),
+    ('OutOfMemoryError', 'oom', 'The graphics card ran out of memory. Close other GPU programs and try again; if it happens again, raise "Offload to RAM" under Train settings (more of the model waits in system memory, slower but smaller), or lower the resolution or rank.'),
     ('No module named', 'missing_module', 'The trainer\'s Python is missing a package. Run the trainer installer again (scripts\\install-lora-trainer.ps1).'),
     ('401 Client Error', 'hf_auth', 'Hugging Face refused the model download. Accept the MiniMax H3 licence on huggingface.co and log in with "hf auth login" from the trainer\'s venv\\Scripts folder.'),
     ('gated', 'hf_auth', 'Hugging Face refused the model download. Accept the MiniMax H3 licence on huggingface.co and log in with "hf auth login" from the trainer\'s venv\\Scripts folder.'),
@@ -46,8 +46,33 @@ def run_name(dataset):
     return '%s_%s' % (name, dataset.get('trigger', 'x').replace(' ', '_'))
 
 
-def ai_toolkit_config(dataset, images_dir, reg_dir, settings, *, output_dir, models_dir=''):
+# ostris's de-distillation adapter for H3 (ai-toolkit's default for this model): H3 is guidance-distilled, and a LoRA
+# trained without it pulls the model off its distilled behaviour.
+H3_TRAINING_ADAPTER = 'ostris/minimax_h3_training_adapter/minimax_h3_training_adapter_v3.safetensors'
+H3_TRANSFORMER_GB = 21.  # the pre-quantized int8 ConvRot DiT
+H3_WORKING_GB = 5.  # LoRA, optimiser, activations at 512 px and CUDA's own room, measured loosely
+
+
+def offload_share(vram_gb, setting=None):
+    """Share of the H3 transformer's layers kept in system memory and brought to the card one at a time. ai-toolkit's
+    low_vram alone moves the whole 21 GB DiT onto the card at the first step (out of memory on a 16 GB RTX 5080)."""
+    if setting is not None and setting != 'auto':
+        return max(0., min(1., float(setting)))
+    if not vram_gb:
+        return .5
+    room = vram_gb - H3_WORKING_GB
+    if room >= H3_TRANSFORMER_GB:
+        return 0.
+    return min(1., round((1 - room / H3_TRANSFORMER_GB) + .05, 2))
+
+
+def ai_toolkit_config(dataset, images_dir, reg_dir, settings, *, output_dir, models_dir='', vram_gb=None):
     s = settings
+    offload = offload_share(vram_gb, s.get('offload'))
+    offload_lines = ('' if not offload else
+                     '        layer_offloading: true\n'
+                     '        layer_offloading_transformer_percent: %s\n'
+                     '        layer_offloading_text_encoder_percent: 1.0\n' % offload)
     name = run_name(dataset)
     resolution = int(s.get('resolution', 512))
     resolutions = sorted({resolution, *([768] if resolution > 768 else [])})
@@ -76,6 +101,8 @@ config:
         type: "lora"
         linear: {int(s.get('rank', 16))}
         linear_alpha: {int(s.get('alpha', 16))}
+        network_kwargs:
+          ignore_if_contains: ["adaln_proj"]
       save:
         dtype: float16
         save_every: {int(s.get('save_every', 250))}
@@ -95,6 +122,7 @@ config:
         train_text_encoder: false
         gradient_checkpointing: true
         noise_scheduler: "flowmatch"
+        timestep_type: "shift"
         optimizer: "adamw8bit"
         lr: {float(s.get('learning_rate', 1e-4))}
         optimizer_params:
@@ -111,6 +139,7 @@ config:
         quantize_te: true
         qtype_te: "nvfp4"
         low_vram: true
+{offload_lines}        assistant_lora_path: {_q(H3_TRAINING_ADAPTER)}
         model_kwargs:
           partition: "fl2va_pruned"
       sample:

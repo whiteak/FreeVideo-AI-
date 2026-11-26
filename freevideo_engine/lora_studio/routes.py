@@ -74,6 +74,15 @@ class Context:
         return ''
 
     # GPU --------------------------------------------------------------------------------------------------
+    @staticmethod
+    def vram_gb():
+        """The card's size, for how much of H3 the trainer keeps in system memory."""
+        try:
+            import torch
+            return torch.cuda.get_device_properties(0).total_memory / 1024 ** 3 if torch.cuda.is_available() else None
+        except Exception:
+            return None
+
     def gpu_busy(self):
         try:
             running, pending = self.server.prompt_queue.get_current_queue()
@@ -241,8 +250,12 @@ class Context:
         destination = self.output_root() / ('%s-ai-toolkit' % export.safe_name(dataset['name']))
         config = training.ai_toolkit_config(
             dataset, str(destination / 'images'), str(destination / 'reg') if settings.get('use_regularisation') and reg else '',
-            settings, output_dir=str(destination / 'output'), models_dir=trainer['models_dir'])
-        return dict(trainer=trainer, warnings=warnings, pictures=len(kept), reg=len(reg), estimate_hours=round(hours, 1),
+            settings, output_dir=str(destination / 'output'), models_dir=trainer['models_dir'], vram_gb=self.vram_gb())
+        vram = self.vram_gb()
+        offload = training.offload_share(vram, settings.get('offload'))
+        if offload:
+            hours *= 1 + offload / 2  # layers streamed from system memory each step
+        return dict(trainer=trainer, warnings=warnings, pictures=len(kept), offload=offload, vram_gb=round(vram or 0, 1), reg=len(reg), estimate_hours=round(hours, 1),
                     config=config, gpu_busy=self.gpu_busy(), training=self.runner.status())
 
     def train_start(self, body):
@@ -264,7 +277,7 @@ class Context:
         use_reg = (destination / 'reg').is_dir()
         config.write_text(training.ai_toolkit_config(
             dataset, str(destination / 'images'), str(destination / 'reg') if use_reg else '', settings,
-            output_dir=str(output), models_dir=trainer['models_dir']), encoding='utf-8')
+            output_dir=str(output), models_dir=trainer['models_dir'], vram_gb=self.vram_gb()), encoding='utf-8')
         env = dict(os.environ, PYTHONUNBUFFERED='1', PYTHONIOENCODING='utf-8')
         for key in list(env):
             # The trainer has its own Python: ComfyUI's paths must not leak into it.

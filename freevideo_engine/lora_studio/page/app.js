@@ -506,10 +506,11 @@ async function renderTrain() {
         field('steps', 'Steps', {min: 100, max: 20000, step: 50}), field('rank', 'Rank (size)', {min: 4, max: 128, step: 4}),
         field('alpha', 'Alpha', {min: 1, max: 128}), field('learning_rate', 'Learning rate', {min: 0.000001, max: 0.01}),
         field('resolution', 'Resolution', {min: 256, max: 1536, step: 64}), field('save_every', 'Save every (steps)', {min: 25, max: 5000, step: 25}),
-        field('repeats', 'Repeats (kohya/Musubi)', {min: 1, max: 100}), field('caption_dropout', 'Caption dropout', {min: 0, max: 0.5}));
+        field('repeats', 'Repeats (kohya/Musubi)', {min: 1, max: 100}), field('caption_dropout', 'Caption dropout', {min: 0, max: 0.5}),
+        field('offload', 'Offload to RAM (0-1, blank = auto)', {min: 0, max: 1, step: 0.05, value: s.offload === 'auto' || s.offload == null ? '' : s.offload, placeholder: 'auto'}));
     const save = async () => {
         const settings = {};
-        for (const input of form.querySelectorAll('input')) settings[input.dataset.key] = Number(input.value);
+        for (const input of form.querySelectorAll('input')) settings[input.dataset.key] = input.dataset.key === 'offload' && input.value.trim() === '' ? 'auto' : Number(input.value);
         setDataset(await studio('update', {dataset: ds.id, settings}));
     };
     const planBox = el('div', {class: 'muted', text: 'Checking…'});
@@ -539,7 +540,7 @@ async function renderTrain() {
     try {
         const plan = await studio('train-plan', {dataset: ds.id});
         planBox.replaceChildren(
-            el('div', {text: `${plan.pictures} pictures${plan.reg ? ` + ${plan.reg} regularisation` : ''}. Estimated ${plan.estimate_hours} hours on a 16 GB card (first run also downloads about 40 GB of H3 files).`}),
+            el('div', {text: `${plan.pictures} pictures${plan.reg ? ` + ${plan.reg} regularisation` : ''}. Estimated ${plan.estimate_hours} hours${plan.vram_gb ? ` on this ${Math.round(plan.vram_gb)} GB card` : ''}${plan.offload ? `, with ${Math.round(plan.offload * 100)}% of the model waiting in system memory` : ''} (first run also downloads about 40 GB of H3 files).`}),
             plan.warnings.length ? el('ul', {class: 'warns'}, plan.warnings.map(w => el('li', {text: w}))) : null,
             el('div', {class: 'row'},
                 el('button', {class: 'btn primary', text: 'Start training', disabled: !plan.trainer.ready || plan.training.phase === 'running', onclick: async event => {
