@@ -29,12 +29,12 @@ def _slot(identity, group, label, prompt, aspect='3:4', clothes=True):
 # described the finished photo made H3 return the reference almost unchanged (tested on an RTX 5080, 2026-11-26),
 # so each one names the change outright and says the old pose, framing or expression must not be copied. The turns
 # reuse the cast cards' measured view words (image_gen.cast_views), which H3 follows.
-_TURN_45 = ('Turn the person in <Picture 1> toward the left side of the picture by 45 degrees. Turn the head and body '
-            'together. Show the front-left three-quarter view, with both eyes visible. Full body, feet visible, plain '
-            'light grey background.')
-_TURN_45R = ('Turn the person in <Picture 1> toward the right side of the picture by 45 degrees. Turn the head and body '
-             'together. Show the front-right three-quarter view, with both eyes visible. Full body, feet visible, plain '
-             'light grey background.')
+# "Left" alone was read as the person's own left on Jason's PC (the picture turned to the right of the frame), so the
+# turns name the picture's edge and where the nose, chest and toes point, as the measured side view does.
+_TURN_45 = ('将<Picture 1>中的同一个人向画面左边转45度，呈现四分之三侧面。鼻尖、胸口、脚尖朝向画面左边（观看者的左边），'
+            '两只眼睛都能看见。头和身体一起转。全身站立，双脚入画，浅灰纯色背景。')
+_TURN_45R = ('将<Picture 1>中的同一个人向画面右边转45度，呈现四分之三侧面。鼻尖、胸口、脚尖朝向画面右边（观看者的右边），'
+             '两只眼睛都能看见。头和身体一起转。全身站立，双脚入画，浅灰纯色背景。')
 _SIDE = ('将<Picture 1>中的同一个人完全转向画面左边，呈现90度正侧面。鼻尖、胸口、脚尖朝向画面左边，只能看见一只眼睛，'
          '近侧肩膀遮住远侧肩膀。全身站立，双脚入画，浅灰纯色背景。')
 _BACK = ('将<Picture 1>中的同一个人整个身体转过180度，完全背对镜头。头、肩膀、躯干、臀部和双脚一起转过去，后脑勺、背部和'
@@ -59,7 +59,7 @@ CHARACTER = [
     _edit('high_angle', 'angles', 'High angle', 'Move the camera high above the person in <Picture 1> and look down at them standing on a city pavement; the top of the head is closest to the camera.'),
     # Close-ups
     _edit('face_front', 'close-ups', 'Face, front', 'Make a tight close-up portrait of the face of the person in <Picture 1>, facing the camera at eye level, neutral expression, soft light, blurred background.' + _FACE, '1:1', new=False),
-    _edit('face_three_quarter', 'close-ups', 'Face, three-quarter', 'Make a close-up portrait of the person in <Picture 1> with the head turned three-quarters to the right and the eyes looking at the camera, soft window light.' + _FACE, '1:1'),
+    _edit('face_three_quarter', 'close-ups', 'Face, three-quarter', 'Make a close-up portrait of the person in <Picture 1> with the head turned three-quarters so the nose points toward the right edge of the picture (seen from the camera) and the eyes looking at the camera, soft window light.' + _FACE, '1:1'),
     _edit('face_profile', 'close-ups', 'Face, profile', 'Make a close-up portrait of the person in <Picture 1> in exact side profile facing the left edge, one eye visible, rim light outlining the face.' + _FACE, '1:1'),
     _edit('eyes', 'close-ups', 'Extreme close-up', 'Make an extreme close-up of the eyes and upper face of the person in <Picture 1>: the eyes and eyebrows fill the frame, sharp skin detail.', '16:9'),
     _edit('half_body', 'close-ups', 'Half body', 'Reframe <Picture 1> as a waist-up portrait of the same person, one hand in a pocket, turned slightly to the side, softly blurred indoor background.'),
