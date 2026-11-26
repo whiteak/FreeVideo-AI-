@@ -9,6 +9,8 @@ load it by writing `@Name` in a prompt. Open it from the **LoRA** entry in FreeV
 1. **Pictures.** Drop in your own photos. Each one is straightened, black bars are trimmed, a person who is small in
    a big photo is cropped to (using the engine's face finder), and near-duplicates are skipped. For objects,
    *Remove background* cuts the object out with the SAM 2 selection model and puts it on plain grey.
+   *Add face close-ups* (characters) cuts head-and-shoulders and half-length crops from the pictures, so the face
+   is big in part of the set; without them a set of full-body shots teaches the outfit better than the face.
    Pick the clearest picture as the **reference**.
 2. **Coverage.** A grid of slots for what a good set covers: angles, close-ups, expressions, poses, places and light
    for characters (29 slots); sides, details, places, in-use and light for objects (21); varied subjects for a style

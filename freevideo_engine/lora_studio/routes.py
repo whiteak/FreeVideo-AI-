@@ -90,6 +90,31 @@ class Context:
         except Exception:
             return False
 
+    def add_face_crops(self, body):
+        """Close-ups cut from the set's own pictures, so the face is large in some training pictures."""
+        dataset = self.store.get(body.get('dataset'))
+        if dataset['kind'] != 'character':
+            raise ValueError('invalid_kind')
+        done = {note[5:] for row in dataset['items'] for note in row.get('notes') or () if note.startswith('from:')}
+        added, skipped = 0, 0
+        for row in list(dataset['items']):
+            if (row.get('source') == 'reg' or row.get('excluded') or row['id'] in done
+                    or 'face_crop' in (row.get('notes') or ())):
+                continue
+            path = self.store.item_path(dataset['id'], row)
+            faces = find_faces(path.read_bytes())
+            if not faces:
+                skipped += 1
+                continue
+            best = max(faces, key=lambda f: (f['box'][2] - f['box'][0]) * (f['box'][3] - f['box'][1]))
+            image = images.open_image(path.read_bytes())
+            for label, crop in images.face_crops(image, best['box']):
+                result = self.store.add_image(dataset['id'], images.fit(crop), source=row.get('source') or 'import',
+                                              notes=('face_crop', label, 'from:' + row['id']), dedupe=True)
+                if not result.get('duplicate_of'):
+                    added += 1
+        return dict(added=added, no_face=skipped, dataset=self.store.get(dataset['id']))
+
     def free_for_pictures(self, body=None):
         """Make room for the picture model: the video model, ComfyUI's idle models and the prompt model let go (a picture
         failed with no_memory on Jason's PC while the video model was still resident). Nothing running is touched."""
@@ -254,7 +279,7 @@ class Context:
             dataset, str(destination / 'images'), str(destination / 'reg') if settings.get('use_regularisation') and reg else '',
             settings, output_dir=str(destination / 'output'), models_dir=trainer['models_dir'], vram_gb=self.vram_gb())
         vram = self.vram_gb()
-        offload = training.offload_share(vram, settings.get('offload'))
+        offload = training.offload_share(vram, settings.get('offload'), settings.get('resolution', 512))
         return dict(trainer=trainer, warnings=warnings, pictures=len(kept), offload=offload, vram_gb=round(vram or 0, 1), reg=len(reg), estimate_hours=round(hours, 2),
                     config=config, gpu_busy=self.gpu_busy(), training=self.runner.status())
 
@@ -529,6 +554,7 @@ def register():
         'train-start': context.train_start,
         'train-status': lambda body: context.runner.status(),
         'free-gpu': context.free_for_pictures,
+        'face-crops': context.add_face_crops,
         'train-cancel': lambda body: context.runner.cancel(),
         'checkpoints': context.checkpoint_list,
         'promote': context.promote,

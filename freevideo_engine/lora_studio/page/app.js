@@ -308,8 +308,9 @@ function renderPictures() {
             el('div', {class: 'row'}, el('label', {}, crop, ' Auto-crop (trim borders, frame the person)'), el('label', {}, dedupe, ' Skip near-duplicates'), status)),
         el('div', {class: 'card'}, el('div', {class: 'row'}, el('h2', {class: 'grow', style: 'margin:0', text: `Pictures (${list.filter(i => !i.excluded).length} in use)`}),
             act('Find duplicates', async () => { const result = await studio('dedupe', {dataset: ds.id}); setDataset(result.dataset); toast(result.excluded.length ? `Excluded ${result.excluded.length} near-duplicates.` : 'No near-duplicates found.'); renderPictures(); }),
+            ds.kind === 'character' && act('Add face close-ups', async () => { const result = await studio('face-crops', {dataset: ds.id}); setDataset(result.dataset); toast(result.added ? `Added ${result.added} close-ups cut from your pictures. Caption them on the Captions tab.` : 'No new close-ups: no faces big enough, or they are already added.'); renderPictures(); }),
             ds.kind === 'object' && act('Remove all backgrounds', async () => { for (const item of items().filter(i => !i.excluded && !(i.notes || []).includes('background_removed'))) await removeBackground(item); })),
-            el('p', {class: 'muted', text: 'The reference picture (outlined) is what every generated picture is matched to. Pick the clearest, most typical one.'}),
+            el('p', {class: 'muted', text: 'The reference picture (outlined) is what every generated picture is matched to. Pick the clearest, most typical one. For characters, Add face close-ups cuts head-and-shoulders and half-length crops from full-body pictures so the LoRA learns the face, not only the outfit.'}),
             list.length ? grid : el('div', {class: 'muted', text: 'No pictures yet. Import photos above, or go to Coverage to start from a description.'})));
 }
 

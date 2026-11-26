@@ -57,14 +57,15 @@ H3_WORKING_GB = 5.  # LoRA, optimiser, activations at 512 px and CUDA's own room
 H3_VAE_GB = 5.2
 
 
-def offload_share(vram_gb, setting=None):
+def offload_share(vram_gb, setting=None, resolution=512):
     """Share of the H3 transformer's layers kept in system memory and brought to the card one at a time. ai-toolkit's
     low_vram alone moves the whole 21 GB DiT onto the card at the first step (out of memory on a 16 GB RTX 5080)."""
     if setting is not None and setting != 'auto':
         return max(0., min(1., float(setting)))
     if not vram_gb:
         return .5
-    room = vram_gb - H3_WORKING_GB - H3_VAE_GB
+    # Activations grow with the picture: about 1.5 GB more for each 256 px above 512.
+    room = vram_gb - H3_WORKING_GB - H3_VAE_GB - max(0, (int(resolution) - 512) / 256 * 1.5)
     if room >= H3_TRANSFORMER_GB:
         return 0.
     return min(1., math.ceil(((1 - room / H3_TRANSFORMER_GB) + .05) * 20) / 20)  # up to the next 5%
@@ -72,7 +73,7 @@ def offload_share(vram_gb, setting=None):
 
 def ai_toolkit_config(dataset, images_dir, reg_dir, settings, *, output_dir, models_dir='', vram_gb=None):
     s = settings
-    offload = offload_share(vram_gb, s.get('offload'))
+    offload = offload_share(vram_gb, s.get('offload'), s.get('resolution', 512))
     offload_lines = ('' if not offload else
                      '        layer_offloading: true\n'
                      '        layer_offloading_transformer_percent: %s\n'
@@ -211,7 +212,9 @@ def default_test_prompt(dataset):
         return 'A close-up shot of %s on a wooden table, the camera slowly circles it, warm window light.' % lead
     if dataset.get('kind') == 'style':
         return '%s, a lighthouse on a rocky coast at dusk, waves crash against the rocks, the camera pushes in.' % lead
-    return ('A medium shot of %s walking along a sunny city street, turning to smile at the camera, natural light.' % lead)
+    # Close enough to judge the face, and no sun: the first test put sunglasses on Scarlett at three of four strengths.
+    return ('A close-up of %s sitting by a window indoors, turning toward the camera with a soft smile, '
+            'soft overcast daylight, face clearly visible.' % lead)
 
 
 def layout_files(dataset, layout, destination, use_reg, settings):

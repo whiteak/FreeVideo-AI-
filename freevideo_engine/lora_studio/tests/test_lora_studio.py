@@ -73,6 +73,13 @@ class ImageTests(unittest.TestCase):
         self.assertTrue(box[0] < 1900 < 2000 < box[2] and box[1] < 400)
         self.assertEqual(max(images.fit(Image.new('RGB', (5000, 2500))).size), images.MAX_SIDE)
 
+    def test_face_crops(self):
+        picture = Image.new('RGB', (1600, 2400), (200, 200, 200))
+        crops = dict(images.face_crops(picture, [700, 300, 900, 550]))
+        self.assertEqual(set(crops), {'face', 'half'})
+        self.assertGreaterEqual(min(crops['face'].size), images.MIN_SIDE)
+        self.assertEqual(images.face_crops(picture, [790, 300, 830, 350]), [])  # too small to be worth a crop
+
     def test_cutout(self):
         image = Image.new('RGB', (400, 400), (255, 0, 0))
         mask = Image.new('L', (400, 400), 0)
@@ -113,6 +120,7 @@ class TrainingConfigTests(unittest.TestCase):
         self.assertEqual(training.offload_share(15.9), .8)
         self.assertEqual(training.offload_share(48), 0.)
         self.assertEqual(training.offload_share(15.9, .8), .8)
+        self.assertGreater(training.offload_share(15.9, None, 768), training.offload_share(15.9))
         dataset = dict(id='d1', name='Scarlett', kind='character', trigger='scrlttv', class_word='woman')
         config = training.ai_toolkit_config(dataset, 'C:/i', '', {}, output_dir='C:/o', vram_gb=15.9)
         self.assertIn('layer_offloading: true', config)
