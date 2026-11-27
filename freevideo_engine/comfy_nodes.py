@@ -324,8 +324,11 @@ class FreeVideoGenerate(io.ComfyNode):
                 from .image_gen.service import stop_prestart_for_generation as stop_image_for_generation
                 # An idle picture model stays when the planner places this video the same beside it; only a plain
                 # text-to-video request is planned here, anything with media or a continuation stops it as before.
-                plain = not any((first, last, references, loras, conditioning, media, refine_from, upscale_from,
-                                 options.get('continue_from'), chain is not None and chain.get('count', 1) > 1))
+                # Pictures arrive as tensors, whose truth value is ambiguous; only "was it given" matters here.
+                given = lambda value: value is not None and (hasattr(value, 'shape') or bool(value))
+                plain = not any(map(given, (first, last, references, loras, conditioning, media, refine_from,
+                                            upscale_from, options.get('continue_from'),
+                                            chain is not None and chain.get('count', 1) > 1)))
                 video = dict(width=width, height=height, seconds=seconds, steps=base_steps, two_pass=two_pass,
                              refine=refine_steps, step_cache=step_cache_option(step_cache).get('step_cache'),
                              upscale=upscale_option(upscale_factor).get('upscale_factor', 2)) if plain else None
@@ -371,7 +374,10 @@ class FreeVideoGenerate(io.ComfyNode):
         from .comfy_launcher_api import page_notice
         notice = page_notice(PromptServer.instance)
         if notice:
-            logging.warning('[FreeVideo] %s', notice)
+            # Runs queued by scripts never open a page, so the console says it once, not on every prompt.
+            if not getattr(PromptServer.instance, '_freevideo_page_notice_logged', False):
+                PromptServer.instance._freevideo_page_notice_logged = True
+                logging.warning('[FreeVideo] %s (shown once; API and script runs need no page)', notice)
             PromptServer.instance.send_progress_text(notice, node_id)
         if two_pass and not refine_from and not preview and not upscale_from:
             from .two_pass import one_pass_note
