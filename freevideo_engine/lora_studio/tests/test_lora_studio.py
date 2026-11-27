@@ -235,6 +235,12 @@ class StoreTests(unittest.TestCase):
         same = cast_loras.extend('x', {'references': [{'cast': 'c123'}]}, loras, folders=self.folders)[1]
         self.assertEqual(len(same), 1)
         self.assertEqual(cast_loras.extend('x', {'references': [{'cast': 'other'}]}, None, folders=self.folders), ('x', None))
+        # A step checkpoint carries no trigger words: the words linked with the card are used.
+        bare = Path(self.tmp) / 'models' / 'loras' / 'bare_000000625.safetensors'
+        bare.write_bytes(b'fake')
+        self.store.link('c999', dict(lora='bare_000000625.safetensors', strength=1.0, trigger='scrlttv', trigger_words='scrlttv woman'))
+        text = cast_loras.extend('she smiles', {'references': [{'cast': 'c999'}]}, None, folders=self.folders)[0]
+        self.assertTrue(text.startswith('scrlttv woman'), text)
         # The card's recipe: first-frame stills by shot, size and words after the prompt.
         pictures = [row for row in self.store.get(ds['id'])['items'] if row.get('source') != 'reg']
         self.context.save_recipe(dict(dataset=ds['id'], prompt_suffix='ruby drop earrings, no sunglasses', size=[832, 1472],
