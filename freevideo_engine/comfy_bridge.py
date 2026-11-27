@@ -1960,6 +1960,12 @@ def generate(prompt, width, height, seconds, seed, output_directory, *,
             changed()
         except Exception:
             pass
+        try:
+            # Take Report Card (fork addition): faces, pops, cuts and walk-backs checked on the CPU in the background.
+            from .report_card import schedule as report_card
+            report_card(output)
+        except Exception:
+            pass
         return output
     except BaseException as error:
         cancelled = isinstance(error, KeyboardInterrupt) or type(error).__name__ in ('InterruptProcessingException', 'CancelledError')

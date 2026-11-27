@@ -22,6 +22,7 @@ import { zoomable } from './picture_zoom.js';
 import { createUpscaleOffer, upscaleChoices, UPSCALE_USE, UPSCALE_QUEUED, UPSCALE_FAILED } from './upscale_offer.js';
 import { capabilityPoints } from './chain_support.js';
 import { LANGUAGE } from './i18n.js';
+import { openReportCard } from './report_card.js';
 
 const style = document.createElement('link');
 style.rel = 'stylesheet'; style.href = new URL('./library.css', import.meta.url).href; document.head.append(style);
@@ -1503,6 +1504,9 @@ export function openLibrary(t, options = {}) {
                     run: () => reuseSaved(one)});
                 items.push({id: 'extend', icon: 'arrow', label: ['Extend', '接着生成'], disabled: canExtend(one) ? '' : ['This video cannot be extended', '这条视频不能接着生成'],
                     run: () => extendSaved(one)});
+                items.push({id: 'report-card', icon: 'check', label: ['Report card', '成绩单'],
+                    use: ['Faces, pops, cuts and walk-backs checked on this take', '检查这条视频的人脸、跳帧、剪切和回走'],
+                    run: () => openReportCard(one.id, t)});
             }
             if (one.kind === 'image') {
                 const text = picturePrompt(one), none = text ? '' : ['This image kept no prompt', '这张图片没有保存提示词'];
