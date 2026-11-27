@@ -1505,7 +1505,7 @@ export function openLibrary(t, options = {}) {
                 items.push({id: 'extend', icon: 'arrow', label: ['Extend', '接着生成'], disabled: canExtend(one) ? '' : ['This video cannot be extended', '这条视频不能接着生成'],
                     run: () => extendSaved(one)});
                 items.push({id: 'report-card', icon: 'check', label: ['Report card', '成绩单'],
-                    use: ['Faces, pops, cuts and walk-backs checked on this take', '检查这条视频的人脸、跳帧、剪切和回走'],
+                    use: ['Faces, pops, cuts, walk-backs and speech checked on this take', '检查这条视频的人脸、跳帧、剪切和回走'],
                     run: () => openReportCard(one.id, t)});
             }
             if (one.kind === 'image') {

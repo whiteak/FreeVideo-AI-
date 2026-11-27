@@ -8,6 +8,7 @@ Checks, all on the CPU and none of them downloading anything:
 - cuts: a hard jump to another picture in the middle of a take (a restart);
 - back to the start: the picture drifts away from the opening frame and then returns to it;
 - walking back: a character moves one way and then comes back (from the face boxes).
+- speech: the prompt's spoken lines heard (faster-whisper), digits in lines, and the lip-sync offset (speech.py).
 """
 import json
 import os
@@ -75,7 +76,7 @@ def frame_flags(frames, fps):
     luma = frames.mean(axis=(1, 2))
     if n >= 5:
         smooth = np.array([np.median(luma[max(0, i - 2):i + 3]) for i in range(n)])
-        quiet = set(cut_at) | {c - 1 for c in cut_at} | {0, 1, 2, n - 1}   # pops and cuts are flagged on their own
+        quiet = set(cut_at) | {c - 1 for c in cut_at} | {0, 1, 2, 3, 4, n - 1}   # pops and cuts are flagged on their own
         bumps = [i for i in range(n) if abs(luma[i] - smooth[i]) > 3 and i not in quiet]
         if bumps:
             flags.append(dict(check='flicker', frames=bumps[:20], t=round(bumps[0] / fps, 2),
@@ -162,11 +163,11 @@ def cast_cards(output_root, input_root, folder, wanted=()):
     return chosen
 
 
-def run_faces(video, cards, step=1.):
+def run_faces(video, cards, step=1., mouth=None):
     python = face_python()
     if python is None:
         raise Unavailable('No face checker: install insightface in Eclipse\'s Python or set FREEVIDEO_FACE_PYTHON.')
-    job = dict(video=str(video), refs={card['name']: card['pictures'] for card in cards if card['pictures']}, step=step)
+    job = dict(video=str(video), refs={card['name']: card['pictures'] for card in cards if card['pictures']}, step=step, mouth=mouth)
     flags = subprocess.CREATE_NO_WINDOW if os.name == 'nt' else 0
     result = subprocess.run([python, '-I', str(Path(__file__).with_name('faces.py'))], input=json.dumps(job),
                             capture_output=True, text=True, timeout=FACE_TIMEOUT, creationflags=flags)
@@ -261,9 +262,25 @@ def build(output_root, input_root, identity, cards=()):
     fps, frames = small_frames(video)
     flags = frame_flags(frames, fps)
     cards = cast_cards(output_root, input_root, folder, cards)
-    faces, notes = [], []
+    faces, notes, words, span = [], [], [], None
+    from . import speech
+    lines, audio = speech.spoken_lines(folder), None
+    if lines:
+        try:
+            from ..subtitle_ears import decode_mono, EarsError
+            audio = decode_mono(video)
+            words = speech.heard_words(audio)
+            flags += speech.line_flags(lines, words)
+            span = speech.voice_span(words, fps, len(frames))
+            notes.append('Heard: "%s"' % ' '.join(w['text'] for w in words)[:300] if words else 'No speech heard.')
+        except (Unavailable, EarsError, OSError, ValueError, KeyError, subprocess.TimeoutExpired) as error:
+            notes.append('Speech not checked: %s' % error)
     try:
-        result = run_faces(video, cards)
+        result = run_faces(video, cards, mouth=span)
+        if span:
+            sync, said = speech.sync_flags(speech.lip_lag(result.get('mouth') or [], speech.loudness(audio, fps, *span)), fps)
+            flags += sync
+            notes += said
         tracks, small = assign(result['samples'], [c['name'] for c in cards])
         faces = [face_summary(card, tracks[card['name']]) for card in cards]
         flags += motion_flags(tracks, result.get('width') or 0, [f['t'] for f in flags if f['check'] in ('cut', 'pop')])

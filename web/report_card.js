@@ -54,7 +54,7 @@ export function openReportCard(id, t = (en) => en) {
     const run = async (fresh, look = false) => {
         again.disabled = lookButton.disabled = true;
         body.replaceChildren(el('p', look ? t('Asking the picture reader about four frames…', '正在让看图模型检查…')
-            : fresh ? t('Checking faces, pops, cuts and motion…', '正在检查…') : t('Loading…', '加载中…')));
+            : fresh ? t('Checking faces, pops, cuts, motion and speech…', '正在检查…') : t('Loading…', '加载中…')));
         try {
             const card = await fetchCard(id, fresh, look);
             if (!card && !fresh) return run(true);   // never checked: check it now
