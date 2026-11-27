@@ -1202,6 +1202,15 @@ class Productions:
             with self.jobs.cpu:
                 result = take_qa.check(self.jobs.port.library_video(library), seconds=seconds,
                                        lines=lines, transcribe=self.transcribe, planned=planned, first=first, last=last)
+                try:
+                    # Report Card (fork addition): faces under the card's bar, walking back or a return to the
+                    # opening shot fail the take, so the judge picks among the rest or reshoots once.
+                    from ..report_card import for_take
+                    problems, notes = for_take(self.jobs.port.output_root, self.jobs.port.input_root, library)
+                    result = dict(result, problems=result['problems'] + problems, notes=result['notes'] + notes,
+                                  ok=result['ok'] and not problems)
+                except Exception as error:  # noqa: BLE001 - the Report Card is extra evidence, never a blocker
+                    logging.getLogger(__name__).warning('Report Card not added to a take check (%s)', error)
         except Exception as error:  # noqa: BLE001 - a failed check must not block the film; the judge sees it as unchecked
             logging.getLogger(__name__).warning('A take could not be checked (%s)', type(error).__name__)
             result = dict(error=type(error).__name__, problems=[], notes=[], ok=True)

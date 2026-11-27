@@ -151,5 +151,18 @@ class Speech(unittest.TestCase):
         self.assertIsNone(voice_span([], 24., 200))
 
 
+class BestTake(unittest.TestCase):
+    def test_take_qa_part_and_score(self):
+        weak = dict(passed=False, faces=[dict(name='Ada', median=.6, bar=.72, passed=False)],
+                    flags=[dict(check='pop', text='Frame-0 pop.'), dict(check='walk_back', text='Ada walks back.')])
+        problems, notes = rc.take_qa_part(weak)
+        self.assertEqual(problems, ["Ada's face 0.60, under 0.72", 'Ada walks back'])
+        self.assertEqual(notes, ['Frame-0 pop'])
+        good = dict(passed=True, faces=[dict(name='Ada', median=.8, bar=.72, passed=True)], flags=[])
+        close = dict(passed=False, faces=[dict(name='Ada', median=.9, bar=.72, passed=True)], flags=[dict(check='pop', text='p')])
+        ranked = sorted([weak, close, good], key=rc.score, reverse=True)
+        self.assertEqual(ranked, [good, close, weak])
+
+
 if __name__ == '__main__':
     unittest.main()
