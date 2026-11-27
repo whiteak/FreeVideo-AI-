@@ -176,8 +176,8 @@ def run_faces(video, cards, step=1., mouth=None):
     return json.loads(result.stdout)
 
 
-def assign(samples, names):
-    """Per second, each card keeps at most its best-matching face of at least MIN_FACE_PX; smaller faces are counted."""
+def assign(samples, names, min_px=MIN_FACE_PX):
+    """Per second, each card keeps at most its best-matching face of at least min_px; smaller faces are counted."""
     tracks = {name: [] for name in names}
     small = 0
     for sample in samples:
@@ -185,7 +185,7 @@ def assign(samples, names):
         faces = sorted(sample['faces'], key=lambda f: -(f.get('score') or 0))
         for face in faces:
             x0, y0, x1, y1 = face['box']
-            if y1 - y0 < MIN_FACE_PX:
+            if y1 - y0 < min_px:
                 small += 1
                 continue
             name = face.get('name')
@@ -232,10 +232,10 @@ def motion_flags(tracks, width, cuts=()):
     return flags
 
 
-def face_summary(card, track):
+def face_summary(card, track, min_px=MIN_FACE_PX):
     if not track:
         return dict(name=card['name'], scored=0, passed=None,
-                    text='%s: no face big enough to score (%d px or more).' % (card['name'], MIN_FACE_PX))
+                    text='%s: no face big enough to score (%d px or more).' % (card['name'], min_px))
     values = sorted(p['score'] for p in track)
     median = values[len(values) // 2]
     share = sum(v >= card['bar'] for v in values) / len(values)
@@ -281,8 +281,10 @@ def build(output_root, input_root, identity, cards=()):
             sync, said = speech.sync_flags(speech.lip_lag(result.get('mouth') or [], speech.loudness(audio, fps, *span)), fps)
             flags += sync
             notes += said
-        tracks, small = assign(result['samples'], [c['name'] for c in cards])
-        faces = [face_summary(card, tracks[card['name']]) for card in cards]
+        # A half-size draft (preview) has half-size faces: the smallest scored face scales with the picture.
+        min_px = min(MIN_FACE_PX, max(32, round(MIN_FACE_PX * (result.get('height') or 1472) / 1472)))
+        tracks, small = assign(result['samples'], [c['name'] for c in cards], min_px)
+        faces = [face_summary(card, tracks[card['name']], min_px) for card in cards]
         flags += motion_flags(tracks, result.get('width') or 0, [f['t'] for f in flags if f['check'] in ('cut', 'pop')])
         for card in cards:
             if not card['pictures'] or card['name'] not in result.get('refs', {}):
@@ -291,7 +293,7 @@ def build(output_root, input_root, identity, cards=()):
             counted = max((len(s['faces']) for s in result['samples']), default=0)
             notes.append('No cast cards in this take, so faces were counted (up to %d at once) but not scored.' % counted)
         if small:
-            notes.append('%d face sightings were under %d px and not scored.' % (small, MIN_FACE_PX))
+            notes.append('%d face sightings were under %d px and not scored.' % (small, min_px))
     except (Unavailable, OSError, ValueError, subprocess.TimeoutExpired) as error:
         notes.append('Faces not checked: %s' % error)
     passed = all(f['passed'] is not False for f in faces) and not flags and not (cards and not faces)
@@ -408,6 +410,35 @@ def register():
         except (ValueError, RuntimeError, OSError) as error:
             return web.json_response(dict(error='Continuity not checked: %s' % error), status=409)
         return web.json_response(result, headers={'Cache-Control': 'no-store'})
+
+    from .drafts import Runs
+    runs = Runs()
+
+    @server.routes.post('/freevideo/report-card/drafts')
+    async def drafts(request):
+        """Draft several seeds small, check each, finish only the best (plan step 1.2). Body: {spec, drafts}, where
+        spec is an agent generate job without takes, seed or preview."""
+        if request.headers.get('X-FreeVideo-Library') != '1':
+            raise web.HTTPForbidden(text='Missing header')
+        jobs = getattr(server, '_freevideo_agent', None)
+        if jobs is None:
+            return web.json_response(dict(error='Drafting needs the agent API, which is off in this installation.'), status=409)
+        try:
+            body = await request.json()
+            spec, count = body.get('spec'), body.get('drafts', 3)
+            if not isinstance(spec, dict) or not isinstance(spec.get('prompt'), str) or type(count) is not int or not 2 <= count <= 6:
+                raise ValueError('spec needs a prompt, and drafts is 2 to 6')
+            state = runs.start(jobs, spec, count, folder_paths.get_output_directory(), folder_paths.get_input_directory())
+        except (ValueError, TypeError, AttributeError) as error:
+            raise web.HTTPBadRequest(text=str(error)) from error
+        return web.json_response(state)
+
+    @server.routes.get('/freevideo/report-card/drafts')
+    async def draft_state(request):
+        state = runs.get(request.query.get('id'))
+        if state is None:
+            raise web.HTTPNotFound(text='Unknown draft run')
+        return web.json_response(state, headers={'Cache-Control': 'no-store'})
 
     @server.routes.post('/freevideo/report-card/look')
     async def look(request):

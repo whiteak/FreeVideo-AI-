@@ -203,5 +203,40 @@ class SpokenNumbers(unittest.TestCase):
         self.assertEqual(len(changed), 1)
 
 
+class Drafts(unittest.TestCase):
+    def test_retake_once_then_finish_best(self):
+        from unittest import mock
+        from freevideo_engine.report_card import drafts
+
+        class Jobs:
+            def __init__(self):
+                self.rows, self.specs = {}, []
+
+            def submit(self, spec, takes=1):
+                self.specs.append((spec, takes))
+                made = []
+                for _ in range(takes):
+                    identity = 'j%012x' % len(self.rows)
+                    self.rows[identity] = dict(id=identity, status='succeeded',
+                                               result=dict(library_id='2026-01-01/%032x' % len(self.rows)))
+                    made.append(self.rows[identity])
+                return made
+
+            def get(self, identity):
+                return self.rows[identity]
+
+        def card(identity, passed=False, median=.6):
+            return dict(id=identity, passed=passed, faces=[dict(name='A', median=median, bar=.72, passed=passed)], flags=[])
+        jobs = Jobs()
+        ranked = lambda root, inputs, ids: [card(i, median=.5 + int(i[-1], 16) / 100) for i in ids]
+        with mock.patch.object(rc, 'rank', ranked), mock.patch.object(rc, 'build', lambda *a: card(a[2], True)):
+            final = drafts.run(jobs, dict(prompt='p', seed=4, takes=2), 2, 'o', 'i')
+        self.assertEqual([t for _, t in jobs.specs], [2, 2, 1])          # two rounds of drafts, then one finish
+        self.assertTrue(jobs.specs[0][0]['preview'])
+        self.assertNotIn('seed', jobs.specs[0][0])
+        self.assertEqual(jobs.specs[2][0], dict(kind='generate', refine_from='2026-01-01/%032x' % 3))
+        self.assertEqual(final, '2026-01-01/%032x' % 4)
+
+
 if __name__ == '__main__':
     unittest.main()
