@@ -189,5 +189,19 @@ class LongTake(unittest.TestCase):
         self.assertEqual(long_take_notes(29., last_frame=True, parts=2), [])
 
 
+class SpokenNumbers(unittest.TestCase):
+    def test_spell(self):
+        from freevideo_engine.spoken_numbers import spell_line, spell_spoken, words
+        self.assertEqual([words(n) for n in (7, 21, 115, 1999)], ['seven', 'twenty-one', 'one hundred and fifteen', 'nineteen ninety-nine'])
+        self.assertEqual(spell_line('Welcome to 7 Sins Entertainment.'), 'Welcome to Seven Sins Entertainment.')
+        self.assertEqual(spell_line('3 drinks at 9.'), 'Three drinks at nine.')
+        self.assertEqual(spell_line('Call 0412, $5 each, 9:30, 3D, 2.5 m.'), 'Call 0412, $5 each, 9:30, 3D, 2.5 m.')
+        prompt = 'A neon sign reads "Open 24 hours". She smiles and says "Welcome to 7 Sins Entertainment."'
+        text, changed = spell_spoken(prompt)
+        self.assertIn('"Open 24 hours"', text)
+        self.assertIn('Welcome to Seven Sins Entertainment.', text)
+        self.assertEqual(len(changed), 1)
+
+
 if __name__ == '__main__':
     unittest.main()

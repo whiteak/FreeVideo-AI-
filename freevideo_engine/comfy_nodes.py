@@ -265,6 +265,13 @@ class FreeVideoGenerate(io.ComfyNode):
             from .comfy_bridge import installation_root
             from .output_settings import avoid_prompt
             text = avoid_prompt(installation_root(), text)
+            try:   # Speech helper (fork addition): spoken digits come out garbled, so "7 Sins" is said as "Seven Sins".
+                from .spoken_numbers import spell_spoken
+                text, spelled = spell_spoken(text)
+                for before, after in spelled:
+                    logging.info('[Eclipse] Spoken line written out: "%s" -> "%s"', before, after)
+            except Exception as error:
+                logging.warning('[Eclipse] Spoken numbers left as written: %s', error)
         try:   # LoRA Studio (fork addition): a cast card mentioned with @ brings the LoRA linked to it.
             from .lora_studio.cast_loras import extend as cast_loras
             from .lora_check import require_usable
