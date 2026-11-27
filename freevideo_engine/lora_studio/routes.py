@@ -379,7 +379,7 @@ class Context:
                     cast_id=(dataset.get('lora') or {}).get('cast_id'))
         self.store.set_lora(dataset_id, lora)
         if lora.get('cast_id'):
-            self.store.link(lora['cast_id'], dict(dataset=dataset_id, lora=name, strength=lora['strength'], trigger=dataset['trigger']))
+            self.store.link(lora['cast_id'], self.link_entry(dataset, lora))
         return lora
 
     def promote(self, body):
@@ -422,9 +422,53 @@ class Context:
         if cast_id:
             if not lora.get('name'):
                 raise ValueError('no_lora')
-            self.store.link(cast_id, dict(dataset=dataset['id'], lora=lora['name'], strength=lora.get('strength', 1.0),
-                                          trigger=dataset['trigger']))
+            self.store.link(cast_id, self.link_entry(dataset, lora))
         lora['cast_id'] = cast_id or None
+        return self.store.set_lora(dataset['id'], lora)
+
+    SHOTS = ('default', 'close', 'waist')
+    SIZES = ((832, 1472), (1472, 832), (1024, 1024), (480, 832), (832, 480))
+
+    def link_entry(self, dataset, lora):
+        """What links.json keeps for a card: the LoRA, and the card's recipe (first-frame stills by shot, size, words
+        added to the prompt) so that @Name brings all of it."""
+        entry = dict(dataset=dataset['id'], lora=lora.get('name'), strength=lora.get('strength', 1.0), trigger=dataset['trigger'])
+        recipe = lora.get('recipe') or {}
+        items = {row['id']: row for row in dataset['items']}
+        frames = {shot: self.store.input_name(dataset['id'], items[item]) for shot, item in (recipe.get('first_frames') or {}).items()
+                  if item in items}
+        if frames:
+            entry['first_frames'] = frames
+        if recipe.get('prompt_suffix'):
+            entry['prompt_suffix'] = recipe['prompt_suffix']
+        if recipe.get('size'):
+            entry['size'] = list(recipe['size'])
+        return entry
+
+    def save_recipe(self, body):
+        """The card's recipe: which stills start a video as its first frame (by shot), its size, its prompt words."""
+        dataset = self.store.get(body.get('dataset'))
+        lora = dict(dataset.get('lora') or {})
+        recipe = dict(lora.get('recipe') or {})
+        if 'prompt_suffix' in body:
+            text = body['prompt_suffix']
+            if text is not None and (not isinstance(text, str) or len(text) > 600):
+                raise ValueError('invalid_request')
+            recipe['prompt_suffix'] = ' '.join((text or '').split())
+        if 'size' in body:
+            size = body['size']
+            if size is not None and (not isinstance(size, list) or tuple(size) not in self.SIZES):
+                raise ValueError('invalid_request')
+            recipe['size'] = size
+        if 'first_frames' in body:
+            frames = body['first_frames']
+            ids = {row['id'] for row in dataset['items'] if row.get('source') != 'reg'}
+            if not isinstance(frames, dict) or set(frames) - set(self.SHOTS) or any(v is not None and v not in ids for v in frames.values()):
+                raise ValueError('invalid_request')
+            recipe['first_frames'] = {k: v for k, v in frames.items() if v}
+        lora['recipe'] = recipe
+        if lora.get('cast_id') and lora.get('name'):
+            self.store.link(lora['cast_id'], self.link_entry(dataset, lora))
         return self.store.set_lora(dataset['id'], lora)
 
     def set_lora_file(self, body):
@@ -436,7 +480,7 @@ class Context:
         lora = dict(dataset.get('lora') or {}, name=name, file=None, step=None, installed_at=store_module.now())
         lora.setdefault('strength', 1.0)
         if lora.get('cast_id'):
-            self.store.link(lora['cast_id'], dict(dataset=dataset['id'], lora=name, strength=lora['strength'], trigger=dataset['trigger']))
+            self.store.link(lora['cast_id'], self.link_entry(dataset, lora))
         return self.store.set_lora(dataset['id'], lora)
 
     def test_graph(self, body):
@@ -589,6 +633,7 @@ def register():
         'checkpoints': context.checkpoint_list,
         'promote': context.promote,
         'link': context.link,
+        'recipe': context.save_recipe,
         'use-lora': context.set_lora_file,
         'settings': lambda body: dict(settings=context.store.save_settings(body), trainer=context.trainer()),
         'test-graph': context.test_graph,

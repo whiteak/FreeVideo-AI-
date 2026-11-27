@@ -7,6 +7,7 @@ node, so the creation panel, the editor and the Agent all get it, and the panel'
 """
 import json
 import logging
+import re
 from pathlib import Path
 
 log = logging.getLogger(__name__)
@@ -29,6 +30,56 @@ def read_links(input_directory):
     except (OSError, ValueError):
         return {}
     return value if isinstance(value, dict) else {}
+
+
+# Which still starts a shot: a face close-up for talking or pushing in, waist-up for walking or turning. As a first
+# frame Scarlett scored 0.80-0.92 on Jason's face checker, against 0.69 with the same still as a reference.
+_CLOSE = re.compile(r'\b(close[- ]?up|push(?:es|ing)? in|portrait|face|talk|talks|talking|speak|speaks|speaking|says?|'
+                    r'saying|whisper|sing|sings|singing|laugh|laughs|smile|smiles|smiling|cries|crying|looks? at)\b', re.I)
+_WAIST = re.compile(r'\b(walk|walks|walking|turn|turns|turning|dance|dances|dancing|run|runs|running|wave|waves|'
+                    r'waving|gesture|gestures|stride|strides|steps?|moves?|moving|medium shot|waist)\b', re.I)
+
+
+def shot_of(text):
+    text = text if isinstance(text, str) else ''
+    return 'close' if _CLOSE.search(text) else 'waist' if _WAIST.search(text) else 'default'
+
+
+def recipe(text, media, width, height, *, folders=None):
+    """(text, media, width, height) with the first linked card's recipe applied: its words after the prompt, its
+    size, and a still of the card as the first frame when the request has none. Nothing changes without a recipe."""
+    ids = cast_ids(media)
+    if not ids:
+        return text, media, width, height
+    if folders is None:
+        import folder_paths as folders
+    links = read_links(folders.get_input_directory())
+    link = next((links[i] for i in ids if isinstance(links.get(i), dict)
+                 and (links[i].get('first_frames') or links[i].get('prompt_suffix') or links[i].get('size'))), None)
+    if link is None:
+        return text, media, width, height
+    shot = shot_of(text)  # from the user's words, before the card's own are added
+    suffix = link.get('prompt_suffix')
+    if isinstance(suffix, str) and suffix and isinstance(text, str) and suffix.lower() not in text.lower():
+        text = '%s %s' % (text.rstrip().rstrip('.') + '.', suffix)
+    size = link.get('size')
+    if isinstance(size, list) and len(size) == 2 and all(type(v) is int and 256 <= v <= 2048 for v in size):
+        width, height = size
+    frames = link.get('first_frames') or {}
+    if isinstance(media, dict) and 'first' not in media and isinstance(frames, dict) and frames:
+        name = frames.get(shot) or frames.get('default') or next(iter(frames.values()))
+        root = Path(folders.get_input_directory()).resolve()
+        path = (root / str(name)).resolve()
+        try:
+            path.relative_to(root)
+        except ValueError:
+            path = None
+        if path is not None and path.is_file():
+            media = dict(media, first=str(path))
+            log.info('[FreeVideo] @mention starts the %s shot from the card still %s', shot, name)
+        else:
+            log.warning('[FreeVideo] The first-frame still of a cast card is missing: %s', name)
+    return text, media, width, height
 
 
 def extend(text, media, loras, *, folders=None, check=None):

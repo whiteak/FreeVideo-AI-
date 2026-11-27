@@ -613,6 +613,7 @@ async function renderUse() {
                 : el('p', {class: 'muted', text: 'No LoRA yet: train one on the Train tab, or use one you trained elsewhere:'}),
             el('div', {class: 'row'}, otherLora, act('Use this LoRA file', async () => { setDataset(await studio('use-lora', {dataset: ds.id, name: otherLora.value.trim()})); renderUse(); }))),
         el('div', {class: 'card'}, el('h2', {text: 'Cast card: @Name loads the LoRA'}), cardBox),
+        ds.kind === 'character' ? recipeCard(ds) : null,
         el('div', {class: 'card'}, el('h2', {text: 'Strength test grid'}),
             el('p', {class: 'muted', text: 'Short test videos with the same prompt and seed at several strengths, so you can see where the likeness holds and where it starts to stiffen. Each takes a few minutes.'}),
             el('label', {class: 'f'}, 'Prompt (leave empty for a default that uses your trigger word)', testPrompt),
@@ -663,6 +664,35 @@ async function renderUse() {
         }
     }
     if (ds.kind !== 'style') renderCast(cardBox);
+}
+// The card's recipe: what @Name brings besides the LoRA.
+function recipeCard(ds) {
+    const recipe = ds.lora?.recipe || {};
+    const pictures = ds.items.filter(i => !i.excluded && i.source !== 'reg');
+    const label = i => [i.slot || (i.notes || []).filter(n => ['face', 'half'].includes(n)).map(n => n === 'face' ? 'close-up crop' : 'waist-up crop')[0] || i.source, i.id.slice(-4)].join(' · ');
+    const still = shot => {
+        const select = el('select', {}, el('option', {value: '', text: '(none)'}), pictures.map(i => el('option', {value: i.id, text: label(i), selected: recipe.first_frames?.[shot] === i.id})));
+        const thumb = el('img', {style: 'width:64px;height:64px;object-fit:cover;border-radius:6px;vertical-align:middle'});
+        const show = () => { const item = pictures.find(i => i.id === select.value); thumb.src = item ? '/view?' + new URLSearchParams({filename: item.input.split('/').pop(), subfolder: item.input.split('/').slice(0, -1).join('/'), type: 'input'}) : ''; thumb.style.visibility = item ? 'visible' : 'hidden'; };
+        select.addEventListener('change', show); show();
+        return {select, thumb};
+    };
+    const shots = {default: still('default'), close: still('close'), waist: still('waist')};
+    const sizes = [['', "The creation panel's size"], ['832x1472', 'Portrait 832×1472'], ['1472x832', 'Landscape 1472×832'], ['1024x1024', 'Square 1024×1024'], ['480x832', 'Portrait 480×832 (quick)'], ['832x480', 'Landscape 832×480 (quick)']];
+    const size = el('select', {}, sizes.map(([value, text]) => el('option', {value, text, selected: (recipe.size || []).join('x') === value})));
+    const suffix = el('textarea', {rows: 2, placeholder: 'e.g. wearing her open black leather trench coat, ruby-red drop earrings, no sunglasses'}, recipe.prompt_suffix || '');
+    return el('div', {class: 'card'}, el('h2', {text: 'Recipe: what @Name brings besides the LoRA'}),
+        el('p', {class: 'muted', text: 'A still of the character as the first frame holds the face far better than the LoRA alone (Scarlett: 0.80-0.92 against 0.69). When the prompt talks, smiles or pushes in, the close-up still is used; when it walks or turns, the waist-up one; otherwise the default. A request that already has a first frame keeps its own.'}),
+        el('div', {class: 'settings-grid'},
+            ...[['default', 'First frame (default)'], ['close', 'Close-up shots'], ['waist', 'Walking / turning shots']].map(([key, text]) => el('label', {class: 'f'}, text, el('div', {class: 'row', style: 'gap:6px'}, shots[key].thumb, shots[key].select)))),
+        el('label', {class: 'f'}, 'Size', size),
+        el('label', {class: 'f'}, 'Words added to every prompt with @Name', suffix),
+        el('div', {class: 'row'}, act('Save recipe', async () => {
+            if (!ds.lora?.name) throw new Failure('no_lora');
+            setDataset(await studio('recipe', {dataset: ds.id, prompt_suffix: suffix.value.trim(), size: size.value ? size.value.split('x').map(Number) : null,
+                first_frames: Object.fromEntries(Object.entries(shots).map(([key, s]) => [key, s.select.value || null]))}));
+            toast(ds.lora?.cast_id ? 'Saved. @Name now brings it.' : 'Saved. Link a cast card above so @Name brings it.');
+        }, 'primary')));
 }
 async function renderCast(box) {
     const ds = state.ds, kind = ds.kind === 'object' ? 'prop' : 'character', lora = ds.lora;

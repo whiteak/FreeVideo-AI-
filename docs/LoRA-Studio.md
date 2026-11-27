@@ -42,7 +42,11 @@ load it by writing `@Name` in a prompt. Open it from the **LoRA** entry in FreeV
    for ai-toolkit and a `dataset.toml` / `train.cmd` for Musubi) to `output/lora-studio/`, or as a zip.
 5. **Use & test.** Link the LoRA to a cast card (or make a new card from the set). When that card is mentioned with
    `@` in a prompt, its LoRA is added to the request at the strength you set and its trigger words go in front of the
-   prompt; the panel's own LoRA list is not changed. The **strength test grid** makes short videos with the same
+   prompt; the panel's own LoRA list is not changed. A character's **recipe** (same tab) adds the rest of the look: a still of the
+   character as the **first frame** (one for close-ups, one for walking or turning shots, one default, picked from
+   the prompt's words; a request that already has a first frame keeps it), a **size**, and **words added to every
+   prompt** (outfit, earrings, "no sunglasses"). As a first frame, Scarlett's still scored 0.80-0.92 on a face
+   checker against 0.69 as a reference. The **strength test grid** makes short videos with the same
    prompt and seed without the LoRA and at several strengths.
 
 ## Installing the trainer

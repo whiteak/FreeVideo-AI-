@@ -269,6 +269,10 @@ class FreeVideoGenerate(io.ComfyNode):
             from .lora_studio.cast_loras import extend as cast_loras
             from .lora_check import require_usable
             text, loras = cast_loras(text, media, loras, check=require_usable)
+            if not refine_from and not upscale_from and not optional_text(continue_from) and first is None:
+                # The card's recipe: its words, its size, a still of it as the first frame (a new shot only).
+                from .lora_studio.cast_loras import recipe as cast_recipe
+                text, media, width, height = cast_recipe(text, media, width, height)
         except Exception as error:
             logging.warning('[FreeVideo] LoRAs linked to cast cards were not added: %s', error)
         node_id = cls.hidden.unique_id
