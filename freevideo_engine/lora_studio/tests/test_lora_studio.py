@@ -235,6 +235,20 @@ class StoreTests(unittest.TestCase):
         same = cast_loras.extend('x', {'references': [{'cast': 'c123'}]}, loras, folders=self.folders)[1]
         self.assertEqual(len(same), 1)
         self.assertEqual(cast_loras.extend('x', {'references': [{'cast': 'other'}]}, None, folders=self.folders), ('x', None))
+        # The card's recipe: first-frame stills by shot, size and words after the prompt.
+        pictures = [row for row in self.store.get(ds['id'])['items'] if row.get('source') != 'reg']
+        self.context.save_recipe(dict(dataset=ds['id'], prompt_suffix='ruby drop earrings, no sunglasses', size=[832, 1472],
+                                      first_frames=dict(default=pictures[0]['id'], close=pictures[1]['id'])))
+        media = {'references': [{'path': 'x', 'cast': 'c123'}]}
+        text, got_media, width, height = cast_loras.recipe('She talks to the camera', media, 1280, 720, folders=self.folders)
+        self.assertTrue(text.endswith('ruby drop earrings, no sunglasses'))
+        self.assertEqual((width, height), (832, 1472))
+        self.assertTrue(got_media['first'].endswith(pictures[1]['file'].split('/')[-1]))  # the close-up still
+        walking = cast_loras.recipe('She walks away', media, 1280, 720, folders=self.folders)[1]
+        self.assertTrue(walking['first'].endswith(pictures[0]['file'].split('/')[-1]))  # no waist still: the default
+        own = cast_loras.recipe('x', dict(media, first='/given.png'), 1280, 720, folders=self.folders)[1]
+        self.assertEqual(own['first'], '/given.png')  # a request's own first frame stays
+        self.assertEqual(cast_loras.recipe('x', {'references': [{'cast': 'other'}]}, 1, 2, folders=self.folders), ('x', {'references': [{'cast': 'other'}]}, 1, 2))
         graph = self.context.test_graph(dict(dataset=ds['id'], strength=0.8, seed=5))
         self.assertEqual(graph['prompt']['2']['class_type'], 'FreeVideoLoRAStack')
         self.assertNotIn('loras', self.context.test_graph(dict(dataset=ds['id'], strength=0))['prompt']['1']['inputs'])
