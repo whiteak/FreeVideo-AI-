@@ -362,6 +362,17 @@ class Context:
             pass
         return result
 
+    @staticmethod
+    def trigger_words(dataset):
+        return dataset['trigger'] if dataset['kind'] == 'style' else ('%s %s' % (dataset['trigger'], dataset.get('class_word') or '')).strip()
+
+    def save_trigger(self, dataset, name):
+        try:
+            from ..lora_triggers import set_trigger
+            set_trigger(name, self.trigger_words(dataset), folders=self.folders)
+        except Exception as error:
+            log.info('[FreeVideo] LoRA Studio could not save the trigger words: %s', error)
+
     def install(self, dataset_id, source, step, version=1):
         dataset = self.store.get(dataset_id)
         file_name = '%s%s%s.safetensors' % (training.run_name(dataset), '_v%d' % version if version > 1 else '',
@@ -432,7 +443,8 @@ class Context:
     def link_entry(self, dataset, lora):
         """What links.json keeps for a card: the LoRA, and the card's recipe (first-frame stills by shot, size, words
         added to the prompt) so that @Name brings all of it."""
-        entry = dict(dataset=dataset['id'], lora=lora.get('name'), strength=lora.get('strength', 1.0), trigger=dataset['trigger'])
+        entry = dict(dataset=dataset['id'], lora=lora.get('name'), strength=lora.get('strength', 1.0), trigger=dataset['trigger'],
+                     trigger_words=self.trigger_words(dataset))
         recipe = lora.get('recipe') or {}
         items = {row['id']: row for row in dataset['items']}
         frames = {shot: self.store.input_name(dataset['id'], items[item]) for shot, item in (recipe.get('first_frames') or {}).items()
@@ -478,6 +490,8 @@ class Context:
         if not isinstance(name, str) or name not in self.folders.get_filename_list('loras'):
             raise ValueError('lora_not_found')
         lora = dict(dataset.get('lora') or {}, name=name, file=None, step=None, installed_at=store_module.now())
+        # A step checkpoint or a file trained elsewhere carries no trigger words of its own (seen with Scarlett's).
+        self.save_trigger(dataset, name)
         lora.setdefault('strength', 1.0)
         if lora.get('cast_id'):
             self.store.link(lora['cast_id'], self.link_entry(dataset, lora))

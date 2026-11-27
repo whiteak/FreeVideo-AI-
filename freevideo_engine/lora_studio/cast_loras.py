@@ -116,8 +116,11 @@ def extend(text, media, loras, *, folders=None, check=None):
             trigger = get_trigger_words(name, folders=folders)
         except Exception:
             trigger = None
-        if trigger:
-            words.append(trigger)
+        if not trigger:
+            # The words LoRA Studio linked with the card, for a file that carries none (an ai-toolkit step checkpoint).
+            trigger = link.get('trigger_words') or link.get('trigger')
+        if isinstance(trigger, str) and trigger.strip():
+            words.append(trigger.strip())
         log.info('[FreeVideo] @mention loads LoRA %s at %.2f', name, strength)
     if words and isinstance(text, str):
         from ..lora_triggers import prepend_words
