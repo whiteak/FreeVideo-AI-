@@ -164,5 +164,21 @@ class BestTake(unittest.TestCase):
         self.assertEqual(ranked, [good, close, weak])
 
 
+class Continuity(unittest.TestCase):
+    def test_skin_colour(self):
+        from freevideo_engine.report_card.continuity import skin_colour
+        frame = np.zeros((60, 60, 3), np.uint8)
+        frame[:30] = (200, 140, 110)                     # warm skin tone on top, black below
+        sat, luma = skin_colour([frame])
+        self.assertAlmostEqual(sat, 0.45, places=2)
+        self.assertLess(luma, 80)
+        self.assertIsNone(skin_colour([np.zeros((60, 60, 3), np.uint8)])[0])
+
+    def test_colour_flags(self):
+        from freevideo_engine.report_card.continuity import colour_flags
+        shots = [dict(sat=.5, luma=50.), dict(sat=.51, luma=52.), dict(sat=.4, luma=49.), dict(sat=None, luma=90.)]
+        self.assertEqual([(f['check'], f['shot']) for f in colour_flags(shots)], [('colour', 3), ('brightness', 4)])
+
+
 if __name__ == '__main__':
     unittest.main()

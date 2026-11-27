@@ -22,7 +22,7 @@ import { zoomable } from './picture_zoom.js';
 import { createUpscaleOffer, upscaleChoices, UPSCALE_USE, UPSCALE_QUEUED, UPSCALE_FAILED } from './upscale_offer.js';
 import { capabilityPoints } from './chain_support.js';
 import { LANGUAGE } from './i18n.js';
-import { openReportCard, openRanking } from './report_card.js';
+import { openReportCard, openRanking, openContinuity } from './report_card.js';
 
 const style = document.createElement('link');
 style.rel = 'stylesheet'; style.href = new URL('./library.css', import.meta.url).href; document.head.append(style);
@@ -1532,6 +1532,8 @@ export function openLibrary(t, options = {}) {
             }});
         if (keys.length > 1 && keys.length <= 16 && keys.every(isVideo)) items.push({id: 'rank', icon: 'check', label: ['Pick the best take', '挑出最佳版本'],
             use: ['Rank these takes by their Report Cards', '按成绩单给这些版本排名'], run: () => openRanking(keys.map(key => works.get(key).id), t)});
+        if (keys.length > 1 && keys.length <= 16 && keys.every(isVideo)) items.push({id: 'continuity', icon: 'check', label: ['Check continuity', '检查连贯性'],
+            use: ['Colour, set and wardrobe compared shot to shot, in the order they were made', '按生成顺序逐镜比较颜色、场景和服装'], run: () => openContinuity(keys.map(key => works.get(key).id), t)});
         if (!selecting) items.push({id: 'select', icon: 'check', label: ['Select', '选择'], use: ['Start selecting with this one', '从这一个开始多选'],
             run: () => { setSelecting(true); picked.add(keys[0]); anchor = keys[0]; syncSelection(); }});
         items.push('-');

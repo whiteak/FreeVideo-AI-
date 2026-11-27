@@ -383,6 +383,32 @@ def register():
             return web.json_response(dict(error=str(error)), status=409)
         return web.json_response(reports, headers={'Cache-Control': 'no-store'})
 
+    @server.routes.post('/freevideo/report-card/continuity')
+    async def continuity(request):
+        """Colour across several takes in film order; with look=true also set and wardrobe at each cut (plan 1.3)."""
+        from .continuity import check
+        if request.headers.get('X-FreeVideo-Library') != '1':
+            raise web.HTTPForbidden(text='Missing header')
+        try:
+            body = await request.json()
+            ids = body.get('ids')
+            if not isinstance(ids, list) or not 2 <= len(ids) <= 16 or not all(isinstance(i, str) for i in ids):
+                raise ValueError('ids must list 2 to 16 saved takes')
+            service = None
+            if body.get('look') is True:
+                service = getattr(server, '_freevideo_prompt_vlm', None)
+                running, pending = server.prompt_queue.get_current_queue()
+                if service is None or running or pending:
+                    return web.json_response(dict(error='The picture reader is free only when no video is rendering; ask again then.'), status=409)
+            async with busy:
+                result = await asyncio.to_thread(check, folder_paths.get_output_directory(), folder_paths.get_input_directory(),
+                                                 list(dict.fromkeys(ids)), service)
+        except (TypeError, AttributeError) as error:
+            raise web.HTTPBadRequest(text=str(error)) from error
+        except (ValueError, RuntimeError, OSError) as error:
+            return web.json_response(dict(error='Continuity not checked: %s' % error), status=409)
+        return web.json_response(result, headers={'Cache-Control': 'no-store'})
+
     @server.routes.post('/freevideo/report-card/look')
     async def look(request):
         """The picture reader's questions (wardrobe, set, hands, people) on one take, added to its Report Card."""
