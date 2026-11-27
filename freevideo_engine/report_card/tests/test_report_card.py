@@ -238,5 +238,13 @@ class Drafts(unittest.TestCase):
         self.assertEqual(final, '2026-01-01/%032x' % 4)
 
 
+    def test_draft_ok(self):
+        from freevideo_engine.report_card.drafts import draft_ok
+        face = lambda m: dict(name='A', median=m, bar=.72, passed=m >= .72)
+        self.assertTrue(draft_ok(dict(faces=[face(.66)], flags=[dict(check='pop', text='p')])))
+        self.assertFalse(draft_ok(dict(faces=[face(.55)], flags=[])))
+        self.assertFalse(draft_ok(dict(faces=[face(.8)], flags=[dict(check='walk_back', text='w')])))
+
+
 if __name__ == '__main__':
     unittest.main()

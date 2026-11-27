@@ -12,6 +12,9 @@ import uuid
 POLL = 2.
 WAIT = 6 * 3600
 ROUNDS = 2
+# Half-size drafts score lower than the finished take (test: best draft 0.66, the same seed finished 0.83), so a
+# draft passes with its faces this far under the card's bar.
+DRAFT_SLACK = .12
 
 
 class Runs:
@@ -64,6 +67,14 @@ def library_of(row):
     return result.get('library_id') if isinstance(result, dict) else None
 
 
+def draft_ok(report):
+    """Good enough to finish without another round: no problems besides faces, faces within DRAFT_SLACK of the bar."""
+    from . import take_qa_part
+    faces = report.get('faces') or []
+    others = [p for p in take_qa_part(dict(report, faces=[]))[0]]
+    return not others and all(f.get('median') is not None and f['median'] >= f['bar'] - DRAFT_SLACK for f in faces)
+
+
 def run(jobs, spec, drafts, output_root, input_root, update=lambda **values: None):
     """Draft `drafts` seeds, rank them, retake once if none passes, finish the best. Returns the final library id."""
     from . import build, rank, score
@@ -78,7 +89,7 @@ def run(jobs, spec, drafts, output_root, input_root, update=lambda **values: Non
         update(phase='checking')
         checked = sorted(checked + rank(output_root, input_root, made), key=score, reverse=True) if made else checked
         update(drafts=[dict(id=r['id'], passed=r['passed'], faces=[f.get('median') for f in r['faces']]) for r in checked])
-        if checked and checked[0]['passed']:
+        if checked and draft_ok(checked[0]):
             break
     if not checked:
         raise RuntimeError('no draft finished')
