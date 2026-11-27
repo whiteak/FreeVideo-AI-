@@ -104,3 +104,37 @@ export function openRanking(ids, t = (en) => en) {
         } catch (error) { body.replaceChildren(el('p', error.message, 'fv-rc-fail')); }
     })();
 }
+
+// Film continuity (plan step 1.3): colour shot to shot, and on request set and wardrobe at every cut.
+export function openContinuity(ids, t = (en) => en) {
+    if (!styled) { const s = el('style', css); document.head.append(s); styled = true; }
+    const dialog = el('dialog', null, 'fv-report-card');
+    const body = el('div');
+    const lookButton = el('button', t('Ask the picture reader', '让看图模型检查'));
+    const close = el('button', t('Close', '关闭'));
+    close.onclick = () => dialog.close();
+    dialog.addEventListener('close', () => dialog.remove());
+    dialog.append(el('h2', t('Continuity', '连贯性')), body, el('div', null, 'fv-rc-actions'));
+    dialog.lastElementChild.append(lookButton, close);
+    document.body.append(dialog);
+    dialog.showModal();
+    const run = async (look) => {
+        lookButton.disabled = true;
+        body.replaceChildren(el('p', look ? t('Comparing every cut…', '正在比较每个剪接点…') : t('Comparing colour across {count} shots…', '正在比较 {count} 个镜头的颜色…', { count: ids.length })));
+        try {
+            const response = await api.fetchApi('/freevideo/report-card/continuity', {method: 'POST',
+                headers: {'Content-Type': 'application/json', 'X-FreeVideo-Library': '1'}, body: JSON.stringify({ids, look})});
+            const result = await response.json().catch(() => null);
+            if (!response.ok) throw new Error(result?.error || 'The check could not run.');
+            body.replaceChildren(el('p', result.passed ? t('The shots match.', '镜头之间一致。') : t('Some shots do not match.', '有镜头不一致。'),
+                'fv-rc-verdict ' + (result.passed ? 'fv-rc-pass' : 'fv-rc-fail')));
+            const list = el('ul');
+            for (const flag of result.flags) list.append(el('li', flag.text));
+            if (list.children.length) body.append(list);
+            for (const note of result.notes) body.append(el('p', note, 'fv-rc-note'));
+        } catch (error) { body.replaceChildren(el('p', error.message, 'fv-rc-fail')); }
+        finally { lookButton.disabled = false; }
+    };
+    lookButton.onclick = () => run(true);
+    run(false);
+}
