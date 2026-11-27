@@ -212,3 +212,20 @@ def plan(seconds, single=False, max_frames=None, single_limit_seconds=None, bloc
         shown += new
         blocks.append(dict(seconds=length, frames=requested, new_frames=new))
     return dict(seconds=total, frames=frames_all, single=False, hide_frames=shown - frames_all, blocks=blocks)
+
+
+# Fork addition (plan step 3.1): one generation holds a story for about 15 s (4 of 4 takes of 29 s restarted at
+# 14.5-15.1 s), and a fixed last frame on a longer take makes it cut back (2 of 2 seeds).
+STORY_SECONDS = BLOCK_SECONDS
+
+
+def long_take_notes(seconds, *, last_frame=False, parts=1):
+    """Warnings for one generation longer than a story holds; nothing for parts of a chain or short takes."""
+    if parts > 1 or seconds <= STORY_SECONDS + .5:
+        return []
+    notes = ['One generation holds a story for about %d s; past that the action often restarts. For %g s, make it in '
+             '%d s parts (block length %d).' % (STORY_SECONDS, seconds, STORY_SECONDS, STORY_SECONDS)]
+    if last_frame:
+        notes.append('A fixed last frame on a take over %d s tends to cut back to the start: leave the last frame '
+                     'empty, or make it in %d s parts.' % (STORY_SECONDS, STORY_SECONDS))
+    return notes

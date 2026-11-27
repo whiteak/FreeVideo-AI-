@@ -300,6 +300,11 @@ class FreeVideoGenerate(io.ComfyNode):
             if not previews_supported():
                 preview = False
                 notes.append('An extended part is made in full, without stopping at the preview.')
+        if not refine_from and not upscale_from and not options.get('continue_from'):
+            # Long-take planner (fork addition): warn before a single generation runs past what a story holds.
+            from .chain_plan import long_take_notes
+            has_last = last is not None or isinstance(media, dict) and media.get('last') is not None
+            notes += long_take_notes(seconds, last_frame=has_last, parts=chain.get('count', 1) if chain is not None else 1)
         from .two_pass import validate_steps
         if not refine_from and not upscale_from:
             validate_steps(base_steps, refine_steps, two_pass)

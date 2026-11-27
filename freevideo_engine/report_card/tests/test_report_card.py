@@ -180,5 +180,14 @@ class Continuity(unittest.TestCase):
         self.assertEqual([(f['check'], f['shot']) for f in colour_flags(shots)], [('colour', 3), ('brightness', 4)])
 
 
+class LongTake(unittest.TestCase):
+    def test_long_take_notes(self):
+        from freevideo_engine.chain_plan import long_take_notes
+        self.assertEqual(long_take_notes(15.), [])
+        self.assertEqual(len(long_take_notes(29.)), 1)
+        self.assertEqual(len(long_take_notes(29., last_frame=True)), 2)
+        self.assertEqual(long_take_notes(29., last_frame=True, parts=2), [])
+
+
 if __name__ == '__main__':
     unittest.main()
