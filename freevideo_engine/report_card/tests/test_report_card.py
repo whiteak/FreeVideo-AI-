@@ -104,5 +104,27 @@ class Cards(unittest.TestCase):
             self.assertEqual([c['name'] for c in rc.cast_cards(out, inp, take, ['c4'])][0], 'Dee')
 
 
+class Look(unittest.TestCase):
+    def test_frames_skip_the_pops(self):
+        from freevideo_engine.report_card.look import frame_times
+        self.assertEqual(frame_times(362, 24.), [3, 122, 241, 360])
+
+    def test_questions_and_answers(self):
+        from freevideo_engine.prompt_vlm.rules import ask_request
+        from freevideo_engine.report_card.look import questions, read_answers
+        cards = [dict(id='c1', name='Ada', description='a red dress', _asked=True), dict(id='c2', name='Ben', description='')]
+        request = questions(['a.jpg', 'b.jpg', 'c.jpg', 'd.jpg'], cards, {'c2': dict(prompt_suffix='a black suit')})
+        ask_request(request)   # the picture reader accepts it as is
+        self.assertEqual(len(request['questions']), 5)
+        cards[1]['_asked'] = True
+        answers = [dict(text='{"counts": [2, 2, 3, 2]}'), dict(text='```json\n{"problems": []}\n```'),
+                   dict(text='{"changes": [{"frame": 2, "what": "floor turns white"}]}'),
+                   dict(text='{"differences": []}'), dict(text='not json')]
+        flags, notes = read_answers(request, answers, [3, 122, 241, 360], 24., cards)
+        self.assertEqual([f['check'] for f in flags], ['people', 'changes'])
+        self.assertIn('5.1 s', flags[1]['text'])
+        self.assertEqual(len(notes), 1)
+
+
 if __name__ == '__main__':
     unittest.main()
