@@ -246,5 +246,42 @@ class Drafts(unittest.TestCase):
         self.assertFalse(draft_ok(dict(faces=[face(.8)], flags=[dict(check='walk_back', text='w')])))
 
 
+class LoRAStartStep(unittest.TestCase):
+    def test_gate_skips_branches_for_the_first_steps(self):
+        import torch
+        from freevideo_engine import lora_online
+        module = torch.nn.Module()
+        branch = torch.nn.Module()
+        branch.register_buffer('a', torch.ones(1, 2))
+        branch.register_buffer('b', torch.ones(2, 1))
+        branch.scale = 1.
+        module._freevideo_lora = torch.nn.ModuleList([branch])
+        raw = torch.ones(1, 2)
+        lora_online.gate(2)
+        outputs = []
+        for _ in range(3):
+            outputs.append(lora_online.apply(module, raw, torch.zeros(1, 2)).sum().item())
+            lora_online.step_done()
+        self.assertEqual(outputs, [0., 0., 4.])
+        lora_online.gate(0)
+        self.assertEqual(lora_online.apply(module, raw, torch.zeros(1, 2)).sum().item(), 4.)
+
+    def test_start_step_from_stack_to_media(self):
+        from freevideo_engine.comfy_assets import resolve_loras
+        rows = resolve_loras(json.dumps([dict(name='a.safetensors', strength=1., start_step=3),
+                                         dict(name='b.safetensors', strength=.5)]), ['a.safetensors', 'b.safetensors'],
+                             lambda name: Path(tempfile.gettempdir(), name))
+        self.assertEqual([r.get('start_step') for r in rows], [3, None])
+        with self.assertRaises(ValueError):
+            resolve_loras(json.dumps([dict(name='a.safetensors', start_step=40)]), ['a.safetensors'], lambda n: n)
+
+    def test_media_request_keeps_start_step(self):
+        from freevideo_engine.media_request import read as read_media
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder, 'media.json')
+            path.write_text(json.dumps(dict(version=1, lora_start_step=3)))
+            self.assertEqual(read_media(path).get('lora_start_step'), 3)
+
+
 if __name__ == '__main__':
     unittest.main()

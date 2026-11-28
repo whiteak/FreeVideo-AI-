@@ -40,7 +40,7 @@ def resolve_loras(serialized, names, resolve, previous=None):
         raise ValueError('Use at most 32 LoRAs per request')
     available = set(names)
     for row in rows:
-        if not isinstance(row, dict) or set(row) - {'name', 'strength', 'enabled'}:
+        if not isinstance(row, dict) or set(row) - {'name', 'strength', 'enabled', 'start_step'}:
             raise ValueError('Invalid LoRA item')
         if type(row.get('enabled', True)) is not bool:
             raise ValueError('LoRA enabled must be a boolean')
@@ -52,8 +52,12 @@ def resolve_loras(serialized, names, resolve, previous=None):
             raise ValueError('LoRA strength must be a finite number between -100 and 100')
         if not isinstance(name, str) or name not in available or not name.lower().endswith('.safetensors'):
             raise ValueError('Select an available safetensors LoRA from your ComfyUI model folders')
+        start = row.get('start_step', 0)
+        if type(start) is not int or not 0 <= start <= 32:
+            raise ValueError('LoRA start step must be a whole number from 0 to 32')
         if strength != 0:
-            result.append({'path': str(Path(resolve(name)).resolve()), 'strength': strength})
+            result.append({'path': str(Path(resolve(name)).resolve()), 'strength': strength,
+                           **({'start_step': start} if start else {})})
     return result
 
 

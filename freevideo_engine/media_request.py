@@ -28,7 +28,7 @@ def read(path):
         raise ValueError('Expected a version 1 Eclipse media request')
     if 'early_steps' in value:
         raise ValueError('early_steps is only allowed on video references')
-    if set(value) - {'version', 'first', 'last', 'middle', 'references', 'loras', 'conditioning_info'}:
+    if set(value) - {'version', 'first', 'last', 'middle', 'references', 'loras', 'conditioning_info', 'lora_start_step'}:
         raise ValueError('Unknown media request fields')
     result = {'version': 1}
     def file_info(name):
@@ -116,6 +116,12 @@ def read(path):
                         raise ValueError('LoRA ' + name + ' must be finite')
                     row[name] = number
             result[field].append(row)
+    start = value.get('lora_start_step')
+    if start is not None:
+        if type(start) is not int or not 0 <= start <= 32:
+            raise ValueError('lora_start_step must be a whole number from 0 to 32')
+        if start:
+            result['lora_start_step'] = start
     from .original_audio import original
     original(result)
     if result['references'] and any(result.get(k) for k in ('first', 'last')):

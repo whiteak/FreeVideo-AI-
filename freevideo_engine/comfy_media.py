@@ -173,7 +173,11 @@ def export(run, canvas, *, first=None, last=None, references=None, loras=None, c
                 row['early_steps'] = reference['early_steps']
             media['references'].append(row)
     if loras:
-        media['loras'] = [dict(row) for row in loras]
+        media['loras'] = [{k: v for k, v in row.items() if k != 'start_step'} for row in loras]
+        # LoRA start step (fork addition): one for the request, the latest any LoRA asks for.
+        start = max((row.get('start_step', 0) for row in loras), default=0)
+        if start:
+            media['lora_start_step'] = start
     if conditioning is not None:
         import torch
         from .media_conditioning import from_comfy

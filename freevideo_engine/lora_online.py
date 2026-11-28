@@ -10,6 +10,17 @@ import torch.nn.functional as F
 TILE_ROWS = 512
 SHARED_LIMIT_BYTES = 256 * 2**20
 _shared = None
+# Steps of the current pass to run without the branches (fork addition, plan step 2.1), and the steps done so far.
+_gate = {'start': 0, 'done': 0}
+
+
+def gate(start):
+    """Start a pass whose first `start` steps run without LoRA branches."""
+    _gate.update(start=max(0, int(start or 0)), done=0)
+
+
+def step_done():
+    _gate['done'] += 1
 
 
 def attach_block(block, index, cache, manifest, load, device='cpu'):
@@ -79,7 +90,7 @@ def _down(branch, rows):
 
 def apply(module, raw, output, channels=None):
     branches = getattr(module, '_freevideo_lora', None)
-    if branches is None:
+    if branches is None or _gate['done'] < _gate['start']:
         return output
     rows = raw.reshape(-1, raw.shape[-1])
     target = output.reshape(-1, output.shape[-1])
