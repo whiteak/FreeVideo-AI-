@@ -98,6 +98,13 @@ async def comfy_entrypoint():
     except Exception as error:
         import logging
         logging.warning('[Eclipse] LoRA Studio routes not registered: %s', error)
+    try:
+        # Take Report Card: checks every finished take (fork addition).
+        from .freevideo_engine.report_card import register as report_card_routes
+        report_card_routes()
+    except Exception as error:
+        import logging
+        logging.warning('[Eclipse] Report Card routes not registered: %s', error)
     from .freevideo_engine.comfy_nodes import FreeVideoExtension, register_prompt_cleanup
     register_prompt_cleanup()
     from .freevideo_engine.comfy_nodes import schedule_startup_prefetch
