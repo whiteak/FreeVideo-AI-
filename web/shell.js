@@ -1,5 +1,5 @@
-// The FreeVideo shell: what every view shares. It knows which view is in front, makes each view fill the
-// window edge to edge, keeps ComfyUI's own frame, title and icon out of sight while FreeVideo is in front,
+// The Eclipse shell: what every view shares. It knows which view is in front, makes each view fill the
+// window edge to edge, keeps ComfyUI's own frame, title and icon out of sight while Eclipse is in front,
 // and moves between views with one cross-fade (switchView). Other modules use window.FreeVideoShell or
 // these exports; see SHELL-TASKS.md for the agreed names.
 const sheet = document.createElement('link');
@@ -17,7 +17,7 @@ export const VIEWS = ['studio', 'image', 'nodes', 'editor', 'autopilot'];
 const VIEW_CLASS = {image: 'fv-image', editor: 'fv-editor', autopilot: 'fv-autopilot'};
 const root = document.documentElement;
 let view = 'nodes', nodesShown = false;
-// Until the first graph is in and FreeVideo has decided what to show, a browser that has used FreeVideo before keeps
+// Until the first graph is in and Eclipse has decided what to show, a browser that has used Eclipse before keeps
 // ComfyUI's frame hidden (no flash of it on a reload); a decision for the user's own workflow gives it back.
 let provisional = false;
 const listeners = new Set();
@@ -99,7 +99,7 @@ function markSurface() {
     const shell = view !== 'nodes' ? 'view' : nodesShown ? 'nodes' : provisional || cover ? 'cover' : '';
     if (shell === 'view' || shell === 'nodes') provisional = false;
     if (shell) root.dataset.fvShell = shell; else delete root.dataset.fvShell;
-    // The whole page is FreeVideo's while it is in front: interface text is not selectable (shell.css).
+    // The whole page is Eclipse's while it is in front: interface text is not selectable (shell.css).
     root.classList.toggle('fv-app', !!shell);
     root.dataset.fvView = view;
 }
@@ -116,7 +116,7 @@ export function noteView(next, {nodes} = {}) {
     guardTitle();
     if (changed) {
         globalThis.requestAnimationFrame?.(raiseOverlays);
-        for (const listener of [...listeners]) try { listener(view); } catch (error) { console.warn('FreeVideo shell listener:', error); }
+        for (const listener of [...listeners]) try { listener(view); } catch (error) { console.warn('Eclipse shell listener:', error); }
         globalThis.dispatchEvent?.(new CustomEvent('freevideo-view', {detail: {view}}));
     }
 }
@@ -447,10 +447,10 @@ export function toastHost() {
 export function statusAnchor() { return frontBar()?.querySelector('[data-fv-status]') || null; }
 function raiseOverlays() { if (toasts?.childElementCount) raise(toasts); }
 
-// ── The browser tab says FreeVideo, with FreeVideo's icon, whatever ComfyUI writes there. ──
+// ── The browser tab says Eclipse, with Eclipse's icon, whatever ComfyUI writes there. ──
 const ICON = new URL('./assets/icon.svg', import.meta.url).href;
 const TITLE = 'FreeVideo';
-// ComfyUI writes "[42%][Node] *Workflow - ComfyUI"; FreeVideo's own notices ("生成好了", a prefix) are kept.
+// ComfyUI writes "[42%][Node] *Workflow - ComfyUI"; Eclipse's own notices ("生成好了", a prefix) are kept.
 export const shellTitle = title => /ComfyUI/i.test(String(title || '')) || !String(title || '').trim() ? TITLE : String(title);
 let guarding = false;
 function guardTitle() {
@@ -481,7 +481,7 @@ function quietSplash() {
     } catch { /* Private browsing: the loading screen keeps ComfyUI's colours. */ }
 }
 
-// ── The cover over ComfyUI while FreeVideo opens its first view (a launcher visit or a reload of one). ──
+// ── The cover over ComfyUI while Eclipse opens its first view (a launcher visit or a reload of one). ──
 let cover = null;
 export function showCover() {
     if (cover || !document.body) return cover;
@@ -496,10 +496,10 @@ export function showCover() {
     cover.fvSafety = safety;
     return cover;
 }
-// FreeVideo has decided what to show (freevideo.js after the first graph, collapseWorkspaces for the user's own one).
+// Eclipse has decided what to show (freevideo.js after the first graph, collapseWorkspaces for the user's own one).
 export function settleShell() { bootDone(); if (provisional) { provisional = false; markSurface(); } }
 // The engine's opening screen (freevideo_engine/comfy_boot.py), in place from the page's first frame on a visit that
-// opens FreeVideo: it stands in for the cover and gives way when FreeVideo has decided what to show.
+// opens Eclipse: it stands in for the cover and gives way when Eclipse has decided what to show.
 const booting = () => globalThis.__freevideoBoot?.active === true;
 function bootDone() { try { globalThis.__freevideoBoot?.done?.(); } catch { /* Its own timer still ends it. */ } }
 export function hideCover() {
@@ -555,22 +555,22 @@ export function installShell({cover: wantCover = false} = {}) {
         const polish = document.createElement('link'); polish.rel = 'stylesheet'; polish.dataset.fvSheet = 'polish';
         polish.href = new URL('./glass/polish.css', import.meta.url).href; document.head.append(polish);
         // The stage light follows the work in front (the look's own module; it installs itself).
-        import('./glass/polish.js').catch(error => console.warn('FreeVideo look:', error));
+        import('./glass/polish.js').catch(error => console.warn('Eclipse look:', error));
         // The picture as the light behind the views, and glass on the windows over it (the stage look's own module).
-        import('./glass/stage_light.js').catch(error => console.warn('FreeVideo stage light:', error));
+        import('./glass/stage_light.js').catch(error => console.warn('Eclipse stage light:', error));
     }
-    // FreeVideo's own right-click menu wherever a part has none of its own (text boxes, links, the empty page).
+    // Eclipse's own right-click menu wherever a part has none of its own (text boxes, links, the empty page).
     // ComfyUI's Templates window: Chinese words for its search box and first category, and the light theme.
     if (!document.querySelector('link[data-fv-sheet="comfy-templates"]')) {
         const sheet = document.createElement('link'); sheet.rel = 'stylesheet'; sheet.dataset.fvSheet = 'comfy-templates';
         sheet.href = new URL('./comfy_templates.css', import.meta.url).href; document.head.append(sheet);
     }
-    import('./comfy_templates.js').then(({watchTemplates}) => watchTemplates()).catch(error => console.warn('FreeVideo templates:', error));
-    import('./context_fallback.js').catch(error => console.warn('FreeVideo menu:', error));
+    import('./comfy_templates.js').then(({watchTemplates}) => watchTemplates()).catch(error => console.warn('Eclipse templates:', error));
+    import('./context_fallback.js').catch(error => console.warn('Eclipse menu:', error));
     guardTitle(); watchHead(); quietSplash();
     for (const type of SWITCH_INPUT) globalThis.addEventListener?.(type, pressDuringSwitch, {capture: true, passive: false});
     // Edge to edge on phones and tablets too: the page may use the area under a notch (the bars pad themselves with
-    // the safe-area insets), and the browser's own frame takes FreeVideo's ground colour.
+    // the safe-area insets), and the browser's own frame takes Eclipse's ground colour.
     const viewport = document.querySelector('meta[name=viewport]');
     if (viewport && !/viewport-fit/.test(viewport.content)) viewport.content = `${viewport.content},viewport-fit=cover`;
     if (!document.querySelector('meta[name=theme-color]') && document.head) {
@@ -610,7 +610,7 @@ export function installShell({cover: wantCover = false} = {}) {
         dialog.fvForcedClose = false;
         if (dialog.open || !dialog.isConnected) return;
         event.stopImmediatePropagation();
-        try { dialog.showModal(); } catch (error) { console.warn('FreeVideo view reopen:', error); }
+        try { dialog.showModal(); } catch (error) { console.warn('Eclipse view reopen:', error); }
     }, true);
     globalThis.FreeVideoShell = {installed: true, view: currentView, onView, go, overlayHost, viewDialog, VIEWS, hideCover, settleShell, setTheme, setGlass, setTransitions, transitionMode, transitionsOn, setMaterial, setLook, switchView, switching: isSwitching, toastHost, statusAnchor, holdWhile};
     return globalThis.FreeVideoShell;

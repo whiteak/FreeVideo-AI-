@@ -29,7 +29,7 @@ def requirements_content(path):
         kept.append(row)
     if len(kept) == len(rows):
         return original
-    return ('# FreeVideo managed host: omit workflow templates (policy v1).\n' + ''.join(kept)).encode('utf-8')
+    return ('# Eclipse managed host: omit workflow templates (policy v1).\n' + ''.join(kept)).encode('utf-8')
 
 
 def install_content(path):
@@ -45,7 +45,7 @@ def install_content(path):
         return content
     if content and not content.endswith((b'\n', b'\r')):
         content += b'\n'
-    return content + ('# FreeVideo managed host: add packages ComfyUI imports but does not declare.\n'
+    return content + ('# Eclipse managed host: add packages ComfyUI imports but does not declare.\n'
                       + ''.join(name + '\n' for name in missing)).encode('utf-8')
 
 

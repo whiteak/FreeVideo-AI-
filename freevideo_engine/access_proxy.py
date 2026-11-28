@@ -33,7 +33,7 @@ PHONE_TYPES = {'.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+
 # Inline like the password page: installed packages only carry .js/.css/.svg under web/.
 PHONE_PAGE = (
     '<!doctype html>'
-    '<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="referrer" content="same-origin"><title>FreeVideo</title><link rel="stylesheet" href="./theme.css"><link rel="stylesheet" href="./phone.css"></head><body class="fv-phone"><div id="phone"></div><script type="module" src="./phone.js"></script></body></html>')
+    '<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="referrer" content="same-origin"><title>Eclipse Image and Video Creator</title><link rel="stylesheet" href="./theme.css"><link rel="stylesheet" href="./phone.css"></head><body class="fv-phone"><div id="phone"></div><script type="module" src="./phone.js"></script></body></html>')
 
 COOKIE = 'freevideo_access'
 DAYS = 30
@@ -42,10 +42,10 @@ LOGIN_PATH = '/m/login'
 PASSWORD_COPY = dict(
     en=dict(title='FreeVideo', password='Password', remember='Keep me signed in',
             submit='Sign in', incorrect='Incorrect password', retry='Too many attempts. Try again in {minutes} min.',
-            phone='FreeVideo mobile'),
+            phone='Eclipse mobile'),
     zh=dict(title='FreeVideo', password='密码', remember='保持登录',
             submit='登录', incorrect='密码不正确', retry='尝试次数过多，请 {minutes} 分钟后再试。',
-            phone='FreeVideo 手机版'))
+            phone='Eclipse 手机版'))
 
 
 def password_language(request):
@@ -113,21 +113,21 @@ def same_origin(request):
 HOP_BY_HOP = frozenset(('connection', 'keep-alive', 'proxy-authenticate', 'proxy-authorization', 'proxy-connection',
                         'te', 'trailer', 'transfer-encoding', 'upgrade', 'content-length'))
 DENIED = """<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>FreeVideo</title></head><body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#10151e;
+<title>Eclipse Image and Video Creator</title></head><body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#10151e;
 color:#e7edf7;font:15px/1.6 'Segoe UI','Noto Sans CJK SC','Noto Sans SC',system-ui,sans-serif"><main style="max-width:520px;
 padding:28px 32px;border:1px solid #2a3443;border-radius:12px;background:#1a222e"><h1 style="margin:0 0 10px;font-size:19px">
-This FreeVideo server opens from its access link</h1><p style="margin:0 0 18px;color:#a5b3c6">Copy the link in the launcher under Settings → Preferences → Local network. On a Linux server, run
-<code>freevideo status</code> to see it.</p><h1 style="margin:0 0 10px;font-size:19px">请使用访问链接打开这台 FreeVideo 服务器</h1>
+This Eclipse server opens from its access link</h1><p style="margin:0 0 18px;color:#a5b3c6">Copy the link in the launcher under Settings → Preferences → Local network. On a Linux server, run
+<code>freevideo status</code> to see it.</p><h1 style="margin:0 0 10px;font-size:19px">请使用访问链接打开这台 Eclipse 服务器</h1>
 <p style="margin:0;color:#a5b3c6">请在启动器的“设置 → 偏好 → 局域网”中复制链接。Linux 服务器上运行 <code>freevideo status</code> 可以看到链接。</p></main></body></html>"""
 
 
-# Through this proxy a device on the network reads ComfyUI's input folder only in FreeVideo's own folders: the
+# Through this proxy a device on the network reads ComfyUI's input folder only in Eclipse's own folders: the
 # input folder itself and any other folder there may hold the user's own pictures.
 INPUT_FOLDERS = ('freevideo', 'freevideo-image', 'freevideo-image-ref', 'freevideo-draft')
 
 
 def input_allowed(request):
-    """False for a /view request that would read from ComfyUI's input folder outside FreeVideo's own folders."""
+    """False for a /view request that would read from ComfyUI's input folder outside Eclipse's own folders."""
     if request.path not in ('/view', '/api/view'):
         return True
     query = request.rel_url.query
@@ -159,7 +159,7 @@ def supplied(request):
 def denied(request):
     if 'text/html' in request.headers.get('Accept', ''):
         return web.Response(status=401, text=DENIED, content_type='text/html')
-    return web.json_response(dict(error='This FreeVideo server needs its access token.'), status=401)
+    return web.json_response(dict(error='This Eclipse server needs its access token.'), status=401)
 
 
 def forwarded(request):

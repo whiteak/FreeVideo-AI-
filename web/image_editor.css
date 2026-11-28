@@ -1,4 +1,4 @@
-/* Image editor. A dark work surface in FreeVideo's tokens (theme.css): tools on
+/* Image editor. A dark work surface in Eclipse's tokens (theme.css): tools on
    the left, the active tool's options above the picture, adjustments and
    layers on the right. The stage stays dark in every theme so colours read true. */
 .fv-image-editor{box-sizing:border-box;width:min(1520px,calc(100vw - 24px));height:min(960px,calc(100dvh - 24px));max-width:none;max-height:none;

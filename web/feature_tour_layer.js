@@ -245,7 +245,7 @@ export function openAnchor({owner, target = null, keep = [], level = 2, shapes =
         owner?.removeEventListener('close', ownerClosed);
         const hadFocus = layer.contains(document.activeElement);
         if (current?.layer === layer) current = null;
-        try { onClose?.(reason); } catch (error) { console.warn('FreeVideo tour layer:', error); }
+        try { onClose?.(reason); } catch (error) { console.warn('Eclipse tour layer:', error); }
         if (hadFocus && restore?.isConnected && reason !== 'outside') restore.focus({preventScroll: true});
         const remove = () => { try { layer.hidePopover?.(); } catch { /* Not a popover. */ } layer.remove(); };
         if (how === 'now' || reduced) { remove(); return Promise.resolve(); }

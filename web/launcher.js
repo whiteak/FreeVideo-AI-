@@ -30,7 +30,7 @@ function cachedStudioProject() {
 }
 
 const finite = (value, low, high) => typeof value === 'number' && Number.isFinite(value) && value >= low && value <= high;
-// A tab restored from another FreeVideo version is replaced by the current default workflow.
+// A tab restored from another Eclipse version is replaced by the current default workflow.
 // Only the creation choices come across, by name; a value that is not valid now is dropped.
 // Positions 0-4 of the generate node and 0 of the media node have never moved between versions.
 function currentStudioWorkflow(saved, bundled) {
@@ -121,11 +121,11 @@ async function existingStudioWorkflow(target, bundled) {
     return restorePromptDraft(api, graph, target.path);
 }
 
-// Opens FreeVideo's own workflow in a tab of its own and returns its generate node. The workflow in front
-// is left as it is: an existing FreeVideo tab comes back with its project, otherwise a new one opens.
+// Opens Eclipse's own workflow in a tab of its own and returns its generate node. The workflow in front
+// is left as it is: an existing Eclipse tab comes back with its project, otherwise a new one opens.
 export async function openFreeVideoWorkflow() {
     const response = await api.fetchApi('/freevideo/launcher/workflow');
-    if (!response.ok) throw new Error(`FreeVideo workflow: HTTP ${response.status}`);
+    if (!response.ok) throw new Error(`Eclipse workflow: HTTP ${response.status}`);
     const workflow = await restorePromptDraft(api, await response.json());
     const store = app.extensionManager?.workflow;
     const existing = store?.getWorkflowByPath?.('workflows/FreeVideo.json')
@@ -151,7 +151,7 @@ async function keepInFront(workflow, opened) {
             && (app.extensionManager?.spinner || performance.now() - configured < 600)) await sleep(100);
         const store = app.extensionManager?.workflow;
         // Opening the bundled graph before session restore overwrites the cached
-        // FreeVideo tab, including its media and connections. Reuse that project.
+        // Eclipse tab, including its media and connections. Reuse that project.
         if (studioWorkflow(app.graph)) {
             const current = app.graph.serialize(), target = store?.activeWorkflow;
             const replaced = target?.path === 'workflows/FreeVideo.json' ? currentStudioWorkflow(current, workflow) : null;
@@ -181,7 +181,7 @@ async function keepInFront(workflow, opened) {
 // then reject one internal step of loadGraphData (the address hash) with this error, un-awaited, after
 // the graph itself has loaded. Nothing in the page depends on that step; absorb exactly this rejection
 // for the duration of the call instead of leaving it unhandled. The listener runs before the page
-// check's own, which therefore never mistakes it for a FreeVideo failure.
+// check's own, which therefore never mistakes it for a Eclipse failure.
 const canvasNotReady = reason => reason instanceof Error && reason.message === 'getCanvas: canvas is null';
 async function loadWhileStarting(graph, name) {
     const absorb = event => { if (canvasNotReady(event.reason)) { event.preventDefault(); event.stopImmediatePropagation(); } };
@@ -205,7 +205,7 @@ app.registerExtension({
         const cached = cachedStudioProject();
         try {
             const response = await api.fetchApi('/freevideo/launcher/workflow');
-            if (!response.ok) throw new Error(`FreeVideo workflow: HTTP ${response.status}`);
+            if (!response.ok) throw new Error(`Eclipse workflow: HTTP ${response.status}`);
             // A fresh copy of the bundled workflow, with the prompt last written.
             workflow = await restorePromptDraft(api, await response.json());
             // Opening the bundled graph now would overwrite the cached project's
@@ -213,14 +213,14 @@ app.registerExtension({
             // brings the restored tab forward instead.
             if (!cached) await loadWhileStarting(structuredClone(workflow), 'FreeVideo');
         } catch (error) {
-            console.error('FreeVideo launcher:', error);
+            console.error('Eclipse launcher:', error);
             health({type: 'launch', error});
             launcherRestoreFinished();
             return;
         }
         const opened = cached ? undefined : app.extensionManager?.workflow?.activeWorkflow;
         keepInFront(workflow, opened).then(() => { health({type: 'launch'}); launcherRestoreFinished(); }, error => {
-            console.error('FreeVideo launcher:', error);
+            console.error('Eclipse launcher:', error);
             health({type: 'launch', error});
             launcherRestoreFinished();
         });

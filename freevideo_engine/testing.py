@@ -336,10 +336,10 @@ def report(directory, value):
         media += '<p><a href="%s/case.json">Metrics</a> · <a href="%s/run.log">Log</a> · <a href="%s/artifacts.json">All artifacts</a></p>' % ((quote(row['id']),) * 3)
         if row.get('error'):
             media += '<pre>' + html.escape(row['error']) + '</pre>'
-    (directory / 'report.html').write_text('<!doctype html><html lang="en"><meta charset="utf-8"><title>FreeVideo test report</title>'
+    (directory / 'report.html').write_text('<!doctype html><html lang="en"><meta charset="utf-8"><title>Eclipse test report</title>'
         '<style>body{font:16px system-ui;margin:32px;background:#111827;color:#e5e7eb}a{color:#93c5fd}'
         'table{border-collapse:collapse;font-size:13px}td,th{padding:8px;border:1px solid #4b5563}video{max-width:800px;width:100%}'
-        'pre{white-space:pre-wrap}section{overflow:auto}</style><h1>FreeVideo test report</h1>'
+        'pre{white-space:pre-wrap}section{overflow:auto}</style><h1>Eclipse test report</h1>'
         '<p>Status: ' + html.escape(value['status']) + '. All videos, audio, raw RGB, latents, conditions and logs are retained locally.</p>'
         '<p>Whole GPU usage includes other applications. Linux uses PSS; Windows separately records working set and private commit, and guards their maximum. '
         'Neither includes all system file cache. Windows available memory also checks commit headroom. RAM/VRAM budgets are placement guidance; '
@@ -403,7 +403,7 @@ def _main(argv=None):
     if args.json:
         print(json.dumps(test_plan, indent=2))
     else:
-        ui.panel('FreeVideo / Engine test plan', [('GPU', machine['gpu_uuid']),
+        ui.panel('Eclipse / Engine test plan', [('GPU', machine['gpu_uuid']),
             ('Cases', '%d · text encode → 8 + 3 denoising steps → video + audio → validation' % len(cases)),
             ('Cache', 'Fresh request processes; persistent compatible inputs ' + ('bypassed' if args.no_tuning else 'reused automatically; no eviction')),
             ('Disk', '~%.2f GiB for retained artifacts · %.2f GiB free' % (disk_needed/GiB, disk_free/GiB)),

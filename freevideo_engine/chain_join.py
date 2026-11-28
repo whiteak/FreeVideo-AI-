@@ -183,7 +183,7 @@ def join_files(sources, target, cancelled=None, frames=None, leads=None, expecte
     try:
         return _join_ending(sources, target, cancelled, frames, leads, expected, speaking, original_audio, progress)
     except _VoiceFailed:
-        logging.warning('[FreeVideo] The voice of the parts could not be evened out; they are joined as they are',
+        logging.warning('[Eclipse] The voice of the parts could not be evened out; they are joined as they are',
                         exc_info=True)
         return _join_ending(sources, target, cancelled, frames, leads, expected, None, original_audio, progress)
 
@@ -255,7 +255,7 @@ def _conform(source, shape, directory, cancelled):
         raise
     except Exception:
         temporary.unlink(missing_ok=True)
-        logging.warning('[FreeVideo] A part could not be matched to the first part', exc_info=True)
+        logging.warning('[Eclipse] A part could not be matched to the first part', exc_info=True)
         return None
 
 
@@ -334,7 +334,7 @@ def _join_files(sources, target, cancelled, frames, exact=True, leads=None, expe
                     try:
                         progress(index + 1, len(sources))
                     except Exception:
-                        logging.debug('[FreeVideo] Join progress could not be reported', exc_info=True)
+                        logging.debug('[Eclipse] Join progress could not be reported', exc_info=True)
                 last = _last_kept(source, wanted - frames) if wanted is not None else None
                 with av.open(str(source)) as container:
                     if len(container.streams.video) != 1 or _shape(container.streams.video[0]) != shape:
@@ -470,7 +470,7 @@ def _voice(sources, speaking, cancelled):
         from .chain_level import plan
         return plan(sources, speaking, lambda: cancelled is not None and cancelled())
     except Exception:
-        logging.warning('[FreeVideo] The voice of the parts could not be measured; they are joined as they are')
+        logging.warning('[Eclipse] The voice of the parts could not be measured; they are joined as they are')
         return None
 
 
@@ -606,7 +606,7 @@ class _JoinedAudio:
 
     def _warn(self):
         if not self.warned:
-            logging.warning('[FreeVideo] A chain sound seam could not be repaired; the blocks are joined as they are'
+            logging.warning('[Eclipse] A chain sound seam could not be repaired; the blocks are joined as they are'
                             + _seam_reasons(self.seam_notes[-1:]))
             self.warned = True
 

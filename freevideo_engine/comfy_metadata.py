@@ -2,7 +2,7 @@
 
 ComfyUI's own video nodes store the prompt and the workflow as MP4 metadata
 (QuickTime keys, moov first). The frontend reads those two keys when a video is
-dropped on the canvas, so a FreeVideo result restores its graph the same way.
+dropped on the canvas, so a Eclipse result restores its graph the same way.
 """
 import hashlib
 import json
@@ -41,10 +41,10 @@ def embed_comfy_metadata(path, *, prompt=None, workflow=None, backup=None, exact
         import av
         size = path.stat().st_size
         if backup is not None and backup.exists():
-            logging.info('FreeVideo left %s unchanged: %s already exists.', path, backup.name)
+            logging.info('Eclipse left %s unchanged: %s already exists.', path, backup.name)
             return False
         if not _room(path, size):
-            logging.info('FreeVideo left %s unchanged: not enough free disk space.', path)
+            logging.info('Eclipse left %s unchanged: not enough free disk space.', path)
             return False
         # faststart puts moov, and with it the metadata, before the media data.
         with av.open(str(path)) as source, av.open(str(temporary), 'w', format='mp4',
@@ -81,7 +81,7 @@ def embed_comfy_metadata(path, *, prompt=None, workflow=None, backup=None, exact
         _restore_times(path, original)
         return True
     except Exception:
-        logging.warning('FreeVideo could not store the workflow in %s; the video is unchanged.', path, exc_info=True)
+        logging.warning('Eclipse could not store the workflow in %s; the video is unchanged.', path, exc_info=True)
         temporary.unlink(missing_ok=True)
         if made_backup and backup.exists():
             backup.unlink()  # the original is still in place, so this copy is not needed
@@ -94,7 +94,7 @@ def _restore_times(path, original):
     try:
         os.utime(path, ns=(original.st_atime_ns, original.st_mtime_ns))
     except OSError:
-        logging.warning('FreeVideo could not keep the original time of %s.', path, exc_info=True)
+        logging.warning('Eclipse could not keep the original time of %s.', path, exc_info=True)
 
 
 def _media(path):
@@ -146,7 +146,7 @@ def carries_graph(path):
     except ImportError:
         pass
     except Exception:
-        logging.info('FreeVideo searched an unreadable video for its workflow keys.')
+        logging.info('Eclipse searched an unreadable video for its workflow keys.')
     markers = [b'mdta' + key.encode() for key in PRIVATE_KEYS]
     tail = b''
     with open(path, 'rb') as stream:
@@ -301,7 +301,7 @@ def restore_backfilled_times(output_directory, *, stop=None):
             restored += 1
         except Exception:
             complete = False
-            logging.warning('FreeVideo could not restore the time of %s.', video, exc_info=True)
+            logging.warning('Eclipse could not restore the time of %s.', video, exc_info=True)
     if complete:
         save(marker, dict(schema=1, completed_at=time.time(), restored=restored))
     return restored
@@ -356,9 +356,9 @@ def register():
         try:
             result = backfill(output) or dict(embedded=0, skipped=0, pending=0, failed=0, no_space=0)
             if result['embedded']:
-                logging.info('FreeVideo stored the workflow in %d earlier videos.', result['embedded'])
+                logging.info('Eclipse stored the workflow in %d earlier videos.', result['embedded'])
         except Exception as error:
-            logging.warning('FreeVideo could not store the workflow in earlier videos.', exc_info=True)
+            logging.warning('Eclipse could not store the workflow in earlier videos.', exc_info=True)
             result = dict(embedded=0, skipped=0, pending=0, failed=1, no_space=int(disk_space.ran_out(error)))
         with _job_lock:
             _job.update(state='done', result=result)
@@ -367,9 +367,9 @@ def register():
         try:
             count = restore_backfilled_times(folder_paths.get_output_directory())
             if count:
-                logging.info('FreeVideo restored the original time of %d earlier videos.', count)
+                logging.info('Eclipse restored the original time of %d earlier videos.', count)
         except Exception:
-            logging.warning('FreeVideo could not restore the time of earlier videos.', exc_info=True)
+            logging.warning('Eclipse could not restore the time of earlier videos.', exc_info=True)
 
     threading.Thread(target=restore_times, name='freevideo-workflow-times', daemon=True).start()
 

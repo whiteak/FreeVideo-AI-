@@ -312,7 +312,7 @@ function scan() {
         if (!tray.closest('dialog')?.querySelector('.fv-run-menu > button[data-mode]')) continue;
         tray.fvAtDone = true;
         try { mark(tray); } catch (error) {
-            console.warn('FreeVideo advanced tray:', error);
+            console.warn('Eclipse advanced tray:', error);
             // The run mode not moved in: it stays usable under Generate.
             const dialog = tray.closest('dialog');
             if (dialog?.querySelector('.fv-run-menu > button[data-mode]')) dialog.querySelector('.fv-runrow')?.classList.remove('fv-at-moved');

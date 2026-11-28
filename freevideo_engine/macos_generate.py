@@ -119,7 +119,7 @@ def encoder_checkpoint(args):
                     folders.append(base / folder.strip())
     matches = {(folder / filename).resolve() for folder in folders if (folder / filename).is_file()}
     if len(matches) != 1:
-        raise ValueError('Expected one installed native H3 encoder checkpoint. In the FreeVideo launcher, open Settings and click Repair.')
+        raise ValueError('Expected one installed native H3 encoder checkpoint. In the Eclipse launcher, open Settings and click Repair.')
     return matches.pop()
 
 

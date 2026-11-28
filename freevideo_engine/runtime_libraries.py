@@ -1,4 +1,4 @@
-"""Whether the cuDNN files a process uses are the ones FreeVideo installed.
+"""Whether the cuDNN files a process uses are the ones Eclipse installed.
 
 cuDNN 9 is one dispatcher and seven sublibraries, and it refuses to run when
 they come from different builds (CUDNN_STATUS_SUBLIBRARY_VERSION_MISMATCH).
@@ -189,7 +189,7 @@ def summary(result, repair=REINSTALL):
     lines = []
     changed = [row.get('name') for row in result.get('changed', []) if isinstance(row, dict)]
     if changed:
-        lines.append("Some of FreeVideo's PyTorch library files do not match the installed version (%s). %s"
+        lines.append("Some of Eclipse's PyTorch library files do not match the installed version (%s). %s"
                      % (', '.join(changed[:4]) + (', …' if len(changed) > 4 else ''), repair))
     missing = result.get('missing_files')
     if isinstance(missing, dict) and missing:
@@ -200,7 +200,7 @@ def summary(result, repair=REINSTALL):
                          % (', '.join(names), ', …' if len(missing) > 4 else '', repair))
     outside = sorted({str(Path(p).parent) for p in result.get('outside', [])})
     if outside:
-        lines.append('cuDNN was also loaded from outside FreeVideo: %s.' % '; '.join(outside[:3]))
+        lines.append('cuDNN was also loaded from outside Eclipse: %s.' % '; '.join(outside[:3]))
     return '\n'.join(lines)
 
 

@@ -413,7 +413,7 @@ export function openImageView(node, {studio = null, client: given = null, poll =
     const clearStep = () => { stepURL = ''; stepPicture.removeAttribute('src'); stepFrame.hidden = true; block.classList.remove('fv-image-block-low'); };
     const block = el('div', 'fv-image-block'), progressText = el('p', 'fv-image-progress');
     const progressLine = el('b'), progressSub = el('span'), runReport = el('div', 'fv-image-run-report');
-    // While the page waits for FreeVideo to come back (#1121): a button that stops waiting, beside the waiting line.
+    // While the page waits for Eclipse to come back (#1121): a button that stops waiting, beside the waiting line.
     const stopWaiting = el('button', 'fv-action fv-image-stop-waiting'); stopWaiting.type = 'button'; stopWaiting.hidden = true;
     stopWaiting.onclick = () => { if (running?.id) jobs.stopWaiting(running.id); };
     progressLine.setAttribute('role', 'status'); progressText.append(progressLine, progressSub, stopWaiting); block.append(progressText, runReport);
@@ -1348,7 +1348,7 @@ export function openImageView(node, {studio = null, client: given = null, poll =
         try { info = await client.packInstall(mine); } catch (error) {
             // A failed download says so in its own words; the generation sentences do not describe it.
             say(error?.code === 'connection_lost'
-                ? t('The download did not start: FreeVideo could not be reached. Start FreeVideo again, then try again.', '下载没有开始：连不上 FreeVideo。请重新启动 FreeVideo 后再试。')
+                ? t('The download did not start: Eclipse could not be reached. Start Eclipse again, then try again.', '下载没有开始：连不上 Eclipse。请重新启动 Eclipse 后再试。')
                 : error?.code === 'disk_full'
                     ? t('The download did not start: the disk is full. Free some space, then download again.', '下载没有开始：磁盘空间不够。空出空间后再下载。')
                 : ['no_memory', 'pack_missing', 'model_unreadable'].includes(error?.code)
@@ -1465,7 +1465,7 @@ export function openImageView(node, {studio = null, client: given = null, poll =
             // The second line changes with every report, so the page never looks stuck; elapsed counts from the job's own start.
             const begun = row.started_at || row.created_at || Date.now();
             const waiting = Boolean(row.meta?.reconnecting);
-            // While waiting, no estimate: nothing is being made until FreeVideo answers again.
+            // While waiting, no estimate: nothing is being made until Eclipse answers again.
             progressSub.textContent = [`${t('Elapsed', '已用时')} ${duration((Date.now() - begun) / 1000)}`, waiting ? '' : imageRemainingText(row.eta_seconds, t)].filter(Boolean).join(' · ');
             if (waiting) progressLine.textContent = t(...WAITING_TEXT.status);
             stopWaiting.hidden = !waiting; stopWaiting.textContent = t(...WAITING_TEXT.stop);
@@ -1509,7 +1509,7 @@ export function openImageView(node, {studio = null, client: given = null, poll =
             label: failure.retryStandard ? ['Retry at Standard', '改用标准并重试'] : ['Retry', '重试'],
             onClick: () => { if (failure.noList) { failure = null; render(); go.onclick(); return; } if (failure.retryStandard) { area = RANGES[model.id].presets.standard; keepSize(); } void generate(); }}});
         const head = el('div', 'fv-iv-fail-head'), mark = el('i', 'fv-iv-fail-icon'); mark.append(icon('warn'));
-        // One title for every failure; why FreeVideo went away is in the sentence below it (Lane, engine-closed-reason).
+        // One title for every failure; why Eclipse went away is in the sentence below it (Lane, engine-closed-reason).
         head.append(mark, el('h3', '', t('The image was not made', '这张没有生成出来')));
         failHost.prepend(head);
         const stage_ = STAGE_WORDS[failure.stage];

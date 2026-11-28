@@ -104,7 +104,7 @@ class Desktop:
         # canvas completely; scrolling an unmapped canvas cannot reveal actions.
         self.log_window = tk.Toplevel(window)
         self.log_window.withdraw()
-        self.log_window.title(self.t('FreeVideo · Details', 'FreeVideo · 详情'))
+        self.log_window.title(self.t('Eclipse · Details', 'Eclipse · 详情'))
         self.log_window.geometry('%dx%d' % (min(860, width), min(440, height)))
         self.log_window.transient(window)
         self.log_window.protocol('WM_DELETE_WINDOW', self.log_window.withdraw)
@@ -337,7 +337,7 @@ class Desktop:
 
     def language(self):
         self.zh = not self.zh
-        self.log_window.title(self.t('FreeVideo · Details', 'FreeVideo · 详情'))
+        self.log_window.title(self.t('Eclipse · Details', 'Eclipse · 详情'))
         for widget, en, zh in self.translated:
             widget.configure(text=self.t(en, zh))
         for page, en, zh in self.pages:

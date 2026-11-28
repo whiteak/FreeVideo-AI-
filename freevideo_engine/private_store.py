@@ -1,15 +1,15 @@
 """FreeVideo's own private files: what may be deleted, and the one function that deletes them.
 
 The user's uploads and the page's temporary pictures live in a few folders of ComfyUI's input
-directory under names only FreeVideo writes. A file there is kept while anything holds it: a
+directory under names only Eclipse writes. A file there is kept while anything holds it: a
 kept work, a queued or running job, a card, a project, a conversation, a saved workflow or a page
 that has it open. Once nothing does, it goes for good.
 
-Every deletion goes through ``safe_remove``, which refuses anything outside FreeVideo's own names
+Every deletion goes through ``safe_remove``, which refuses anything outside Eclipse's own names
 and folders, links, junctions and other reparse points, files with more than one hard link, files on
 another volume, read-only files and anything that resolves outside the input directory, even when
 ComfyUI's input directory is a folder of the user's own. A folder is removed only when it is empty;
-a folder holding anything FreeVideo did not write is left alone whole.
+a folder holding anything Eclipse did not write is left alone whole.
 
 Names written to disk never carry a prompt or an original file name: ``name`` gives a keyed hash
 with a random salt kept on this machine.
@@ -31,9 +31,9 @@ import time
 REPARSE_POINT = 0x400
 HEX32 = '[0-9a-f]{32}'
 UUID = '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
-# A folder and file name FreeVideo's uploads use: one file per folder.
+# A folder and file name Eclipse's uploads use: one file per folder.
 LEAF = r'[^/\\:\x00]{1,255}'
-# FreeVideo's own names in ComfyUI's input directory, by kind. Nothing else there is ever touched.
+# Eclipse's own names in ComfyUI's input directory, by kind. Nothing else there is ever touched.
 PATTERNS = (
     ('upload', re.compile(r'freevideo/(' + HEX32 + ')/' + LEAF)),
     ('page', re.compile(r'freevideo-image-ref/(' + UUID + r')\.(?:png|jpg|webp)')),
@@ -52,7 +52,7 @@ CACHE_PATTERNS = (
     re.compile(r'[a-z0-9-]{1,40}/[0-9a-f]{64}/[0-9a-f]{38}-[0-9a-f]{16}\.previous\.json'),
     re.compile(r'[a-z0-9-]{1,40}/[0-9a-f]{64}/(?:[0-9a-f]{64}|[0-9a-f]{31}-[0-9a-f]{32})\.pt'),
 )
-# FreeVideo's own folders stay even when empty; only a folder of one upload goes with its file.
+# Eclipse's own folders stay even when empty; only a folder of one upload goes with its file.
 KEPT_FOLDERS = ('freevideo', 'agent', 'assets', 'freevideo-image-ref', 'freevideo-image', 'freevideo-draft')
 # A page's temporary pictures are kept a day at most; an upload nothing holds, a week.
 PAGE_GRACE = 24 * 3600.
@@ -124,7 +124,7 @@ def name_file(kind, path, *, root=None):
 
 
 def classify(relative):
-    """(kind, key) for one of FreeVideo's own names relative to the input directory, else None."""
+    """(kind, key) for one of Eclipse's own names relative to the input directory, else None."""
     if not isinstance(relative, str) or '\\' in relative or relative.startswith('/'):
         return None
     if any(part in ('', '.', '..') for part in relative.split('/')):
@@ -171,7 +171,7 @@ def _base(base):
 
 
 def check(base, relative, *, patterns=None):
-    """The checked path of one of FreeVideo's own files under ``base`` with its lstat, or (None, reason)."""
+    """The checked path of one of Eclipse's own files under ``base`` with its lstat, or (None, reason)."""
     if patterns is None:
         if classify(relative) is None:
             return None, 'not-ours'
@@ -215,10 +215,10 @@ def check(base, relative, *, patterns=None):
 
 
 def safe_remove(base, relative, *, dry_run=False, patterns=None, folders=1):
-    """Remove one of FreeVideo's own files under ``base`` and then up to ``folders`` of its now empty parents.
+    """Remove one of Eclipse's own files under ``base`` and then up to ``folders`` of its now empty parents.
 
     Returns (status, bytes): 'removed' or 'would-remove' with the file's size, else the reason it stayed
-    with 0. Nothing outside ``base`` or FreeVideo's names is ever removed.
+    with 0. Nothing outside ``base`` or Eclipse's names is ever removed.
     """
     with LOCK:
         checked, reason = check(base, relative, patterns=patterns)
@@ -253,7 +253,7 @@ def safe_remove(base, relative, *, dry_run=False, patterns=None, folders=1):
 
 def upload_folder(base, key):
     """The relative path of the one file in input/freevideo/<key>/, or (None, reason) when the folder holds
-    anything else: a second file, a folder, a link, or nothing FreeVideo wrote."""
+    anything else: a second file, a folder, a link, or nothing Eclipse wrote."""
     if not re.fullmatch(HEX32, key or ''):
         return None, 'not-ours'
     try:
@@ -324,7 +324,7 @@ def _derived_ok(row):
 
 
 def hold(owner_id, *, refs=(), derived=(), names=None, root=None):
-    """Add files to what ``owner_id`` holds. ``refs`` are input paths of FreeVideo's own names, ``derived``
+    """Add files to what ``owner_id`` holds. ``refs`` are input paths of Eclipse's own names, ``derived``
     are input-cache receipts (<kind>/<identity>/<receipt>.json), ``names`` the display names of refs."""
     if not isinstance(owner_id, str) or not owner_id or len(owner_id) > 512:
         raise ValueError('Invalid owner')
@@ -589,7 +589,7 @@ def grace(kind):
 
 
 def sweep(input_root, referenced, *, root=None, now=None, dry_run=None, released=frozenset()):
-    """Remove (or with ``dry_run`` only list) FreeVideo's own input files nothing references, past their grace.
+    """Remove (or with ``dry_run`` only list) Eclipse's own input files nothing references, past their grace.
 
     ``referenced`` is the set of (kind, key) tokens that records, jobs and pages still use; ``released``
     names tokens whose owner the user deleted, which need no grace. The summary is also written to
@@ -620,7 +620,7 @@ def sweep(input_root, referenced, *, root=None, now=None, dry_run=None, released
         _write(store_root(root) / 'sweep-log.json', summary)
     except OSError:
         pass
-    logging.info('[FreeVideo] Private file cleanup%s: %d files, %.1f MB.', ' (listed only)' if dry_run else '',
+    logging.info('[Eclipse] Private file cleanup%s: %d files, %.1f MB.', ' (listed only)' if dry_run else '',
                  files, total / 1e6)
     return summary
 
@@ -758,7 +758,7 @@ TEMP_AGE = 3600.
 
 
 def clean_temp(*, folder=None, now=None, older=TEMP_AGE):
-    """Remove FreeVideo's own working folders left in the temporary folder, untouched for ``older`` seconds. Only
+    """Remove Eclipse's own working folders left in the temporary folder, untouched for ``older`` seconds. Only
     their own plain files go; a folder holding a link keeps it. Returns how many folders went."""
     import tempfile
     folder = Path(folder or tempfile.gettempdir())
@@ -793,7 +793,7 @@ def clean_temp(*, folder=None, now=None, older=TEMP_AGE):
 
 
 def adopt(input_root, relative, *, root=None):
-    """Make one of FreeVideo's temporary pictures (a card's draft) a kept file: one copy per content at
+    """Make one of Eclipse's temporary pictures (a card's draft) a kept file: one copy per content at
     freevideo/<keyed hash>/media.<ext>, where uploads go, with the temporary name gone. Returns the new path."""
     found = classify(relative)
     if not found or found[0] not in ('draft', 'page'):

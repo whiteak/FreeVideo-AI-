@@ -1,4 +1,4 @@
-// One media file into ComfyUI's input folder through FreeVideo's streaming upload; every upload place shares it.
+// One media file into ComfyUI's input folder through Eclipse's streaming upload; every upload place shares it.
 import { isChinese, translator } from './i18n.js';
 const cn = isChinese();
 const text = translator(cn);

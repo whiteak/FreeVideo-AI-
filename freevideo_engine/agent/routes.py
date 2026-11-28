@@ -36,7 +36,7 @@ from .whitebox import MAX_VIDEO_BYTES as MAX_WHITEBOX_VIDEO
 from . import whitebox_pick
 from .whitebox_presets import PRESETS, preset as whitebox_preset
 # What an empty wait tells the agent: the conversation is open for as long as the user keeps the page.
-KEEP_WAITING = ('Nothing new yet. The user is still in FreeVideo and may speak at any moment: call this wait '
+KEEP_WAITING = ('Nothing new yet. The user is still in Eclipse and may speak at any moment: call this wait '
                 'again now. An empty wait never ends the conversation; do not end your turn or write a summary.')
 # The user may open another conversation while the agent waits; its words go where the user now is.
 MOVED = ('The user is now in another conversation, session %s. Post your words to that session from now on; '
@@ -45,8 +45,8 @@ MOVED_NEW = ' It starts afresh: do not carry requests over from the earlier conv
 MOVED_BACK = (' It is one the user was in before, and the user means what was said there, not the conversation you just '
               'left. Its last lines are in "before"; all of it: GET /sessions/%s/events.')
 # The user disconnected the agent from the page: its waits end with this, and a later wait no longer listens.
-DISCONNECTED = ('The user disconnected you from FreeVideo in the app, so the conversation there no longer reaches you. '
-                'Stop waiting now: end your turn with one sentence saying FreeVideo was disconnected. Any other FreeVideo '
+DISCONNECTED = ('The user disconnected you from Eclipse in the app, so the conversation there no longer reaches you. '
+                'Stop waiting now: end your turn with one sentence saying Eclipse was disconnected. Any other Eclipse '
                 'call, or POST /connect/hello, connects you again; make one when the user asks you to.')
 # An agent that connects again finds the conversation where the user left it, and has greeted there once already.
 RESUMED = ('This conversation is already under way; its last lines are in "before". Do not introduce yourself again: '
@@ -243,7 +243,7 @@ def whitebox_support(jobs):
     """White-model guidance needs the user's open page to render, and the Mac engine cannot use it yet."""
     if quality_tiers.on_mac():
         return dict(available=False, needs_page=True, note='Mac 暂不支持白模。')
-    return dict(available=True, needs_page=True, page_open=jobs.whitebox.page_open(), note='白模预览在 FreeVideo 页面中显示，需保持页面打开。')
+    return dict(available=True, needs_page=True, page_open=jobs.whitebox.page_open(), note='白模预览在 Eclipse 页面中显示，需保持页面打开。')
 
 
 def capabilities(port, jobs):
@@ -466,7 +466,7 @@ def register():
         jobs.session_open = sessions.require_open
     except Exception as error:
         # Optional agent state must never prevent the studio or other routes from loading.
-        logging.getLogger(__name__).warning('[FreeVideo] Agent startup unavailable: %s', error)
+        logging.getLogger(__name__).warning('[Eclipse] Agent startup unavailable: %s', error)
         startup_failed = True
     else:
         server._freevideo_agent = jobs
@@ -530,7 +530,7 @@ def register():
             kind = 'localhost' if host == 'localhost' else 'name'
         if (code, kind) not in refused_connects:
             refused_connects.add((code, kind))
-            logging.getLogger(__name__).warning('[FreeVideo] Agent connection address refused: %s (opened by %s)', code, kind)
+            logging.getLogger(__name__).warning('[Eclipse] Agent connection address refused: %s (opened by %s)', code, kind)
     # The conversation in the Autopilot view: the page and the connected agent talk in the agent's latest session.
     chat = dict(client=None, waiting=0, folds={}, told={})
     chat_writes = asyncio.Lock()
@@ -663,7 +663,7 @@ def register():
                 return problem('too_large' if error.status == 413 else 'invalid_request')
             except Exception:
                 value = errors.build('internal_error', stage='submission_unknown' if suffix == '/jobs' else 'request')
-                logging.exception('[FreeVideo] Agent request %s failed', value['request_id'])
+                logging.exception('[Eclipse] Agent request %s failed', value['request_id'])
                 return reply({'error': value}, 500)
             finally:
                 for variable, token in attached or ():
@@ -1007,7 +1007,7 @@ def register():
     def link_state(now=None):
         """Whether an agent is connected and, when not, why: 'user' (disconnected from the page), 'refused' (its last
         call came with a key that is not this installation's), 'quiet' (no call for ten minutes; quiet_s says how long)
-        or 'never' (none has called since FreeVideo started)."""
+        or 'never' (none has called since Eclipse started)."""
         seen, now = connection['last_seen_at'], time.time() if now is None else now
         connected = seen is not None and 0 <= now - seen < 600
         refused = connection['refused_at']
@@ -1374,7 +1374,7 @@ def register():
         async with chat_writes, upload_decoders:
             done = await asyncio.to_thread(write)
         if done is None:
-            # Nothing is kept: no agent has connected since FreeVideo started, so nobody would read it.
+            # Nothing is kept: no agent has connected since Eclipse started, so nobody would read it.
             return chat_not_connected()
         return reply(done[1], done[0])
 
@@ -1518,7 +1518,7 @@ def register():
                 release_attachments(dict(input_root=port.input_root, output_root=port.output_root, user_root=user_directory(),
                                          queue=getattr(server, 'prompt_queue', None)), named or [])
             except Exception:
-                logging.getLogger(__name__).warning('[FreeVideo] Could not remove the pictures of a deleted conversation.')
+                logging.getLogger(__name__).warning('[Eclipse] Could not remove the pictures of a deleted conversation.')
             try:
                 named_folders = set(getattr(store, 'folders_of_deleted', ())) | owned
                 elsewhere = store.other_text(sid) + jobs.text_outside_session(sid)
@@ -1531,15 +1531,15 @@ def register():
                             except Exception:
                                 pass
             except Exception:
-                logging.getLogger(__name__).warning('[FreeVideo] Could not remove the files of a deleted conversation.')
+                logging.getLogger(__name__).warning('[Eclipse] Could not remove the files of a deleted conversation.')
             try:
                 jobs.productions.delete_session(sid)  # its finished films (script, shots) go before the jobs they name
             except Exception:
-                logging.getLogger(__name__).warning('[FreeVideo] Could not remove the films of a deleted conversation.')
+                logging.getLogger(__name__).warning('[Eclipse] Could not remove the films of a deleted conversation.')
             try:
                 jobs.forget_session(sid)  # its finished jobs, with their prompts, go with it
             except Exception:
-                logging.getLogger(__name__).warning('[FreeVideo] Could not remove the jobs of a deleted conversation.')
+                logging.getLogger(__name__).warning('[Eclipse] Could not remove the jobs of a deleted conversation.')
             chat['folds'].pop(sid, None)  # The page cache held its whole text.
             chat_moved(store, before)
             return dict(deleted=sid, here=chat_session(store), agent=agent_state())
@@ -2524,7 +2524,7 @@ def register():
                     await asyncio.sleep(.5)
             value = await body(request)
             if not scenes.page_open():
-                raise JobError('page_required', 'No FreeVideo page is open to render the scene')
+                raise JobError('page_required', 'No Eclipse page is open to render the scene')
             return reply(await asyncio.to_thread(scenes.create, value['code'], value.get('summary'),
                                                  request.get('agent_session')), 201)
         return guarded(handler)
@@ -2683,7 +2683,7 @@ def register():
                 await jobs.tick()
             except Exception:  # noqa: BLE001 - keep scheduling; each job records its own failure
                 import logging
-                logging.getLogger(__name__).exception('FreeVideo agent scheduler')
+                logging.getLogger(__name__).exception('Eclipse agent scheduler')
             await asyncio.sleep(.5 if await asyncio.to_thread(jobs.active) else 2.)
 
     try:
@@ -2704,4 +2704,4 @@ def register():
         path = token_path(root).with_name('endpoint.json')
         path.write_text(json.dumps(endpoint), encoding='utf-8')
     except Exception as error:  # noqa: BLE001 - discovery is a convenience; the API works without it
-        logging.getLogger(__name__).warning('[FreeVideo] Agent discovery unavailable: %s', error)
+        logging.getLogger(__name__).warning('[Eclipse] Agent discovery unavailable: %s', error)

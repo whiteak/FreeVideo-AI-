@@ -1,6 +1,6 @@
 /* ═══ The anchored layer (feature_tour_layer.js): feature cards, "Take me there", first-run steps, how-to steps, hints ═══
    A manual popover inside the view it explains: fixed to the window, so the light dim covers it edge to edge (top bar
-   included, nothing but FreeVideo behind it); no pointer input except on the card, so a press anywhere reaches what
+   included, nothing but Eclipse behind it); no pointer input except on the card, so a press anywhere reaches what
    was pressed. data-level: 0 hint (no dim, no ring) · 1 point (ring) · 2 spotlight (light dim, the target cut out). */
 :root{--fv-tour-scrim:rgb(3 4 6 / .36);--fv-tour-w:328px;--fv-tour-wide:464px;--fv-tour-text:288px}
 :root[data-theme=light]{--fv-tour-scrim:rgb(20 24 32 / .2)}

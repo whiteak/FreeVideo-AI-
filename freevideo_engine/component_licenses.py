@@ -115,7 +115,7 @@ def local(value, *paths, title=None):
 
 
 def text(value):
-    """The row opening its full text on this computer when FreeVideo ships one."""
+    """The row opening its full text on this computer when Eclipse ships one."""
     return local(value, TEXTS / value['text']) if value['text'] else value
 
 

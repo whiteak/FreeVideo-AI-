@@ -35,8 +35,8 @@ const tint=(hex,alpha)=>{const v=parseInt(hex.slice(1),16);return `rgba(${v>>16}
 let opened;
 
 // Prefer bundled sans, but keep the card usable when optional font files are blocked.
-export const shareFonts=()=>Promise.all([loadFont('sans',400),loadFont('sans',700)]).catch(error=>console.warn('FreeVideo share fonts unavailable; using fallback fonts.',error));
-const fontCSS=(name,weight,size)=>{const css=bundledFontCSS(name,weight,size);return fontLoaded(name,weight)?css:css.replace('"FreeVideo Box"','sans-serif');};
+export const shareFonts=()=>Promise.all([loadFont('sans',400),loadFont('sans',700)]).catch(error=>console.warn('Eclipse share fonts unavailable; using fallback fonts.',error));
+const fontCSS=(name,weight,size)=>{const css=bundledFontCSS(name,weight,size);return fontLoaded(name,weight)?css:css.replace('"Eclipse Box"','sans-serif');};
 
 export function drawShareCard(canvas,frame,logo,record,t) {
     const g=record.geometry||{}, shape=shareLayout(g.width||frame?.naturalWidth||1344,g.height||frame?.naturalHeight||768);
@@ -205,9 +205,9 @@ export async function openShare(record,t){
         const response=await api.fetchApi('/freevideo/share?'+new URLSearchParams({id}),{signal:abort.signal});
         if(!response.ok)throw new Error(t('This saved video cannot be read.','无法读取这个已保存的视频。'));
         metadata=await response.json();
-        [first,logo]=await Promise.all([image(api.apiURL('/freevideo/share/frame?'+new URLSearchParams({id}))),image(new URL('./assets/freevideo.svg',import.meta.url).href).catch(error=>{console.warn('FreeVideo share logo unavailable; continuing without it.',error);return null;})]);
+        [first,logo]=await Promise.all([image(api.apiURL('/freevideo/share/frame?'+new URLSearchParams({id}))),image(new URL('./assets/freevideo.svg',import.meta.url).href).catch(error=>{console.warn('Eclipse share logo unavailable; continuing without it.',error);return null;})]);
         if(disposed)return;
-        await shareFonts();if(document.fonts?.ready)await document.fonts.ready.catch(error=>console.warn('FreeVideo share fonts unavailable; using fallback fonts.',error));
+        await shareFonts();if(document.fonts?.ready)await document.fonts.ready.catch(error=>console.warn('Eclipse share fonts unavailable; using fallback fonts.',error));
         shape=drawShareCard(canvas,null,logo,metadata,t);template=canvas.toDataURL('image/png').split(',')[1];
         preview.style.aspectRatio=`${shape.width}/${shape.height}`;
         player.style.cssText=`left:${shape.rect[0]/shape.width*100}%;top:0;width:${shape.rect[2]/shape.width*100}%;height:${shape.rect[3]/shape.height*100}%`;

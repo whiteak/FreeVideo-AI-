@@ -91,7 +91,7 @@ class BackgroundCompile:
             self.lock = Path(lock)
             self.root = Path(log).parent
             self.thread = threading.Thread(target=self._work, args=(command, environment, cwd, Path(log), busy, delay),
-                                           name='FreeVideo background compile', daemon=True)
+                                           name='Eclipse background compile', daemon=True)
             self.thread.start()
             return True
 
@@ -128,7 +128,7 @@ class BackgroundCompile:
                     # Its supervisor ended the tree and the run closed its own
                     # lease: a lease still held belongs to whoever took the card.
                     row.update(gave_way=True, released=None, release_seconds=row['stop_seconds'])
-                    logging.info('[FreeVideo] Background compile gave way in %.1f s.', row['stop_seconds'])
+                    logging.info('[Eclipse] Background compile gave way in %.1f s.', row['stop_seconds'])
                     return dict(row)
             elif gave_way(process):
                 return None
@@ -139,7 +139,7 @@ class BackgroundCompile:
             row['release_seconds'] = time.monotonic() - tick
             if not row.get('stopped'):
                 return None
-            logging.info('[FreeVideo] Background compile stopped in %.1f s; the GPU lease is %s.',
+            logging.info('[Eclipse] Background compile stopped in %.1f s; the GPU lease is %s.',
                          row['release_seconds'], 'free' if row['released'] else 'still held')
             return dict(row)
 
@@ -186,7 +186,7 @@ class BackgroundCompile:
             with self.guard:
                 if self.closed.is_set():
                     return
-                logging.info('[FreeVideo] Compiling GPU kernels for recent video sizes in the background; '
+                logging.info('[Eclipse] Compiling GPU kernels for recent video sizes in the background; '
                              'a generation request stops it.')
                 row = dict(started=time.time())
                 self.attempts.append(row)

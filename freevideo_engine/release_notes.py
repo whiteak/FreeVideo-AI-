@@ -195,7 +195,7 @@ def markdown(value):
         raise ValueError('Build has no bilingual release notes')
     def escape(text):
         return re.sub(r'([\\`*_{}\[\]()#+.!<>|~-])', r'\\\1', text)
-    title = 'FreeVideo v' + data['product_version']
+    title = 'Eclipse v' + data['product_version']
     rows = ['# ' + title, '', 'Build / 构建号: ' + escape(str(value['version'])), '']
     for language, heading in (('en', "What's new"), ('zh', '更新内容')):
         row = release[language]

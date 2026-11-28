@@ -372,10 +372,10 @@ def write_report(directory, result):
               number(remaining) + ' s.</p>')
     if bootstrap:
         budget += '<p>New full baseline: ' + html.escape(str(bootstrap.get('status', 'unknown'))) + '</p>'
-    (directory / 'report.html').write_text('<!doctype html><meta charset="utf-8"><title>FreeVideo optimization</title>'
+    (directory / 'report.html').write_text('<!doctype html><meta charset="utf-8"><title>Eclipse optimization</title>'
         '<style>body{font:16px system-ui;background:#111827;color:#e5e7eb;margin:32px}a{color:#93c5fd}'
         'td,th{padding:10px;border:1px solid #4b5563}table{border-collapse:collapse}video{max-width:800px;width:100%}</style>'
-        '<h1>FreeVideo local optimization</h1><p>Status: ' + html.escape(result['status']) + '</p>'
+        '<h1>Eclipse local optimization</h1><p>Status: ' + html.escape(result['status']) + '</p>'
         '<p>Validated prompts cached: ' + str(result.get('cached_prompts', 0)) + '. Sampling profile activated: ' +
         html.escape(str(result.get('activated_profile') or 'none')) + '</p>'
         + budget + explanations + attempt_table +
@@ -554,7 +554,7 @@ def run(args, machine, ui):
     else:
         raise ValueError('No baseline found. Pass --prompt-file PATH or --conditioning PATH to measure a full baseline within --max-seconds.')
     if spec is not None:
-        ui.panel('FreeVideo / establish a complete baseline', [
+        ui.panel('Eclipse / establish a complete baseline', [
             ('Input', spec.get('conditioning') or spec.get('prompt_file')),
             ('Request', '%dx%d, %d frames, 8 steps, attention %s' %
                 (spec['geometry']['width'], spec['geometry']['height'], spec['geometry']['frames'], spec['attention'])),
@@ -609,7 +609,7 @@ def run(args, machine, ui):
     history = ResourceHistory(history_path) if not args.plan or history_path.exists() else None
     plan = tuning.candidate_plan(row, base, maximum=20)
     candidates, estimated, placement_trials = search_plan(row, base, args.max_trials, remaining_seconds)
-    ui.panel('FreeVideo / local optimization', [('Baseline', source), ('GPU', hardware.gpu_name),
+    ui.panel('Eclipse / local optimization', [('Baseline', source), ('GPU', hardware.gpu_name),
         ('Text reuse', 'Import %d validated requests; cache later prompts after successful encoding' % len(usable)),
         ('Sampling search', '%d candidates · at most %.0fs · identical backend, precision, resolution and steps' % (len(candidates), args.max_seconds)),
         ('Validation', 'Repeat speed gain, memory budgets, full eight steps, identical video/audio latents and decoded output'),

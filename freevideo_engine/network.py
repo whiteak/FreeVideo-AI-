@@ -625,7 +625,7 @@ def resolution_reason(text):
 
 
 def resolution_packages(reason):
-    """The packages a resolution failure names with a version, in order, FreeVideo's own engine left out."""
+    """The packages a resolution failure names with a version, in order, Eclipse's own engine left out."""
     names = []
     # uv writes a requirement's markers in braces (triton-windows{sys_platform == 'win32'}==3.7.1); they are not packages.
     plain = re.sub(r'\{[^{}]*\}', '', reason)
@@ -1600,7 +1600,7 @@ def git_https_ready(executable, env=None):
 
 
 def old_git_message(version):
-    return ('Git %d.%d is too old to download the pinned sources; FreeVideo needs Git %d.%d or newer. '
+    return ('Git %d.%d is too old to download the pinned sources; Eclipse needs Git %d.%d or newer. '
             'Click Retry installation to use FreeVideo\'s own Git.' % (*version, *MIN_GIT))
 
 
@@ -1763,7 +1763,7 @@ def checkout_status(path, git, env, hidden, *, filemode=False):
     """`git status` lines for tracked files, limited to the sparse checkout when there is one.
 
     Git 2.37 and newer report a file that appears at a path outside the sparse
-    patterns; such a file is not part of what FreeVideo uses.
+    patterns; such a file is not part of what Eclipse uses.
     """
     specs = sparse_pathspecs(sparse_patterns(path, git, env) or [])
     settings = CONTENT_ONLY if not filemode else ('-c', 'core.filemode=true', '-c', 'core.autocrlf=false')
@@ -1870,9 +1870,9 @@ def same_source(first, second):
 
 
 def owned_checkout(target, url, sparse, git, env):
-    """Whether `target` is a checkout FreeVideo made itself and may set aside.
+    """Whether `target` is a checkout Eclipse made itself and may set aside.
 
-    Only dependency folders directly in a FreeVideo `vendor` folder qualify, and
+    Only dependency folders directly in a Eclipse `vendor` folder qualify, and
     only when the checkout is set up as clone() leaves it: the same sparse
     patterns, or (without them) no origin or the same origin. A ComfyUI the user
     works in is never replaced: its custom nodes and models live inside it.
@@ -1913,14 +1913,14 @@ def mismatch_message(target, git, env, head, commit, dirty):
             details.append('1 other file differs only in permissions, which does not block installation.'
                            if len(modes) == 1 else
                            '%d other files differ only in permissions, which do not block installation.' % len(modes))
-    return ('A dependency folder differs from the version FreeVideo needs: %s. %s '
-            'Rename or move this folder, then retry installation. FreeVideo will download a fresh copy.'
+    return ('A dependency folder differs from the version Eclipse needs: %s. %s '
+            'Rename or move this folder, then retry installation. Eclipse will download a fresh copy.'
             % (target, ' '.join(details)))
 
 
 # Git reads a checkout's settings from .git\config by its ordinary path, even in
 # the deep-folder branch above. Past the path limit it cannot tell whether
-# FreeVideo made the folder, and a new copy in the same place could not be read
+# Eclipse made the folder, and a new copy in the same place could not be read
 # either, so such a folder is reported before anything is renamed.
 GIT_SETTINGS_SUFFIX = '\\.git\\config'
 
@@ -1930,7 +1930,7 @@ def git_settings_out_of_reach(path):
 
 
 def path_too_long_message(target):
-    return ('The path of the dependency folder %s is too long for Git to read. Install FreeVideo in a folder '
+    return ('The path of the dependency folder %s is too long for Git to read. Install Eclipse in a folder '
             'with a shorter path, such as D:\\FreeVideo, then click "Retry installation". '
             'The folder was left unchanged.' % plain(target))
 
@@ -1946,7 +1946,7 @@ def set_aside(target):
     try:
         io_path(target).rename(io_path(old))
     except OSError as error:
-        raise ValueError('FreeVideo could not rename the dependency folder %s to replace it. Close programs that '
+        raise ValueError('Eclipse could not rename the dependency folder %s to replace it. Close programs that '
                          'use this folder, then retry installation. The folder was left unchanged.' % target) from error
     try:
         io_path(old / '.git' / REPLACED_MARKER).write_text(target.name + '\n', encoding='utf-8')
@@ -1982,7 +1982,7 @@ def repository_missing(error):
 
 
 def repository_missing_message(target):
-    return ('FreeVideo could not keep the Git repository it created for %s: its files disappeared right after Git '
+    return ('Eclipse could not keep the Git repository it created for %s: its files disappeared right after Git '
             'wrote them. Another program on this computer, such as security software, or the drive may be removing '
             'or blocking them. Allow FreeVideo\'s folder in that program or install to another drive, then retry '
             'installation.' % Path(target).name)
@@ -2007,7 +2007,7 @@ def clone(target, url, commit, *, sparse=None, run=None, network=None, env=None)
     """Fetch only the pinned commit, atomically; never reset existing checkouts.
 
     An existing checkout at the pinned commit with unchanged content is used
-    as it is. One FreeVideo made itself in its `vendor` folder that holds
+    as it is. One Eclipse made itself in its `vendor` folder that holds
     another version or changed content is replaced by a fresh verified
     download; the old folder is kept beside it as `<name>.replaced-<time>`.
     Any other differing folder is reported, never changed.
@@ -2147,14 +2147,14 @@ def clone(target, url, commit, *, sparse=None, run=None, network=None, env=None)
                 try:
                     io_path(old).rename(io_path(target))
                 except OSError:
-                    raise ValueError('FreeVideo could not put the new copy of %s in place, and the previous files '
+                    raise ValueError('Eclipse could not put the new copy of %s in place, and the previous files '
                                      'are now in %s. Close programs that use these folders, then retry '
                                      'installation.' % (target, old)) from error
                 try:
                     io_path(target / '.git' / REPLACED_MARKER).unlink()
                 except OSError:
                     pass
-                raise ValueError('FreeVideo could not put the new copy of %s in place. Close programs that use '
+                raise ValueError('Eclipse could not put the new copy of %s in place. Close programs that use '
                                  'this folder, then retry installation. The folder was left unchanged.' % target) from error
             if old is not None:
                 event(network, category='git', file=target.name, action='replaced', commit=commit, kept=old.name)

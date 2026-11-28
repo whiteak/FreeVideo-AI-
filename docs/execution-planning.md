@@ -1,6 +1,6 @@
-# FreeVideo Adaptive Execution Planner
+# Eclipse Adaptive Execution Planner
 
-The FreeVideo Adaptive Execution Planner computes an execution plan for every request from live device and host measurements. The plan fixes the residency of the 50 transformer blocks across VRAM, pinned host memory and disk, the transfer schedule, the int8 or FP8 GEMM path, the attention backend and head grouping, activation staging and the VAE decoder placement, within the measured VRAM and host-memory budgets.
+The Eclipse Adaptive Execution Planner computes an execution plan for every request from live device and host measurements. The plan fixes the residency of the 50 transformer blocks across VRAM, pinned host memory and disk, the transfer schedule, the int8 or FP8 GEMM path, the attention backend and head grouping, activation staging and the VAE decoder placement, within the measured VRAM and host-memory budgets.
 
 ## Inputs
 

@@ -242,7 +242,7 @@ function renderJobs() {
         if (img.firstChild && hintWanted()) {
             const hint = el('div', 'phone-hint'), close = button('phone-hint-close', '×', () => { markHintSeen(); jobsSignature = ''; renderJobs(); });
             close.setAttribute('aria-label', t('Close', '关闭'));
-            hint.append(el('span', '', t('The preview can be set to loop in FreeVideo Settings on the computer.', '预览可在电脑上的 FreeVideo 设置中改为循环播放。')), close); card.append(hint);
+            hint.append(el('span', '', t('The preview can be set to loop in Eclipse Settings on the computer.', '预览可在电脑上的 Eclipse 设置中改为循环播放。')), close); card.append(hint);
         }
         card.append(info); generations.append(card);
     }

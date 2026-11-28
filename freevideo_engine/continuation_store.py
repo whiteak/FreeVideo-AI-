@@ -1,4 +1,4 @@
-"""Small, bounded continuation records in FreeVideo's own data directory."""
+"""Small, bounded continuation records in Eclipse's own data directory."""
 import base64
 import hashlib
 import json
@@ -152,7 +152,7 @@ def save(video_path, data):
     except Exception as error:
         if isinstance(error, MemoryError) or type(error).__name__ in ('OutOfMemoryError', 'CancelledError', 'InterruptProcessingException'):
             raise
-        logging.warning('[FreeVideo] Continuation retention failed (%s).', type(error).__name__)
+        logging.warning('[Eclipse] Continuation retention failed (%s).', type(error).__name__)
     return result
 
 
@@ -170,7 +170,7 @@ def save_with_retry(video_path, data):
     except Exception as error:
         if _must_propagate(error):
             raise
-        logging.warning('[FreeVideo] Continuation record could not be saved (%s); trying once more.', type(error).__name__)
+        logging.warning('[Eclipse] Continuation record could not be saved (%s); trying once more.', type(error).__name__)
     try:
         return dict(save(video_path, data), retried=True)
     except Exception as error:

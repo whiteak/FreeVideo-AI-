@@ -7,7 +7,7 @@
    copyable texts of the current views (failure reasons, report text, prompts and parameters in an info layer, file
    names and paths, the version, the phone address and the assistant sentence, chat messages); new ones use .fv-copyable.
    Ctrl/Cmd+A selects only inside a typing field (a11y.js).
-   The root is html.fv-app while FreeVideo is in front (shell.js); each FreeVideo surface on its own covers the rest. */
+   The root is html.fv-app while Eclipse is in front (shell.js); each Eclipse surface on its own covers the rest. */
 :is(.fv-app,dialog.fv-studio,.fv-view-navigation,.fv-setup,.fv-panel,.fv-failure-dialog,.fv-whatsnew,.fv-tutorial-book,.fv-release-notes,.fv-image-editor,
     .fv-cast-dialog,.fv-lan,.fv-phone,.fv-feature-tour,.fv-prompt-guide,.fv-reference-picker,.fv-generation-progress,.fv-library,.fv-tip,.sgf,[data-fv-tip-scope]){
   -webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
@@ -37,10 +37,10 @@
 /* While something is being dragged, nothing selects anywhere (views set html.fv-dragging for the drag). */
 html.fv-dragging,html.fv-dragging *{-webkit-user-select:none!important;user-select:none!important}
 
-/* FreeVideo's own selection colour. */
+/* Eclipse's own selection colour. */
 :is(.fv-app,dialog.fv-studio,.fv-view-navigation,.fv-setup,.fv-library) ::selection{background:var(--fv-selection,var(--fv-accent-soft,rgb(79 140 255 / .3)));color:inherit}
 
-/* Reading (this sheet is the one every FreeVideo surface loads): the explanation in a failure card or a notice bar
+/* Reading (this sheet is the one every Eclipse surface loads): the explanation in a failure card or a notice bar
    wraps so its last line is not one or two characters on their own ("试。"). Only the wrapping style is set, not
    whether the text wraps, and with zero specificity, so a part's own balance or nowrap stays; browsers without
    text-wrap-style wrap as before. */

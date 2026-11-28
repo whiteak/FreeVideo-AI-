@@ -54,7 +54,7 @@ def missing_curl_message(env=None):
         from .curl_windows import inspect, failure_message
         return failure_message(inspect(env))
     if platform.system() == 'Darwin':
-        return 'macOS curl was not found. Check /usr/bin/curl and reopen FreeVideo with curl available in PATH.'
+        return 'macOS curl was not found. Check /usr/bin/curl and reopen Eclipse with curl available in PATH.'
     env = os.environ if env is None else env
     command = linux_tools_command(['curl'], which=lambda name: shutil.which(name, path=env.get('PATH', os.defpath)))
     message = 'Missing curl, needed for downloads and proxy connections. %s, then check again.' % (

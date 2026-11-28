@@ -21,8 +21,8 @@ export function createPortNotice(cn) {
     element.setAttribute('role', 'status');
     const label = document.createElement('span');
     const t = translator(cn);
-    label.textContent = t('FreeVideo now uses port {newPort} because port {oldPort} is in use by another program. If you bookmarked 127.0.0.1:{oldPort}, change the bookmark to this address.',
-        'FreeVideo 现在使用端口 {newPort}，因为端口 {oldPort} 已被其他程序占用。如果收藏了 127.0.0.1:{oldPort}，请改为当前地址。', { newPort, oldPort });
+    label.textContent = t('Eclipse now uses port {newPort} because port {oldPort} is in use by another program. If you bookmarked 127.0.0.1:{oldPort}, change the bookmark to this address.',
+        'Eclipse 现在使用端口 {newPort}，因为端口 {oldPort} 已被其他程序占用。如果收藏了 127.0.0.1:{oldPort}，请改为当前地址。', { newPort, oldPort });
     const close = document.createElement('button'); close.type = 'button';
     close.textContent = t('Close', '关闭');
     close.onclick = () => { element.hidden = true; portFrom = null; };

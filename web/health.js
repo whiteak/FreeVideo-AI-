@@ -1,7 +1,7 @@
-// Checks that FreeVideo's page loaded completely and says what is wrong when
+// Checks that Eclipse's page loaded completely and says what is wrong when
 // it did not: which file, why, and what to do. It imports nothing at load and
-// styles itself inline, so it still runs when every other FreeVideo file fails.
-// Other FreeVideo files report through `window.__freevideoHealth.push(...)`.
+// styles itself inline, so it still runs when every other Eclipse file fails.
+// Other Eclipse files report through `window.__freevideoHealth.push(...)`.
 // The shared browser-extension check and error advice load only once the page
 // check runs, after the listeners are installed; each may fail on its own.
 let extensionUI = null, errorUI = null;
@@ -65,7 +65,7 @@ const retryRecord = (() => {
     try { return JSON.parse(sessionStorage.getItem(RETRY_KEY) || '{}') || {}; } catch { return null; }
 })();
 const retried = !!retryRecord && Date.now() - (Number(retryRecord.at) || 0) < RETRY_WINDOW;
-// Any click or key outside FreeVideo's own panels: a reload could lose edits.
+// Any click or key outside Eclipse's own panels: a reload could lose edits.
 let touched = false;
 const fileName = url => decodeURIComponent(String(url).split(/[?#]/)[0].split('/').pop() || String(url));
 const ours = url => typeof url === 'string' && url.startsWith(base.href);
@@ -151,23 +151,23 @@ async function probe(url) {
 }
 
 const ADVICE = {
-    files: t('FreeVideo’s page files are missing or unreadable. In the FreeVideo launcher, open Settings and click Repair, then open FreeVideo again. Without the launcher, update the FreeVideo node and restart ComfyUI.',
-        'FreeVideo 的网页文件缺失或无法读取。请在 FreeVideo 启动器的“设置”里点击“修复”，完成后重新打开。没有使用启动器时，请更新 FreeVideo 节点并重启 ComfyUI。'),
+    files: t('Eclipse’s page files are missing or unreadable. In the Eclipse launcher, open Settings and click Repair, then open Eclipse again. Without the launcher, update the Eclipse node and restart ComfyUI.',
+        'Eclipse 的网页文件缺失或无法读取。请在 Eclipse 启动器的“设置”里点击“修复”，完成后重新打开。没有使用启动器时，请更新 Eclipse 节点并重启 ComfyUI。'),
     type: t('ComfyUI sent the file with the wrong type, so the browser refused it. Restart ComfyUI. If it persists, use Report a problem.',
         'ComfyUI 发给浏览器的文件类型不对，浏览器拒绝使用。请重启 ComfyUI；仍然出现时，请点“提交问题”。'),
-    browser: t('This browser cannot run FreeVideo. Open the same address in a current Chrome or Edge.',
-        '当前浏览器无法运行 FreeVideo。请用最新版 Chrome 或 Edge 打开同一个地址。'),
-    mixed: t('The browser mixed files from two FreeVideo versions. Press Ctrl+F5 to reload without the cache.',
-        '浏览器混用了新旧两个版本的 FreeVideo 文件。请按 Ctrl+F5 强制刷新。'),
-    duplicate: t('Keep custom_nodes/FreeVideo, move the other FreeVideo folders out of custom_nodes, then restart ComfyUI.',
-        '请保留 custom_nodes/FreeVideo，把其他 FreeVideo 文件夹移出 custom_nodes，然后重启 ComfyUI。'),
+    browser: t('This browser cannot run Eclipse. Open the same address in a current Chrome or Edge.',
+        '当前浏览器无法运行 Eclipse。请用最新版 Chrome 或 Edge 打开同一个地址。'),
+    mixed: t('The browser mixed files from two Eclipse versions. Press Ctrl+F5 to reload without the cache.',
+        '浏览器混用了新旧两个版本的 Eclipse 文件。请按 Ctrl+F5 强制刷新。'),
+    duplicate: t('Keep custom_nodes/FreeVideo, move the other Eclipse folders out of custom_nodes, then restart ComfyUI.',
+        '请保留 custom_nodes/FreeVideo，把其他 Eclipse 文件夹移出 custom_nodes，然后重启 ComfyUI。'),
     plugin: t('Another ComfyUI extension reported an error at the same time. Turn it off in ComfyUI Settings › Extensions, then reload.',
         '同时有其他 ComfyUI 插件报错。可在 ComfyUI“设置 › 扩展”里暂时停用它，然后刷新页面。'),
     reload: t('Reload the page. If it happens again, use Report a problem.',
         '请刷新页面。仍然出现时，请点“提交问题”。'),
-    cache: t('FreeVideo already reloaded this page once with fresh copies of its files. Press Ctrl+F5. If it still fails, turn off browser extensions that block scripts on this page or open the same address in another browser. If that does not help, use Report a problem.',
-        'FreeVideo 已经用重新下载的文件自动刷新过一次页面。请按 Ctrl+F5 强制刷新；仍然出现时，请停用会拦截此页面脚本的浏览器插件，或换一个浏览器打开同一地址。仍未解决时，请点“提交问题”。'),
-    relaunch: t('Click Start in the FreeVideo launcher again.', '请在 FreeVideo 启动器里重新点击“启动”。'),
+    cache: t('Eclipse already reloaded this page once with fresh copies of its files. Press Ctrl+F5. If it still fails, turn off browser extensions that block scripts on this page or open the same address in another browser. If that does not help, use Report a problem.',
+        'Eclipse 已经用重新下载的文件自动刷新过一次页面。请按 Ctrl+F5 强制刷新；仍然出现时，请停用会拦截此页面脚本的浏览器插件，或换一个浏览器打开同一地址。仍未解决时，请点“提交问题”。'),
+    relaunch: t('Click Start in the Eclipse launcher again.', '请在 Eclipse 启动器里重新点击“启动”。'),
 };
 
 // Requests url the way a script (modulepreload) or a stylesheet (preload) is
@@ -320,13 +320,13 @@ async function diagnoseStyles() {
     }
     if (!found.length) {
         found.push({text: links.length
-            ? t('FreeVideo’s styles loaded but do not apply; another extension may be overriding them.', 'FreeVideo 的样式已下载但没有生效，可能被其他插件的样式覆盖。')
-            : t('FreeVideo’s styles were never requested.', 'FreeVideo 的样式文件没有被加载。'), advice: links.length ? 'plugin' : 'reload'});
+            ? t('Eclipse’s styles loaded but do not apply; another extension may be overriding them.', 'Eclipse 的样式已下载但没有生效，可能被其他插件的样式覆盖。')
+            : t('Eclipse’s styles were never requested.', 'Eclipse 的样式文件没有被加载。'), advice: links.length ? 'plugin' : 'reload'});
     }
     return found;
 }
 
-// Every custom-node folder that serves FreeVideo's page, from ComfyUI's own list.
+// Every custom-node folder that serves Eclipse's page, from ComfyUI's own list.
 async function freevideoFolders() {
     for (const path of ['../../api/extensions', '../../extensions']) {
         try {
@@ -351,7 +351,7 @@ function pluginErrors() {
         text: t(`Extension ${fileName(name)} reported an error: ${text.slice(0, 240)}`, `插件 ${fileName(name)} 报错：${text.slice(0, 240)}`), advice: 'plugin'}));
 }
 
-// Whenever the workflow in front has a FreeVideo node, the creative workspace
+// Whenever the workflow in front has a Eclipse node, the creative workspace
 // or the toolbar that opens it must be on screen. The nodes still generate
 // without them, so a page missing both looks like it works.
 function onScreen(element) {
@@ -430,8 +430,8 @@ function inTransition() {
     return !!(window.FreeVideoShell?.switching?.() || document.documentElement.dataset.fvSwitching
         || document.querySelector('.fv-shell-cover') || document.querySelector('dialog[open][data-closing="true"]'));
 }
-// A FreeVideo surface is in front: any view (kept-alive ones underneath do not matter), Settings, Creations or another
-// FreeVideo sheet that is on screen.
+// A Eclipse surface is in front: any view (kept-alive ones underneath do not matter), Settings, Creations or another
+// Eclipse sheet that is on screen.
 const surfaceOnScreen = () => [...document.querySelectorAll('dialog[open]')].some(dialog => /(^|\s)fv-/.test(dialog.className) && onScreen(dialog));
 function workspaceProblem(app) {
     // Scripts that never started are already named by the load check.
@@ -446,15 +446,15 @@ function workspaceProblem(app) {
         : {text: t('The creative workspace is open but cannot be seen on the page.', '创作面板已经打开，但页面上看不到。'), advice: 'reload',
             state: `${nameOf(studio)}: ${whyOffScreen(studio)}`};
     const bar = document.querySelector('.fv-view-navigation');
-    if (!bar) return {text: t('The FreeVideo toolbar that opens the creative workspace is missing from the page.', '页面上没有打开创作面板的 FreeVideo 工具栏。'), advice: 'reload'};
+    if (!bar) return {text: t('The Eclipse toolbar that opens the creative workspace is missing from the page.', '页面上没有打开创作面板的 Eclipse 工具栏。'), advice: 'reload'};
     const cover = onScreen(bar) ? coveredBy(bar) : null;
     if (onScreen(bar) && !cover) return null;
     // Its own stylesheet places it above the canvas.
     return sheetLoaded('view_navigation.css')
-        ? {text: t('The FreeVideo toolbar that opens the creative workspace is hidden or covered by other page elements.', '打开创作面板的 FreeVideo 工具栏被页面上的其他元素隐藏或遮挡了。'), advice: 'plugin',
+        ? {text: t('The Eclipse toolbar that opens the creative workspace is hidden or covered by other page elements.', '打开创作面板的 Eclipse 工具栏被页面上的其他元素隐藏或遮挡了。'), advice: 'plugin',
             ...(cover && {cover: nameOf(cover)})}
-        : {text: t('The FreeVideo toolbar that opens the creative workspace cannot be seen: its stylesheet view_navigation.css did not load.',
-            '看不到打开创作面板的 FreeVideo 工具栏：样式文件 view_navigation.css 没有加载。'), advice: 'reload', sheet: 'view_navigation.css'};
+        : {text: t('The Eclipse toolbar that opens the creative workspace cannot be seen: its stylesheet view_navigation.css did not load.',
+            '看不到打开创作面板的 Eclipse 工具栏：样式文件 view_navigation.css 没有加载。'), advice: 'reload', sheet: 'view_navigation.css'};
 }
 
 // Looks again as the page changes, such as another workflow coming to the
@@ -485,11 +485,11 @@ async function watchWorkspace(app) {
 
 function reportText(item) {
     const where = {studio: t('The creative workspace could not open', '创作面板打不开'),
-        navigation: t('The FreeVideo toolbar could not be added', 'FreeVideo 工具栏没有加载'),
+        navigation: t('The Eclipse toolbar could not be added', 'Eclipse 工具栏没有加载'),
         progress: t('Live progress could not start', '生成进度无法更新'),
         updates: t('Update checks could not start', '更新检查无法启动'),
-        launch: t('The FreeVideo workflow did not open', 'FreeVideo 工作流没有打开'),
-        menu: t('FreeVideo could not be opened from the menu', '从菜单打开 FreeVideo 失败')}[item.where] || t('FreeVideo reported an error', 'FreeVideo 报错');
+        launch: t('The Eclipse workflow did not open', 'Eclipse 工作流没有打开'),
+        menu: t('Eclipse could not be opened from the menu', '从菜单打开 Eclipse 失败')}[item.where] || t('Eclipse reported an error', 'Eclipse 报错');
     // The script's own words go to the technical details and the report, not into the sentence the card shows.
     return {text: where, detail: describe(item.error), error: item.error, advice: item.where === 'launch' ? 'relaunch' : 'reload', asked: item.where === 'menu'};
 }
@@ -516,11 +516,11 @@ function extensionProblem(problem) {
 
 const distinct = problems => problems.filter((problem, index) => problems.findIndex(other => other.text === problem.text && other.detail === problem.detail) === index);
 // Opening from the launcher: once the page has taken 3 s, it says it is opening and counts the seconds,
-// in the look of the workspace's own opening screen, until FreeVideo is in front or a problem is shown.
+// in the look of the workspace's own opening screen, until Eclipse is in front or a problem is shown.
 export const openingText = (s, words = t) => {
     const m = Math.floor(s / 60), r = s % 60;
-    return s < 60 ? words(`Opening FreeVideo · ${s} s`, `正在打开 FreeVideo · ${s} 秒`)
-        : words(`Opening FreeVideo · ${m} min${r ? ` ${r} s` : ''}`, `正在打开 FreeVideo · ${m} 分${r ? ` ${r} 秒` : ''}`);
+    return s < 60 ? words(`Opening Eclipse · ${s} s`, `正在打开 Eclipse · ${s} 秒`)
+        : words(`Opening Eclipse · ${m} min${r ? ` ${r} s` : ''}`, `正在打开 Eclipse · ${m} 分${r ? ` ${r} 秒` : ''}`);
 };
 function beginOpening() {
     let cover = null, timer = null;
@@ -547,11 +547,11 @@ function details(problems) {
     const cache = problems.flatMap(p => p.cache || []);
     const checks = problems.flatMap(p => p.checks || []);
     const before = retried && Array.isArray(retryRecord.before) ? retryRecord.before : [];
-    return [`FreeVideo page check · ${new Date().toISOString()}`,
+    return [`Eclipse page check · ${new Date().toISOString()}`,
         `Page: ${location.origin}${location.pathname}`,
         `Browser: ${navigator.userAgent}`,
         `ComfyUI frontend: ${window.__COMFYUI_FRONTEND_VERSION__ || 'unknown'}`,
-        `FreeVideo UI: ${JSON.stringify(window.FreeVideoUI || {})}`,
+        `Eclipse UI: ${JSON.stringify(window.FreeVideoUI || {})}`,
         `Automatic reload: ${retried ? new Date(Number(retryRecord.at)).toISOString() : retryRecord ? 'not needed' : 'unavailable (no session storage)'}`,
         '', 'Problems:', ...problems.flatMap(p => [`- ${p.text}`, ...(p.detail ? [`  error: ${p.detail}`] : []), ...(p.cover ? [`  covered by: ${p.cover}`] : []), ...(p.state ? [`  state: ${p.state}`] : [])]),
         ...(checks.length ? ['', 'Load check:', ...checks.map(row => `- ${row}`)] : []),
@@ -572,7 +572,7 @@ const forgetPlaces = text => String(text)
     .replace(/(^|[\s('"])\/[\w.-]+(?:\/[^\s'"<>)]*)+/g, '$1<path>');
 function issueAddress(problems) {
     const summary = forgetPlaces(details(problems)).split('\n').filter(line => !line.startsWith('Page:')).join('\n');
-    const feedback = ['FreeVideo showed an error.', 'Where: Page check',
+    const feedback = ['Eclipse showed an error.', 'Where: Page check',
         `Error: ${forgetPlaces([problems[0]?.text, problems[0]?.detail].filter(Boolean).join(': ')).slice(0, 300)}`].join('\n');
     const build = text => `${ISSUE_FORM}?${new URLSearchParams({template: 'feedback.yml', title: '[Feedback] Page check',
         feedback, diagnostics: text})}`;
@@ -603,7 +603,7 @@ function addQuoteFaces() {
     quoteFaces = true;
     for (const [weight, names] of [['100 500', ['Noto Sans Regular', 'NotoSans-Regular', 'DejaVu Sans', 'Liberation Sans']],
         ['600 900', ['Noto Sans Bold', 'NotoSans-Bold', 'DejaVu Sans Bold', 'Liberation Sans Bold']]]) {
-        try { document.fonts.add(new FontFace('FreeVideo Quotes', names.map(name => `local("${name}")`).join(), {weight, unicodeRange: 'U+2018-2019'})); }
+        try { document.fonts.add(new FontFace('Eclipse Quotes', names.map(name => `local("${name}")`).join(), {weight, unicodeRange: 'U+2018-2019'})); }
         catch { /* The card still shows in the fonts the browser has. */ }
     }
 }
@@ -632,14 +632,14 @@ function show(problems, asked = false) {
         width: 'min(600px, calc(100vw - 32px))', maxHeight: 'calc(100vh - 32px)', overflow: 'auto', boxSizing: 'border-box',
         padding: '18px 20px 16px', borderRadius: '12px', background: '#1a222e', color: '#e7edf7',
         border: '1px solid #5a3440', boxShadow: '0 18px 48px rgba(0,0,0,.45)',
-        font: '13px/1.55 "Segoe UI","FreeVideo Quotes","Microsoft YaHei UI","Noto Sans CJK SC","Noto Sans SC",system-ui,sans-serif'});
+        font: '13px/1.55 "Segoe UI","Eclipse Quotes","Microsoft YaHei UI","Noto Sans CJK SC","Noto Sans SC",system-ui,sans-serif'});
     const title = document.createElement('div');
     const extension = problems.map(extensionProblem).find(Boolean);
     const extensionAdvice = extension && extensionUI.browserExtensionAdvice(extension, filled,
         {blocked: problems.some(p => p.advice === 'blocked')});
     // Only what the user just asked for failed (opening from the menu): the page itself loaded.
-    title.textContent = extensionAdvice?.title || (problems.every(p => p.asked) ? t('FreeVideo ran into a problem', 'FreeVideo 出错了')
-        : t('FreeVideo did not load completely', 'FreeVideo 没有完整加载'));
+    title.textContent = extensionAdvice?.title || (problems.every(p => p.asked) ? t('Eclipse ran into a problem', 'Eclipse 出错了')
+        : t('Eclipse did not load completely', 'Eclipse 没有完整加载'));
     Object.assign(title.style, {color: '#f09aa2', fontWeight: '600', fontSize: '16px', marginBottom: '8px'});
     const list = document.createElement('ul');
     Object.assign(list.style, {margin: '0 0 10px', paddingLeft: '18px'});
@@ -706,7 +706,7 @@ function show(problems, asked = false) {
         Object.assign(card.style, {right: 'auto', bottom: 'auto', margin: '0'});
         raise();
     }
-    consoleError.call(console, '[FreeVideo] Page check:\n' + details(problems));
+    consoleError.call(console, '[Eclipse] Page check:\n' + details(problems));
 }
 // A modal such as an unstyled workspace sits in the top layer; a manual
 // popover joins it and returns to the front whenever a dialog opens. Not in
@@ -734,7 +734,7 @@ let sent = '', latest = null;
 const comfyApi = () => comfy()?.api || window.comfyAPI?.api?.api;
 function send(state, problems) {
     // Kept with diagnostic reports, so a report from this computer names the cause.
-    // 'loading' tells ComfyUI this page runs FreeVideo's scripts before the check ends.
+    // 'loading' tells ComfyUI this page runs Eclipse's scripts before the check ends.
     latest = {state, problems};
     if (state === 'error' && document.hidden) return;
     const body = JSON.stringify({state, problems: problems.map(p => p.detail ? `${p.text}: ${p.detail}` : p.text), errors: seen.map(row => `[${row.kind}] ${row.text}`),
@@ -770,7 +770,7 @@ async function check() {
     // the workflow is open and in front.
     await waitFor(() => window.FreeVideoUI?.ready, 10000);
     const launched = launchVisit ? await waitFor(() => reports.find(r => r.type === 'launch'), 30000) : null;
-    // FreeVideo is in front: the page itself now says what it is doing.
+    // Eclipse is in front: the page itself now says what it is doing.
     if (window.FreeVideoUI?.ready) { opening?.finish(); opening = null; }
     // Opening the workspace waits for an animation frame.
     await sleep(1500);
@@ -781,10 +781,10 @@ async function check() {
     }
     // Every file loads, so ComfyUI is most likely still working through other
     // extensions: it starts them one after another, and a slow one ahead of
-    // FreeVideo's delays it. Give it the rest of the minute before naming it.
+    // Eclipse's delays it. Give it the rest of the minute before naming it.
     if (!window.FreeVideoUI?.ready && !problems.length) await waitFor(() => window.FreeVideoUI?.ready, 50000);
     opening?.finish(); opening = null;
-    const notStarted = {text: t('The page did not finish loading. Reload and try again.', '页面没有加载完成，请刷新后再试。'), detail: 'FreeVideo’s scripts loaded, but ComfyUI did not start them.', advice: 'reload'};
+    const notStarted = {text: t('The page did not finish loading. Reload and try again.', '页面没有加载完成，请刷新后再试。'), detail: 'Eclipse’s scripts loaded, but ComfyUI did not start them.', advice: 'reload'};
     if (!window.FreeVideoUI?.ready && !problems.length) {
         problems.push(notStarted);
         // A start later than that clears the card instead of leaving it up.
@@ -799,16 +799,16 @@ async function check() {
     if (!problems.length) problems.push(...await diagnoseStyles());
     let checkStudio = false;
     if (launchVisit && !problems.length) {
-        if (!launched) problems.push({text: t('The page did not finish loading. Reload and try again.', '页面没有加载完成，请刷新后再试。'), detail: 'The FreeVideo workflow did not open: launcher.js did not report back.', advice: 'reload'});
+        if (!launched) problems.push({text: t('The page did not finish loading. Reload and try again.', '页面没有加载完成，请刷新后再试。'), detail: 'The Eclipse workflow did not open: launcher.js did not report back.', advice: 'reload'});
         else if (launched.error) problems.push(reportText(launched));
-        else if (!studioWorkflow(app.graph)) problems.push({text: t('The interface opened another workspace; FreeVideo is in another tab.', '界面打开了另一个工作区，FreeVideo 在其他标签页中。'), detail: 'ComfyUI shows another workflow.', advice: 'relaunch'});
+        else if (!studioWorkflow(app.graph)) problems.push({text: t('The interface opened another workspace; Eclipse is in another tab.', '界面打开了另一个工作区，Eclipse 在其他标签页中。'), detail: 'ComfyUI shows another workflow.', advice: 'relaunch'});
         else checkStudio = true;
     }
     for (const item of reports) if (item.type === 'error') problems.push(reportText(item));
     const copies = await freevideoFolders();
     if (copies.length > 1 || seen.some(row => /already registered/i.test(row.text) && /FreeVideo\./.test(row.text))) {
         const named = copies.map(name => `custom_nodes/${name}`).join(cn ? '、' : ', ');
-        problems.push({text: t('FreeVideo was loaded more than once.', 'FreeVideo 被加载了多份。'), ...(copies.length > 1 ? {detail: `ComfyUI loaded FreeVideo from: ${named}`} : {}), advice: 'duplicate'});
+        problems.push({text: t('Eclipse was loaded more than once.', 'Eclipse 被加载了多份。'), ...(copies.length > 1 ? {detail: `ComfyUI loaded Eclipse from: ${named}`} : {}), advice: 'duplicate'});
     }
     // Later failures, such as the workspace failing to open from a node.
     listener = item => {
@@ -839,13 +839,13 @@ async function check() {
     } else {
         send('ready', []);
     }
-    watchWorkspace(app).catch(error => consoleError.call(console, '[FreeVideo] Workspace check failed:', error));
+    watchWorkspace(app).catch(error => consoleError.call(console, '[Eclipse] Workspace check failed:', error));
 }
 
-// A second FreeVideo folder loads this file again; one check covers both.
+// A second Eclipse folder loads this file again; one check covers both.
 if (!window.__freevideoHealthStarted) {
     window.__freevideoHealthStarted = true;
     install();
     // Whatever happens in the check, the opening cover never outlives it.
-    check().catch(error => consoleError.call(console, '[FreeVideo] Page check failed:', error)).finally(() => { opening?.finish(); opening = null; });
+    check().catch(error => consoleError.call(console, '[Eclipse] Page check failed:', error)).finally(() => { opening?.finish(); opening = null; });
 }

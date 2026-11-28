@@ -28,7 +28,7 @@ const outputURL = file => api.apiURL('/view?' + new URLSearchParams({filename: f
 export function startJobSources() {
     if (sourcesStarted) return; sourcesStarted = true;
     let storage = null; try { storage = globalThis.localStorage; } catch { /* Private windows keep jobs in memory only. */ }
-    // Why FreeVideo went away while a picture was being made, as the launcher saw it end (#1121).
+    // Why Eclipse went away while a picture was being made, as the launcher saw it end (#1121).
     void watchEngineExit(api);
     imageSource(jobs, {client: createImageGenClient(), storage, connection: api, lastExit: async () => exitCause(await newEngineExit(api))});
     // The request the engine runs on each node now, from its own events: a plain (one graphics card) run's progress
@@ -186,10 +186,10 @@ function reasonShort(row) {
 }
 function reasonLong(row) {
     const code = row.failure?.code;
-    // A picture: why FreeVideo went away, as far as the launcher saw it end, and what next (#1121).
+    // A picture: why Eclipse went away, as far as the launcher saw it end, and what next (#1121).
     if (row.kind === 'image' && (code === 'engine_closed' || code === 'engine_restarted')) return lostEngineText(code, row.failure?.cause, t).join(t(' ', ''));
     if (code === 'engine_closed') return lostEngineText(code, row.failure?.cause, t).join(t(' ', ''));
-    if (code === 'engine_restarted' || row.status === 'interrupted') return t('FreeVideo restarted while this was being made, so it did not finish. Finished parts are in your creations.', 'FreeVideo 在生成过程中重新启动，这次没有完成。已经完成的部分在作品里。');
+    if (code === 'engine_restarted' || row.status === 'interrupted') return t('Eclipse restarted while this was being made, so it did not finish. Finished parts are in your creations.', 'Eclipse 在生成过程中重新启动，这次没有完成。已经完成的部分在作品里。');
     if (row.kind === 'image') return imageGenError(code, row.failure, t) || t('The image did not finish.', '这张图没有完成。');
     // The engine's own text is raw; it goes through the same advice as the create panel, and an unknown cause says so.
     const told = row.failure?.message ? failureAdvice(String(row.failure.message), t) : null;
@@ -199,11 +199,11 @@ function reasonLong(row) {
     const said = advice && advice.kind !== 'unknown'
         ? [advice.summary || advice.title, advice.action].filter(Boolean).map(x => x.replace(/[.。]$/, '')).join(t('. ', '。')) + t('.', '。') : '';
     if (said) return said;
-    return t('FreeVideo did not report a reason for this video. Try again, and report the problem if it keeps failing.',
-        'FreeVideo 没有给出这段视频失败的原因。请重试，仍然失败请提交问题。');
+    return t('Eclipse did not report a reason for this video. Try again, and report the problem if it keeps failing.',
+        'Eclipse 没有给出这段视频失败的原因。请重试，仍然失败请提交问题。');
 }
 function line2(row) {
-    // Waiting for FreeVideo to come back (#1121): said, with the stop button turned into "Stop waiting".
+    // Waiting for Eclipse to come back (#1121): said, with the stop button turned into "Stop waiting".
     if (row.meta?.reconnecting && ACTIVE.has(row.status)) return t(...WAITING_TEXT.short);
     if (row.status === 'running') return etaText(row.eta_seconds) || elapsedText(row);
     if (row.status === 'queued' || row.status === 'submitting') return t('Starts after the one before it', '等前一项完成后开始');
@@ -542,8 +542,8 @@ export function installTaskFloat() {
     }
 
     // ----- the rows the window speaks for -----
-    // The user's own workflow (no FreeVideo view, no FreeVideo node view): nothing of FreeVideo stays over it, as the
-    // shell rules; the jobs go on and the window comes back with the next FreeVideo view.
+    // The user's own workflow (no Eclipse view, no Eclipse node view): nothing of Eclipse stays over it, as the
+    // shell rules; the jobs go on and the window comes back with the next Eclipse view.
     const ownWorkflow = () => Boolean(shell()?.installed) && !document.documentElement.dataset.fvShell && !modals().length;
     const visible = () => { if (ownWorkflow()) return []; const place = where(); return rows.filter(row => !(FINAL.has(row.status) && row.seen) && row.status !== 'cancelled' && !atHome(row, place)); };
     const primary = list => list.find(r => r.status === 'running') || list.find(r => ACTIVE.has(r.status)) || list.find(r => r.status === 'failed' || r.status === 'interrupted') || list[0];
@@ -864,7 +864,7 @@ export function installTaskFloat() {
             drawSheet(); draw(); return;
         }
         if (button === close) {
-            // Waiting for FreeVideo: nothing can reach it to stop the job, so the button stops waiting (#1121).
+            // Waiting for Eclipse: nothing can reach it to stop the job, so the button stops waiting (#1121).
             if (row.meta?.reconnecting && ACTIVE.has(row.status)) { jobs.stopWaiting(row.id); draw(); return; }
             if (ACTIVE.has(row.status)) { ask = row.id; stopError = ''; open = false; failCard = null; drawSheet(); setTimeout(() => sheet.querySelector('[data-k="keep"]')?.focus({preventScroll: true}), 0); }
             else { jobs.dismiss(row.id); }
@@ -973,8 +973,8 @@ if (typeof document !== 'undefined' && typeof window !== 'undefined' && !globalT
     tasks.jobs = jobs;
     tasks.float = {enabled: floatEnabled(), install: () => { tasks.float.enabled = true; return installTaskFloat(); }};
     const start = () => {
-        try { startJobSources(); } catch (error) { console.warn('FreeVideo jobs:', error); }
-        if (tasks.float.enabled) try { installTaskFloat(); } catch (error) { console.warn('FreeVideo floating window:', error); }
+        try { startJobSources(); } catch (error) { console.warn('Eclipse jobs:', error); }
+        if (tasks.float.enabled) try { installTaskFloat(); } catch (error) { console.warn('Eclipse floating window:', error); }
     };
     if (document.body) start(); else addEventListener('DOMContentLoaded', start, {once: true});
 }

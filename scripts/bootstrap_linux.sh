@@ -13,7 +13,7 @@ case "$(uname -m 2>/dev/null)" in
     *) FV_ARCH=x86_64 ;;
 esac
 
-fv_note() { printf 'FreeVideo: %s\n' "$*" >&2; }
+fv_note() { printf 'Eclipse: %s\n' "$*" >&2; }
 fv_fail() { fv_note "$*"; return 1; }
 
 # Match network._certificate_failure and slow_download_failure certificate keywords.
@@ -71,11 +71,11 @@ fv_find_python() {
 
 fv_help() {
     cat <<'EOF'
-FreeVideo Linux launcher
+Eclipse Linux launcher
 
-  ./setup.sh              Install FreeVideo and ComfyUI, then open FreeVideo in the browser
-  ./freevideo             Open FreeVideo again (starts ComfyUI in the background if needed)
-  ./freevideo server      Keep FreeVideo running for other computers; see ./freevideo server --help
+  ./setup.sh              Install Eclipse and ComfyUI, then open Eclipse in the browser
+  ./freevideo             Open Eclipse again (starts ComfyUI in the background if needed)
+  ./freevideo server      Keep Eclipse running for other computers; see ./freevideo server --help
   ./freevideo stop        Stop ComfyUI; ./freevideo status shows whether it runs
   ./test.sh               Generate and retain videos, timings and memory reports
   ./freevideo diagnose    Export a small local diagnostic ZIP
@@ -89,7 +89,7 @@ Setup launcher options:
   --network official      Upstream sources only; compare proxy/direct connections
   --model-downloader xet   Require HF Xet for large weights; stop instead of falling back
   --reuse-models PATH      Verify and reuse compatible models in an existing folder
-  --no-launch              Stop after the engine; do not install ComfyUI or open FreeVideo
+  --no-launch              Stop after the engine; do not install ComfyUI or open Eclipse
 
 No Python, pip, virtual environment or CUDA toolkit installation is needed beforehand.
 Default installation: this checkout's directory (independent of the current directory).
@@ -429,7 +429,7 @@ freevideo_bootstrap_linux() {
     export FREEVIDEO_HOME="$fv_root"
     export FREEVIDEO_BOOTSTRAP_ROOT="${FREEVIDEO_BOOTSTRAP_ROOT:-$fv_root/.freevideo/bootstrap}"
     [[ "$mode" != cli || "$command_name" != setup ]] || mode=setup
-    # ./freevideo alone opens an installed FreeVideo. Before ./setup.sh it only
+    # ./freevideo alone opens an installed Eclipse. Before ./setup.sh it only
     # shows how to install: nothing is downloaded without that explicit step.
     if [[ "$mode" == cli && -z "$command_name" ]] && (( ! help )); then
         if [[ -f "$fv_root/machine.json" ]]; then command_name=open; FREEVIDEO_BOOTSTRAP_ARGS+=(open); else help=1; fi

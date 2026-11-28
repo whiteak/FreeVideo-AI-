@@ -27,7 +27,7 @@ class Installer(SharedInstaller):
         return native.prepare_uv(self.root, self.network, self.env, self.fetch)
 
     def install_git(self):
-        """The system Git when it runs; otherwise Git from conda-forge in FreeVideo's own folder."""
+        """The system Git when it runs; otherwise Git from conda-forge in Eclipse's own folder."""
         git = native.available_git()
         if git:
             return

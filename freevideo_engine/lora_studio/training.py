@@ -5,7 +5,7 @@ single frames from the Comfy-Org repack (pruned int8 ConvRot transformer, nvfp4 
 ``low_vram``, which is what fits a 16 GB card. A published 12 GB run used the same settings (512 px, rank 16,
 1000 steps, about 6-7 hours for 32 pictures). Musubi Tuner files are written too, for people who prefer it.
 
-FreeVideo's own LoRA loader reads the key names both trainers write (``blocks.N.attn.qkv_proj`` and friends, with
+Eclipse's own LoRA loader reads the key names both trainers write (``blocks.N.attn.qkv_proj`` and friends, with
 or without a ``diffusion_model.`` prefix), so the finished file works in the creation panel as it is.
 
 The trainer runs as its own process with its own Python; this process only starts it, reads its log and stops it.
@@ -90,7 +90,7 @@ def ai_toolkit_config(dataset, images_dir, reg_dir, settings, *, output_dir, mod
                '          auto_frame_count: false\n'
                '          resolution: %s\n') % (_q(reg_dir), json.dumps(resolutions))
     sample_prompt = (s.get('test_prompt') or '').strip() or default_test_prompt(dataset)
-    return f"""# Written by FreeVideo LoRA Studio for ai-toolkit (ostris/ai-toolkit), arch minimax_h3.
+    return f"""# Written by Eclipse LoRA Studio for ai-toolkit (ostris/ai-toolkit), arch minimax_h3.
 # Run from the ai-toolkit folder:  python run.py "<this file>"
 # Models come from {H3_REPO} on Hugging Face (accept the MiniMax H3 licence first); about 40 GB on first run,
 # kept in MODELS_PATH{(' = ' + models_dir) if models_dir else ''}.
@@ -159,7 +159,7 @@ config:
 meta:
   name: "[name]"
   version: "1.0"
-  made_with: "FreeVideo LoRA Studio"
+  made_with: "Eclipse LoRA Studio"
 """
 
 
@@ -167,7 +167,7 @@ def musubi_files(dataset, images_dir, reg_dir, settings, *, cache_dir, output_di
     s = settings
     name = run_name(dataset)
     resolution = int(s.get('resolution', 512))
-    toml = ('# Written by FreeVideo LoRA Studio for Musubi Tuner (kohya-ss/musubi-tuner), MiniMax H3 one-frame image training.\n'
+    toml = ('# Written by Eclipse LoRA Studio for Musubi Tuner (kohya-ss/musubi-tuner), MiniMax H3 one-frame image training.\n'
             '[general]\nresolution = [%d, %d]\ncaption_extension = ".txt"\nbatch_size = 1\nenable_bucket = true\n'
             'bucket_no_upscale = false\n\n[[datasets]]\nimage_directory = %s\ncache_directory = %s\nnum_repeats = %d\n'
             % (resolution, resolution, _q(images_dir), _q(cache_dir), int(s.get('repeats', 10))))
@@ -176,7 +176,7 @@ def musubi_files(dataset, images_dir, reg_dir, settings, *, cache_dir, output_di
             _q(reg_dir), _q(str(Path(cache_dir) / 'reg')))
     epochs = max(1, round(int(s.get('steps', 1500)) / max(1, int(s.get('repeats', 10)) * max(1, dataset_count(images_dir)))))
     cmd = f"""@echo off
-rem Written by FreeVideo LoRA Studio. Run from the musubi-tuner folder with its venv active.
+rem Written by Eclipse LoRA Studio. Run from the musubi-tuner folder with its venv active.
 rem Check the flags against docs\\minimax_h3.md in your Musubi version: the H3 recipe is new and still moving.
 rem Weights: Comfy-Org/MiniMax-H3 (diffusion_models, text_encoders, vae). Set the paths below first.
 set DIT=C:\\models\\diffusion_models\\minimax_h3_fl2va_pruned_int8_convrot.safetensors
@@ -294,7 +294,7 @@ def _kill_tree(process):
 
 
 class Runner:
-    """One training run at a time; its state survives a page reload (not a FreeVideo restart, which ends it)."""
+    """One training run at a time; its state survives a page reload (not a Eclipse restart, which ends it)."""
 
     def __init__(self):
         self.lock = threading.Lock()

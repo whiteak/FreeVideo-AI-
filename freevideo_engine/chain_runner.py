@@ -176,7 +176,7 @@ class ChainRunner:
                 self._save(record)
             if record['state'] == 'interrupted' and record['join'] and record['output_state'] != 'failed':
                 self.recover.add(record['id'])
-        self.thread = threading.Thread(target=self._work, name='FreeVideo chain', daemon=True)
+        self.thread = threading.Thread(target=self._work, name='Eclipse chain', daemon=True)
         self.thread.start()
 
     def _save(self, record):
@@ -755,7 +755,7 @@ class ChainRunner:
             except (ValueError, TypeError, RecursionError, OverflowError):
                 valid = False
             if not valid:
-                logging.warning('[FreeVideo] Discarding non-JSON chain continuation')
+                logging.warning('[Eclipse] Discarding non-JSON chain continuation')
                 continuation = None
             saved = deepcopy(continuation)
             # The engine trims the repeated opening itself. A skip applies only
@@ -809,7 +809,7 @@ class ChainRunner:
                 return None
         except Exception as error:
             reason = 'save_failed:' + type(error).__name__
-        logging.warning('[FreeVideo] A chain block\'s seam sound could not be kept: %s', identity)
+        logging.warning('[Eclipse] A chain block\'s seam sound could not be kept: %s', identity)
         return reason
 
     @staticmethod
@@ -914,7 +914,7 @@ class ChainRunner:
             self.success.pop(prompt_id, None)
             self.cancel_sent.discard(prompt_id)
             self._save(record)
-            logging.warning('[FreeVideo] A chain block left no seam record; making that block again once')
+            logging.warning('[Eclipse] A chain block left no seam record; making that block again once')
             return
         self.redo_lead.discard(prompt_id)
         ended, finished = self.success.get(prompt_id, (self.clock(), self.wall()))
@@ -1096,7 +1096,7 @@ class ChainRunner:
             try:
                 self.host.cancel(prompt_id, node)
             except Exception:
-                logging.warning('[FreeVideo] Chain cancellation could not reach the host')
+                logging.warning('[Eclipse] Chain cancellation could not reach the host')
         with self.lock:
             succeeded = prompt_id in self.success
         if succeeded:
@@ -1105,7 +1105,7 @@ class ChainRunner:
             try:
                 status = self.host.status(prompt_id)
             except Exception:
-                logging.warning('[FreeVideo] Chain status could not reach the host')
+                logging.warning('[Eclipse] Chain status could not reach the host')
                 return
         with self.lock:
             state = status['state']
@@ -1132,7 +1132,7 @@ class ChainRunner:
             try:
                 parts, reason = split(value, cancelled)
             except Exception:
-                logging.exception('[FreeVideo] Splitting the description failed')
+                logging.exception('[Eclipse] Splitting the description failed')
                 parts, reason = None, 'failed'
         with self.lock:
             if parts is None and cancelled():
@@ -1194,7 +1194,7 @@ class ChainRunner:
             snapshot = dict(snapshot, lead_reader=lead_reader, expected_seams=promised, join_progress=join_progress,
                             allow_unrepaired=True, join_result=join_result)
             if kept < promised:
-                logging.warning('[FreeVideo] Chain seams joined without sound smoothing: %s%s', identity,
+                logging.warning('[Eclipse] Chain seams joined without sound smoothing: %s%s', identity,
                                 self._kept_reasons(reasons))
             output = self.host.join(snapshot, cancelled)
             if not isinstance(output, str) or not output:
@@ -1214,7 +1214,7 @@ class ChainRunner:
                 record['state'] = self._finish_blocks(record, 'cancelled')
             elif failure is not None:
                 record.update(state=final_state, output_state='failed', output_error=failure, **failure_fields)
-                logging.warning('[FreeVideo] Chain joining failed: %s', identity)
+                logging.warning('[Eclipse] Chain joining failed: %s', identity)
             else:
                 # Only the blocks the joined video is made of count, as `_work_lineage` counts them for a record without these fields.
                 lineage, leading = self._lineage(snapshot), store.leading_blocks(snapshot)
@@ -1245,7 +1245,7 @@ class ChainRunner:
             try:
                 self.estimates[key] = _number(self.estimate(record, block))
             except Exception:
-                logging.warning('[FreeVideo] Chain estimate is unavailable')
+                logging.warning('[Eclipse] Chain estimate is unavailable')
                 self.estimates[key] = None
         return self.estimates[key]
 
@@ -1329,7 +1329,7 @@ class ChainRunner:
             try:
                 self.step()
             except Exception:
-                logging.exception('[FreeVideo] Chain scheduler pass failed')
+                logging.exception('[Eclipse] Chain scheduler pass failed')
             self.wake.wait(self.poll)
 
     def close(self):

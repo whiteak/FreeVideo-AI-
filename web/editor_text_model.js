@@ -133,11 +133,11 @@ export function parseSRT(text, result = {}) {
         }
         entries.push(entry);
     }
-    if (skipped) console.warn(`FreeVideo SRT import skipped ${skipped} unreadable blocks.`);
-    if (trimmed) console.warn(`FreeVideo SRT import trimmed ${trimmed} overlapping subtitles.`);
+    if (skipped) console.warn(`Eclipse SRT import skipped ${skipped} unreadable blocks.`);
+    if (trimmed) console.warn(`Eclipse SRT import trimmed ${trimmed} overlapping subtitles.`);
     check(entries.length > 0, 'srt');
     result.skipped = skipped; result.truncated = entries.length > 500;
-    if (result.truncated) console.warn('FreeVideo SRT import kept only the first 500 subtitles.');
+    if (result.truncated) console.warn('Eclipse SRT import kept only the first 500 subtitles.');
     return entries.slice(0, 500);
 }
 // An import replaces every subtitle already there, in one edit that one undo reverses.

@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# Modified by FreeVideo: reduced to the Qwen-based CosyVoice tokenizers (no tiktoken).
+# Modified by Eclipse: reduced to the Qwen-based CosyVoice tokenizers (no tiktoken).
 from functools import lru_cache
 
 import torch

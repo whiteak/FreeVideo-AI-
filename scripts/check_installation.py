@@ -34,7 +34,7 @@ def main():
 
     workflow = json.loads((ROOT / 'example_workflows' / comfy_launcher_runtime.TEMPLATE).read_text(encoding='utf-8'))
     assert {node['type'] for node in workflow['nodes']} == {'FreeVideoMedia', 'FreeVideoGenerate'}
-    with tempfile.TemporaryDirectory(prefix='FreeVideo install 中文 ') as folder:
+    with tempfile.TemporaryDirectory(prefix='Eclipse install 中文 ') as folder:
         root = Path(folder)
         source = materialize_source(ROOT, root / 'launcher')
         payload = check_launcher_payload(source, root)

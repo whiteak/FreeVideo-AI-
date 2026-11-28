@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# Modified by FreeVideo: reduced to the non-streaming CosyVoice3 inference path
+# Modified by Eclipse: reduced to the non-streaming CosyVoice3 inference path
 # (no streaming, TensorRT, vLLM or JIT variants); the language model runs on the
 # calling thread so errors propagate.
 import torch

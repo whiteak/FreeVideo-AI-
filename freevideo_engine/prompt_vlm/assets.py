@@ -1,4 +1,4 @@
-"""Explicit, resumable installation through FreeVideo's download routing."""
+"""Explicit, resumable installation through Eclipse's download routing."""
 import json
 from pathlib import Path
 import shutil
@@ -147,7 +147,7 @@ def _recheck(folder, spec, moved, key):
 
 
 def remote(spec, row):
-    """One catalog file with every source FreeVideo may fetch it from.
+    """One catalog file with every source Eclipse may fetch it from.
 
     Hugging Face hosts are pinned to the catalog revision. ModelScope has no
     matching commit, so its copy is accepted only when the size and SHA-256 in

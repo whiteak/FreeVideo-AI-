@@ -1,4 +1,4 @@
-// Settings › Storage › Privacy. FreeVideo's own uploads and pictures that nothing uses any more, removed when the user
+// Settings › Storage › Privacy. Eclipse's own uploads and pictures that nothing uses any more, removed when the user
 // confirms the list; the encoding cache (its size, how much it may use, one click to clear); and pictures earlier
 // versions put in ComfyUI's input folder under the user's own file names, which cannot be told apart from the user's own
 // files, so each one goes only when the user chooses it. Built with the settings kit so it reads like the rest of the

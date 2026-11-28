@@ -93,7 +93,7 @@ def install(memory):
 
     @wraps(original)
     def free_memory(memory_required, device, *args, **kwargs):
-        # FreeVideo's own handoff releases native Comfy models only. Other
+        # Eclipse's own handoff releases native Comfy models only. Other
         # nodes, and Comfy's explicit unload command, can reclaim our idle
         # process before choosing a lower-memory native loading strategy.
         if (not getattr(_local, 'keep', False) and not _releasing.is_set() and not OWNER.active and

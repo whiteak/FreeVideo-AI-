@@ -10,7 +10,7 @@ from .comfy_launcher_runtime import Controller, local_url, loopback_url, matches
 from .monitoring import save
 from .long_paths import io_path, resolved, plain, plain_text
 
-UNREADABLE = 'FreeVideo cannot read its program files'
+UNREADABLE = 'Eclipse cannot read its program files'
 
 
 class PortableController(Controller):
@@ -120,7 +120,7 @@ class PortableController(Controller):
     def progress(self, row):
         stage = row.get('stage')
         label = {'verify': 'Verify bundled files', 'gpu': 'Test GPU acceleration',
-                 'comfy': 'Start ComfyUI'}.get(stage, 'Prepare FreeVideo')
+                 'comfy': 'Start ComfyUI'}.get(stage, 'Prepare Eclipse')
         progress = dict(row, label=label)
         done, total = row.get('done', 0), row.get('total')
         fraction = min(1., max(0., done/total)) if total else 0.
@@ -179,7 +179,7 @@ class PortableController(Controller):
                 'from freevideo_engine.portable import main;'
                 'sys.exit(main(sys.argv[2], ["--initialize"]))', str(self.source), str(self.root)]
         # -I ignores PYTHONUTF8, so name the mode on the command line: the start
-        # process then reads and writes UTF-8 like every other FreeVideo process,
+        # process then reads and writes UTF-8 like every other Eclipse process,
         # whatever the system code page is.
         command[1:1] = ['-X', 'utf8']
         tail = ''
@@ -221,7 +221,7 @@ class PortableController(Controller):
                     self.child.stdout.close()
                 self.child = None
         machine = json.loads((io_path(self.root)/'engine/machine.json').read_text(encoding='utf-8'))
-        self.progress(dict(stage='comfy', detail='Open FreeVideo workflow'))
+        self.progress(dict(stage='comfy', detail='Open Eclipse workflow'))
         opened = portable.connect(self.root, self.bundle, machine, self.progress_keywords,
                                   self.cancelled, url=url, on_controller=self.retain_comfy_controller,
                                   previous=self.comfy_controller, lan_access=self.selection['lan_access'],

@@ -300,7 +300,7 @@ class ReportDownloads:
                 else:
                     index.unlink()
             except OSError:
-                logging.getLogger(__name__).warning('[FreeVideo] Could not update the report index after a deletion.')
+                logging.getLogger(__name__).warning('[Eclipse] Could not update the report index after a deletion.')
 
     @staticmethod
     def tokens(output_directory):
@@ -405,7 +405,7 @@ def publish(server, node, message):
 
 
 def cancel_request(queue, prompt_id, node_id, interrupt):
-    """Remove or interrupt exactly this FreeVideo request under the queue lock."""
+    """Remove or interrupt exactly this Eclipse request under the queue lock."""
     with queue.mutex:
         running, pending = queue.get_current_queue()
         def matches(row):
@@ -423,7 +423,7 @@ def cancel_request(queue, prompt_id, node_id, interrupt):
 
 
 def move_request_first(queue, prompt_id, node_id, protected=lambda prompt_id: False):
-    """Put exactly this waiting FreeVideo request ahead of every other waiting one.
+    """Put exactly this waiting Eclipse request ahead of every other waiting one.
 
     Comfy runs the smallest queue number first, so the request takes a number
     below the current smallest. Everything else keeps its relative order.

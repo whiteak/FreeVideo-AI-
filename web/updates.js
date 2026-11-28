@@ -256,7 +256,7 @@ export function createUpdateNotice(cn) {
     thumb.onclick = () => details.click();
     const apply = document.createElement('button'); apply.type = 'button'; apply.className = 'fv-update-apply';
     apply.textContent = t('Update now', '立即更新');
-    apply.title = t('FreeVideo restarts once; running videos finish first.', 'FreeVideo 会重启一次，正在生成的视频会先完成。');
+    apply.title = t('Eclipse restarts once; running videos finish first.', 'Eclipse 会重启一次，正在生成的视频会先完成。');
     apply.onclick = () => { apply.disabled = true; void applyUpdate().finally(() => { apply.disabled = false; }); };
     const link = document.createElement('a'); link.href = releasePage;
     link.target = '_blank'; link.rel = 'noopener noreferrer';
@@ -287,7 +287,7 @@ export function createUpdateNotice(cn) {
         link.href = releasePage;
         link.title = mac
             ? t('After your task finishes, open the new FreeVideo.app to update.', '当前任务完成后，打开新版 FreeVideo.app 更新。')
-            : linux ? t('After your task finishes, open the new FreeVideo AppImage to update.', '当前任务完成后，打开新版 FreeVideo AppImage 更新。')
+            : linux ? t('After your task finishes, open the new Eclipse AppImage to update.', '当前任务完成后，打开新版 Eclipse AppImage 更新。')
             : t('After your task finishes, open the new FreeVideo.exe to update.', '当前任务完成后，打开新版 FreeVideo.exe 更新。');
         const progress = launcher?.progress, percent = progress?.total ? ' ' + Math.floor(100 * progress.done / progress.total) + '%' : '';
         // The last model state seen stays while ComfyUI is away.
@@ -300,19 +300,19 @@ export function createUpdateNotice(cn) {
         } else if (busy) {
             text = model === 'switching' || (model && offline)
                 ? t('Switching to the faster model. This page reconnects by itself.', '正在切换到更快的模型，页面会自动恢复。')
-                : model === 'waiting' ? t('The faster model is ready. FreeVideo switches after the current video.', '更快的模型已下载好，当前视频完成后自动切换。')
+                : model === 'waiting' ? t('The faster model is ready. Eclipse switches after the current video.', '更快的模型已下载好，当前视频完成后自动切换。')
                 : offline || phase === 'restarting' || phase === 'engine'
-                ? t('Restarting FreeVideo to finish the update. The page refreshes by itself.', '正在重启 FreeVideo 完成更新，页面会自动刷新。')
+                ? t('Restarting Eclipse to finish the update. The page refreshes by itself.', '正在重启 Eclipse 完成更新，页面会自动刷新。')
                 : phase === 'downloading' ? t('Downloading the update', '正在下载更新') + percent
                 : phase === 'waiting' ? t('The update installs as soon as the current video finishes.', '当前视频生成完成后会自动更新。')
                 : t('Checking for updates…', '正在检查更新…');
         } else if (phase === 'review') {
-            text = t('Confirm the update in the FreeVideo launcher.', '请在 FreeVideo 启动器中确认本次更新。');
+            text = t('Confirm the update in the Eclipse launcher.', '请在 Eclipse 启动器中确认本次更新。');
         } else if (failure) {
-            text = t('Open the FreeVideo launcher to update, or download the new version.', '请在 FreeVideo 启动器中更新，或下载新版。');
+            text = t('Open the Eclipse launcher to update, or download the new version.', '请在 Eclipse 启动器中更新，或下载新版。');
             actions = true;
         } else if (candidate && dismissed !== identity(candidate)) {
-            text = t('FreeVideo update available', 'FreeVideo 有新版本') + ' · ' + displayVersion(candidate);
+            text = t('Eclipse update available', 'Eclipse 有新版本') + ' · ' + displayVersion(candidate);
             // The launcher's own reason (its copy, in the user's language) follows “last attempt failed”: its first
             // sentence, the cause, like the other parts without a full stop. The whole reason is the tooltip and goes in
             // the issue; program text from the launcher leaves only the prefix.
@@ -340,7 +340,7 @@ export function createUpdateNotice(cn) {
         if (failed) {
             problem ||= issueButton(t, () => {
                 const launcher = value?.launcher;
-                return {where: ['Update FreeVideo', '更新 FreeVideo'], message: issueText || label.textContent,
+                return {where: ['Update Eclipse', '更新 Eclipse'], message: issueText || label.textContent,
                     facts: launcher?.error ? {launcher_error: String(launcher.error), launcher_status: launcher.status, launcher_phase: launcher.phase || ''} : null};
             });
             element.append(problem);
@@ -402,8 +402,8 @@ function emptyNotes(body, t) {
     if (!started && !offline) void checkUpdates();
     const empty = document.createElement('p'); empty.className = 'fv-release-empty';
     if (retrying || (!value && !offline)) { empty.textContent = t('Reading version information…', '正在读取版本信息…'); body.append(empty); return; }
-    const message = t('Version information is not available: FreeVideo on this computer did not return it. Click Retry; if it still fails, report a problem.',
-        '暂时无法获取版本信息：本机的 FreeVideo 服务没有返回结果。请点“重试”；仍然失败时请提交问题。');
+    const message = t('Version information is not available: Eclipse on this computer did not return it. Click Retry; if it still fails, report a problem.',
+        '暂时无法获取版本信息：本机的 Eclipse 服务没有返回结果。请点“重试”；仍然失败时请提交问题。');
     empty.textContent = message;
     const retry = document.createElement('button'); retry.type = 'button'; retry.className = 'fv-release-retry';
     retry.textContent = t('Retry', '重试');
@@ -497,7 +497,7 @@ function showReleaseNotes(cn) {
         dialog.close(); publish();
     };
     const apply = button(t('Update now', '立即更新'), 'fv-primary fv-update-apply');
-    apply.dataset.fvTipUse = t('FreeVideo restarts once; running videos finish first.', 'FreeVideo 会重启一次，正在生成的视频会先完成。');
+    apply.dataset.fvTipUse = t('Eclipse restarts once; running videos finish first.', 'Eclipse 会重启一次，正在生成的视频会先完成。');
     apply.onclick = () => { apply.disabled = true; dialog.close(); void applyUpdate().finally(() => { apply.disabled = false; }); };
     const link = document.createElement('a'); link.className = 'fv-primary'; link.href = releasePage; link.target = '_blank'; link.rel = 'noopener noreferrer';
     link.textContent = t('Download update', '下载新版'); link.onclick = () => dialog.close();
@@ -517,7 +517,7 @@ function showReleaseNotes(cn) {
         later.hidden = !offer; apply.hidden = !offer || !direct; link.hidden = !offer || direct; close.hidden = offer;
         const mac = value?.channel === 'macos-preview', linux = value?.channel === 'linux-preview';
         link.title = mac ? t('After your task finishes, open the new FreeVideo.app to update.', '当前任务完成后，打开新版 FreeVideo.app 更新。')
-            : linux ? t('After your task finishes, open the new FreeVideo AppImage to update.', '当前任务完成后，打开新版 FreeVideo AppImage 更新。')
+            : linux ? t('After your task finishes, open the new Eclipse AppImage to update.', '当前任务完成后，打开新版 Eclipse AppImage 更新。')
             : t('After your task finishes, open the new FreeVideo.exe to update.', '当前任务完成后，打开新版 FreeVideo.exe 更新。');
     };
     // While more notes are below, their lower edge fades out instead of cutting a line of text in half.

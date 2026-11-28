@@ -1,7 +1,7 @@
 # Installs ai-toolkit (github.com/ostris/ai-toolkit) for LoRA Studio's "Train on this PC" (MiniMax H3 LoRAs).
 # Fork addition. Run from PowerShell:
 #   powershell -ExecutionPolicy Bypass -File scripts\install-lora-trainer.ps1 [-Target C:\Projects\ai-toolkit]
-# It needs git and Python 3.10+ (3.12 recommended). It does not touch FreeVideo's own Python.
+# It needs git and Python 3.10+ (3.12 recommended). It does not touch Eclipse's own Python.
 # After it finishes: accept the MiniMax H3 licence at https://huggingface.co/Comfy-Org/MiniMax-H3 and run
 #   C:\Projects\ai-toolkit\venv\Scripts\hf.exe auth login
 # if the download asks for it. LoRA Studio finds C:\Projects\ai-toolkit on its own; for another folder set it
@@ -60,4 +60,4 @@ Write-Host ''
 Write-Host "Done. ai-toolkit is in $Target."
 Write-Host 'Next: accept the licence at https://huggingface.co/Comfy-Org/MiniMax-H3, then log in with a Read token:'
 Write-Host "  $(Join-Path $Target 'venv\Scripts\hf.exe') auth login"
-Write-Host "Then open LoRA Studio (the LoRA entry in FreeVideo's top bar) > Train."
+Write-Host "Then open LoRA Studio (the LoRA entry in Eclipse's top bar) > Train."

@@ -25,7 +25,7 @@ def read(path):
         raise ValueError('Media request JSON exceeds 1 MiB')
     value = json.loads(path.read_text(encoding='utf-8'))
     if not isinstance(value, dict) or value.get('version') != 1:
-        raise ValueError('Expected a version 1 FreeVideo media request')
+        raise ValueError('Expected a version 1 Eclipse media request')
     if 'early_steps' in value:
         raise ValueError('early_steps is only allowed on video references')
     if set(value) - {'version', 'first', 'last', 'middle', 'references', 'loras', 'conditioning_info'}:

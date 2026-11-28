@@ -2,7 +2,7 @@
 
 Bytes come from NVML; Windows (WDDM) usually reports none per process, so
 there they come from the "GPU Process Memory" performance counters that Task
-Manager shows. Those are summed over every adapter the process uses. FreeVideo's
+Manager shows. Those are summed over every adapter the process uses. Eclipse's
 own processes and the desktop's system components are left out: the user
 cannot close them. Names are shown on the page only, never written to reports.
 """

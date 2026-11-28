@@ -497,7 +497,7 @@ def _encode(args, request, resident, trace):
     reader = adapter_reader()
     guard = SpillGuard(torch, reader)
     current = {}
-    # What this process may hold under FreeVideo's plan, beside the physical room.
+    # What this process may hold under Eclipse's plan, beside the physical room.
     budget_bytes = int(float(request['gpu_budget_gb']) * 1e9) if request.get('gpu_budget_gb') else None
 
     if resident is not None and encoder_cache_hit:

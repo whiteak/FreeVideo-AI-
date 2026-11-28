@@ -49,8 +49,8 @@ MESSAGES = {
     'device_unavailable': ('The graphics card is not available right now. Try again later.',
                           '显卡暂时用不了，稍后再试。'),
     'gpu_kernels_failed': ("The graphics card's computation check did not pass. Update the graphics card driver, then restart "
-                           'FreeVideo. If the check still does not pass, download the report and report the problem.',
-                           '显卡的计算检查未通过。请更新显卡驱动后重新启动 FreeVideo；如仍未通过，请下载报告并提交问题。'),
+                           'Eclipse. If the check still does not pass, download the report and report the problem.',
+                           '显卡的计算检查未通过。请更新显卡驱动后重新启动 Eclipse；如仍未通过，请下载报告并提交问题。'),
     'worker_exit': ('Image generation stopped unexpectedly. Try again.',
                    '图像生成意外停止了，请再试一次。'),
     'timeout': ('This image took too long and was stopped. Try again.',

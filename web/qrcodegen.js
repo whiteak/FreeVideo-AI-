@@ -836,5 +836,5 @@ var qrcodegen;
     })(QrSegment = qrcodegen.QrSegment || (qrcodegen.QrSegment = {}));
 })(qrcodegen || (qrcodegen = {}));
 
-// FreeVideo ES module adapter.
+// Eclipse ES module adapter.
 export {qrcodegen};

@@ -42,14 +42,14 @@ class Parser(argparse.ArgumentParser):
 
 def build_parser():
     from . import schema
-    parser = Parser(prog='./freevideo agent', description='Drive FreeVideo through its agent API.')
+    parser = Parser(prog='./freevideo agent', description='Drive Eclipse through its agent API.')
     parser.add_argument('--root', type=Path)
     parser.add_argument('--url')
     commands = parser.add_subparsers(dest='command', required=True)
     commands.add_parser('status', help='Readiness, limits, LoRAs, VLM and queue')
     commands.add_parser('guide', help='How to write H3 prompts')
     commands.add_parser('schema', help='JSON Schemas of jobs')
-    command = commands.add_parser('install-skill', help='Copy the FreeVideo skill where Codex, Gemini CLI, Cursor and Claude Code read skills')
+    command = commands.add_parser('install-skill', help='Copy the Eclipse skill where Codex, Gemini CLI, Cursor and Claude Code read skills')
     command.add_argument('--target', choices=('agents', 'claude'), action='append', help='Default: both')
     command = commands.add_parser('capabilities', help='Read the studio capability cache')
     schema.cli_arguments(command, schema.contracts()['GET', '/capabilities']['query'])
@@ -78,7 +78,7 @@ def build_parser():
             schema.cli_arguments(command, schema.contracts()['POST', '/jobs/{id}/resume']['body'])
     command = commands.add_parser('jobs')
     schema.cli_arguments(command, schema.contracts()['GET', '/jobs']['query'])
-    command = commands.add_parser('upload', help='Copy a local media file into FreeVideo inputs')
+    command = commands.add_parser('upload', help='Copy a local media file into Eclipse inputs')
     command.add_argument('path')
     command = commands.add_parser('imports', help='Bring local video or audio into the editing timeline')
     imports = command.add_subparsers(dest='operation', required=True)

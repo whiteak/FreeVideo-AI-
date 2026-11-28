@@ -152,7 +152,7 @@ def uv_file_arguments(command, cwd=None):
     """Return (command, cwd) for which uv reads constraint files in folders with spaces.
 
     Such a file is named relative to its folder, which becomes uv's working
-    directory. FreeVideo passes every other path to uv as an absolute path.
+    directory. Eclipse passes every other path to uv as an absolute path.
     """
     command = [str(item) for item in command]
     if not command or Path(command[0]).name.lower() not in ('uv', 'uv.exe') or command[1:2] != ['pip']:

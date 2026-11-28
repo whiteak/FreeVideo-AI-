@@ -500,7 +500,7 @@ def host_compiler_choice(below, path=None, env=None, find=shutil.which, major=gc
 
 
 def pinned_compiler_identity(spec=None):
-    """How FreeVideo's own GCC is named in the wheel cache key and in a build record."""
+    """How Eclipse's own GCC is named in the wheel cache key and in a build record."""
     spec = spec or json.loads((PACKAGE / 'gcc_linux.json').read_text(encoding='utf-8'))
     return 'conda-forge gcc ' + spec['version'] + ' static-libstdc++'
 
@@ -694,7 +694,7 @@ def plan(args, *, local_progress=None, stage=None):
         if compatibility['error']:
             errors.append(compatibility['error'])
         snapshot['cuda_compatibility'] = compatibility
-        # A missing or too old Git is replaced by FreeVideo's own.
+        # A missing or too old Git is replaced by Eclipse's own.
         if offline_installation(root):
             # Its sources carry no Git history and its Python is the package's.
             errors.append('This folder holds an installation from offline packages; automatic installation does not change it. '
@@ -1136,7 +1136,7 @@ def display(value, ui=None, *, verbose=False):
         route = 'Public Edge via ' + label + ' · verified mirrors · resume retained files'
     rows.append(('Network', route
                  + (' · compare proxy / direct' if networking.get('proxy_configured') or networking.get('git_proxy_configured') else '')))
-    ui.panel('FreeVideo / ' + h['system'] + ' setup', rows)
+    ui.panel('Eclipse / ' + h['system'] + ' setup', rows)
     ui.write('Space and memory are estimates. Setup checks your GPU before marking it ready.\n')
     ui.write('Model licenses: MiniMax H3, H3 text encoder.\n' if value.get('device_backend') == 'mps' else
              'Model / toolkit licenses: MiniMax H3, H3 text encoder, NVIDIA CUDA.\n')
@@ -1203,7 +1203,7 @@ def display_details(value, ui=None):
                     (disk['needed_bytes']/GiB, disk['free_bytes']/GiB, disk['paths'][0])))
     rows += [('Preparation RAM', value['preparation_ram_estimate_gib']), ('Test outputs', value['test_artifacts_estimate_gib'])]
     rows.append(('First generation', value['first_generation_note']))
-    ui.panel('FreeVideo / ' + h['system'] + ' setup plan', rows)
+    ui.panel('Eclipse / ' + h['system'] + ' setup plan', rows)
     print('Resource numbers are conservative estimates. The test suite measures actual usage.')
     for i, step in enumerate(value['steps'], 1):
         print('%d. %s' % (i, step))
@@ -1372,10 +1372,10 @@ def setup_task(label):
         'space-saving-comfy': ('Prepare ComfyUI', 'Finish the environment before downloading models'),
         'python': ('Install Python', 'Download and prepare the private Python runtime'),
         'python-bootstrap-reuse': ('Use existing Python', 'Check the Python already prepared by the launcher'),
-        'venv': ('Create Python environment', 'Prepare an isolated environment for FreeVideo'),
+        'venv': ('Create Python environment', 'Prepare an isolated environment for Eclipse'),
         'torch': ('Install PyTorch + CUDA', 'Download and install the GPU runtime packages'),
         'packages': ('Install engine dependencies', 'Download and install video and text encoding libraries'),
-        'engine': ('Install encoder support', 'Connect the encoder to FreeVideo'),
+        'engine': ('Install encoder support', 'Connect the encoder to Eclipse'),
         'vdn': ('Install model support', 'Install the verified model code'),
         'vdn-source': ('Download model code', 'Prepare model source files while runtime packages download'),
         'library-check': ('Check text encoder', 'Verify that the text encoding library loads'),
@@ -2037,7 +2037,7 @@ class Installer:
     def release_package_cache(self, uv):
         cache = self.root / 'downloads' / 'uv-cache'
         if cache.is_symlink() or not cache.resolve().is_relative_to(self.root.resolve()):
-            raise ValueError('The installation cache points outside this FreeVideo folder; '
+            raise ValueError('The installation cache points outside this Eclipse folder; '
                              'space-saving cleanup stopped without removing it.')
         # Use uv's lock-aware cleanup; never unlink its internal files ourselves.
         result = self.command('release-package-cache', [uv, 'cache', 'clean', '--cache-dir', cache])
@@ -2144,7 +2144,7 @@ class Installer:
             raise failure from error
 
     def install_sage_optional(self, uv, python):
-        """Sage2 is an optional speed-up: where FreeVideo's own compiler builds it, a failure leaves it out."""
+        """Sage2 is an optional speed-up: where Eclipse's own compiler builds it, a failure leaves it out."""
         try:
             return self.install_sage(uv, python)
         except Exception as error:
@@ -2246,14 +2246,14 @@ class Installer:
         return conflict
 
     def host_compiler(self, cuda):
-        """The compiler pair Sage is built with: the system's, a versioned one beside it, or FreeVideo's own.
+        """The compiler pair Sage is built with: the system's, a versioned one beside it, or Eclipse's own.
 
         `env` is empty when the system compiler is used; `identity` names the compiler in the wheel cache key.
         A portable compiler is only installed when a build is needed (see install_compiler_linux).
         """
         spec = conda_lock(json.loads((PACKAGE / 'gcc_linux.json').read_text(encoding='utf-8')))
         below = spec['host_compiler_below'].get(cuda)
-        # Without any system g++, FreeVideo's own compiler builds Sage2.
+        # Without any system g++, Eclipse's own compiler builds Sage2.
         if not shutil.which('g++', path=self.env['PATH']):
             choice = None
         else:
@@ -2805,7 +2805,7 @@ def run_main(argv, shown):
     parser.add_argument('--yes', action='store_true')
     parser.add_argument('--accept-model-license', action='store_true')
     parser.add_argument('--no-launch', action='store_true',
-                        help='Linux: finish after the engine instead of installing ComfyUI and opening FreeVideo')
+                        help='Linux: finish after the engine instead of installing ComfyUI and opening Eclipse')
     parser.add_argument('--approved-plan', type=Path, help='GUI confirmation receipt; changed paths, models or larger disk/download requirements require a new review')
     args = parser.parse_args(argv)
     if not 1 <= args.network_timeout <= 30:

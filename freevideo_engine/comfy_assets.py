@@ -17,7 +17,7 @@ def saved_video(output, output_directory):
     if not output.is_file():
         raise FileNotFoundError(output)
     # ComfyUI adds executed outputs to its assets itself, and only while the user has assets on;
-    # FreeVideo never writes to the asset database, so an off switch stays off.
+    # Eclipse never writes to the asset database, so an off switch stays off.
     return dict(filename=relative.name, subfolder=relative.parent.as_posix(), type='output')
 
 

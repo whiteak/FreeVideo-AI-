@@ -232,7 +232,7 @@ export function createPromptEnhancer({node, input, editor, api, context, setText
     const errorText = error => isNetworkTypeError(error) ? networkText(error) : ({
         busy: t('Finish the current queue before enhancing this prompt.', '请等待当前队列完成后再改写。'),
         prompt_required: t('Type a prompt first; enhancement rewrites it before generating.', '请先输入提示词，生成前会自动改写。'),
-        setup_required: t('Complete FreeVideo installation first.', '请先完成 FreeVideo 安装。'),
+        setup_required: t('Complete Eclipse installation first.', '请先完成 Eclipse 安装。'),
         model_missing: t('Download the optional model to enable enhancement.', '下载可选模型后可启用。'),
         download_failed: t('Download paused. Retry to resume.', '下载已暂停，重试可继续。'),
         disk_space: t('Not enough disk space for the optional model.', '可选模型的磁盘空间不足，请清理后重试。'),
@@ -259,14 +259,14 @@ export function createPromptEnhancer({node, input, editor, api, context, setText
         timeout: t('Rewriting took too long. Retry or use the original.', '改写超时，请重试或使用原文。'),
         stale: t('The prompt or references changed. Rewrite again to use the current scene.', '原文或素材已更改，可按当前内容重新改写。'),
         cancelled: t('Cancelled. Your original prompt is retained.', '已取消，原文已保留。'),
-        worker_cleanup_failed: t('The rewrite process could not close. Restart FreeVideo before generating.', '改写进程未能退出，请重启 FreeVideo 后再生成。'),
+        worker_cleanup_failed: t('The rewrite process could not close. Restart Eclipse before generating.', '改写进程未能退出，请重启 Eclipse 后再生成。'),
     }[error?.message] || (reasonOf(error)
         ? t('Could not enhance the prompt: {reason}. Retry or switch enhancement off to use the original.', '暂时无法改写。原因：{reason}。请重试，或关闭增强使用原文。', { reason: reasonOf(error) })
         : t('Could not enhance the prompt. Retry or switch enhancement off to use the original.', '暂时无法改写，请重试，或关闭增强使用原文。')));
     // After falling back the original is already in use, so only the reason and the next useful step are shown.
     const fallbackText = error => isNetworkTypeError(error) ? networkText(error) : ({
         busy: t('The prompt cannot be rewritten while the queue is running.', '队列未完成时不能改写。'),
-        setup_required: t('Rewriting is available after FreeVideo installation is complete.', 'FreeVideo 安装完成后才能改写。'),
+        setup_required: t('Rewriting is available after Eclipse installation is complete.', 'Eclipse 安装完成后才能改写。'),
         model_missing: t('Rewriting needs the optional model. Download it to enable rewriting.', '改写需要可选模型，下载后可用。'),
         download_failed: t('The optional model download paused. Retry to resume.', '可选模型下载已暂停，重试可继续下载。'),
         disk_space: t('Not enough disk space for the optional model.', '磁盘空间不足，无法安装可选模型。'),
@@ -533,7 +533,7 @@ export function createPromptEnhancer({node, input, editor, api, context, setText
         context_length: t('The result was incomplete. Try again.', '结果不完整，请重试。'),
         download_failed: t('Download paused. Retry to resume.', '下载已暂停，重试可继续。'),
         disk_space: t('Not enough disk space for the optional model.', '可选模型的磁盘空间不足，请清理后重试。'),
-        worker_cleanup_failed: t('The process could not close. Restart FreeVideo before generating.', '生成提示词的进程未能退出，请重启 FreeVideo 后再生成。'),
+        worker_cleanup_failed: t('The process could not close. Restart Eclipse before generating.', '生成提示词的进程未能退出，请重启 Eclipse 后再生成。'),
         cancelled: t('Stopped. Your prompt is unchanged.', '已停止，原文已保留。'),
         not_enabled: t('Not enabled. Your prompt is unchanged.', '未启用，原文已保留。'),
     }[error?.message] || (reasonOf(error)
@@ -659,7 +659,7 @@ export function createPromptEnhancer({node, input, editor, api, context, setText
     function useOriginal(error) {
         // A successful rewrite discarded after an edit is a draft notice, not a failure.
         const stale = error?.message === 'stale';
-        if (!stale) console.warn('FreeVideo prompt rewrite failed; using the original prompt.', error?.message);
+        if (!stale) console.warn('Eclipse prompt rewrite failed; using the original prompt.', error?.message);
         versions.value.selected = 'original'; apply();
         show(t('Generated with the original prompt. {reason}', '已用原文生成。{reason}', { reason: stale ? errorText(error) : fallbackText(error) }), 'note');
     }

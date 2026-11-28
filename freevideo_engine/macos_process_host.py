@@ -1,6 +1,6 @@
-"""Mac child ownership, including FreeVideo workers in separate sessions.
+"""Mac child ownership, including Eclipse workers in separate sessions.
 
-Each FreeVideo spawn has a lightweight parent watcher. Descendants are tracked
+Each Eclipse spawn has a lightweight parent watcher. Descendants are tracked
 with psutil process identities so cleanup never signals a reused PID. This is
 not a kernel subreaper: unrelated daemonization is outside this contract.
 """

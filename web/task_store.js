@@ -66,11 +66,11 @@ export function createJobStore({now = () => Date.now(), storage = null} = {}) {
         for (const entry of [...subscribers]) {
             if (!subscribers.has(entry)) continue;
             if (change && entry.filter && !matches(change.row || {}, entry.filter) && !matches(change.previous || {}, entry.filter)) continue;
-            try { entry.fn(snapshot.filter(row => matches(row, entry.filter)), change); } catch (error) { console.warn('FreeVideo jobs subscriber:', error); }
+            try { entry.fn(snapshot.filter(row => matches(row, entry.filter)), change); } catch (error) { console.warn('Eclipse jobs subscriber:', error); }
         }
         for (const fn of [...events.change]) try { fn(change); } catch { /* One listener never stops the others. */ }
     }
-    function fire(name, row) { for (const fn of [...events[name]]) try { fn(row); } catch (error) { console.warn(`FreeVideo jobs ${name}:`, error); } }
+    function fire(name, row) { for (const fn of [...events[name]]) try { fn(row); } catch (error) { console.warn(`Eclipse jobs ${name}:`, error); } }
 
     // Merges what a source knows into the row. A finished row stays finished unless the source says it runs
     // again (a long video continued after a stop); a late progress message cannot revive it.
@@ -124,7 +124,7 @@ export function createJobStore({now = () => Date.now(), storage = null} = {}) {
     return {
         subscribe(fn, filter = null) {
             const entry = {fn, filter}; subscribers.add(entry);
-            try { fn(snapshot.filter(row => matches(row, filter)), null); } catch (error) { console.warn('FreeVideo jobs subscriber:', error); }
+            try { fn(snapshot.filter(row => matches(row, filter)), null); } catch (error) { console.warn('Eclipse jobs subscriber:', error); }
             return () => subscribers.delete(entry);
         },
         list: () => snapshot,
@@ -173,7 +173,7 @@ export function createJobStore({now = () => Date.now(), storage = null} = {}) {
         localOf: id => local[id] || null,
         async refresh() { await Promise.all([...new Set(sources.values())].map(source => source.refresh?.().catch?.(() => {}))); },
         // For sources only.
-        // A job waiting for FreeVideo to come back (meta.reconnecting): its source stops waiting and ends it (#1121).
+        // A job waiting for Eclipse to come back (meta.reconnecting): its source stops waiting and ends it (#1121).
         stopWaiting(id) { const row = rows.get(id), source = sourceOf(row); return Boolean(source?.stopWaiting?.(id)); },
         upsert, addSource(name, source) { sources.set(name, source); return () => { if (sources.get(name) === source) sources.delete(name); }; },
         now,
@@ -196,7 +196,7 @@ export function imageSource(store, {client, storage = null, poll = 500, now = st
     // The resume list holds the worker's job key, the model and the view: no prompt (old entries lose theirs on load).
     const keys = readJSON(storage, IMAGE_KEY), tracking = new Set(), missed = new Map(); // id → the last failed asks, for Stop waiting
     // The page's socket to ComfyUI closing (its 'reconnecting' event) wakes every poll at once: two failed asks in a row
-    // and the page says it is waiting, within seconds of FreeVideo going away instead of after the backoff (#1121).
+    // and the page says it is waiting, within seconds of Eclipse going away instead of after the backoff (#1121).
     const wakers = new Set();
     const nap = ms => new Promise(done => { const wake = () => { wakers.delete(wake); done(); }; wakers.add(wake); void Promise.resolve(sleep(ms)).then(wake); });
     connection?.addEventListener?.('reconnecting', () => { for (const wake of [...wakers]) wake(); });
@@ -206,13 +206,13 @@ export function imageSource(store, {client, storage = null, poll = 500, now = st
     const clients = new Map(), clientOf = id => clients.get(id) || client;
     const save = () => writeJSON(storage, IMAGE_KEY, keys);
     const forget = id => { delete keys[id]; save(); };
-    // Why FreeVideo went away, as the launcher saw it end (engine_exit.js exitCause): asked once the page can reach it.
+    // Why Eclipse went away, as the launcher saw it end (engine_exit.js exitCause): asked once the page can reach it.
     const causeOf = async () => { try { return await lastExit(); } catch { return null; } };
 
     async function track(id) {
         if (tracking.has(id)) return; tracking.add(id);
         // misses: the kind of the last failed asks (connection_lost, engine_error, http_502...); lostSince: when the page
-        // began to wait for FreeVideo to come back (#1121: an engine_closed that said nothing of why).
+        // began to wait for Eclipse to come back (#1121: an engine_closed that said nothing of why).
         let serial = 0, outages = 0, preview = store.get(id)?.meta?.preview || '', misses = [], lostSince = null;
         try {
             for (;;) {
@@ -223,7 +223,7 @@ export function imageSource(store, {client, storage = null, poll = 500, now = st
                 try { status = await clientOf(id).status(entry.job, entry.model); outages = 0; }
                 catch (error) {
                     if (GONE.has(error?.code)) {
-                        // FreeVideo came back without this job: it was restarted. Why it stopped is the launcher's to say.
+                        // Eclipse came back without this job: it was restarted. Why it stopped is the launcher's to say.
                         const cause = await causeOf();
                         store.upsert({id, status: 'interrupted', failure: {code: 'engine_restarted', ...(cause ? {cause} : {}),
                             ...(misses.length ? {misses} : {})}, meta: {reconnecting: null}});
@@ -232,14 +232,14 @@ export function imageSource(store, {client, storage = null, poll = 500, now = st
                     misses = [...misses, missWord(error?.step && error.step !== 'start' ? error.step
                         : error?.code || (error instanceof TypeError ? 'connection_lost' : 'unknown'))].slice(-3);
                     missed.set(id, misses);
-                    // A few misses are a reset. A run of them: the page says it is waiting for FreeVideo to come back, and
+                    // A few misses are a reset. A run of them: the page says it is waiting for Eclipse to come back, and
                     // waits a while longer (the user can stop waiting) before it calls the job lost.
                     if (++outages >= outageLimit && lostSince === null) { lostSince = now(); store.upsert({id, meta: {reconnecting: {since: lostSince}}}); }
                     if (lostSince !== null && now() - lostSince >= reconnectFor) {
                         store.upsert({id, status: 'failed', failure: {code: 'engine_closed', cause: 'unreachable', misses}, meta: {reconnecting: null}});
                         forget(id); return;
                     }
-                    // Asked again soon enough that FreeVideo coming back is seen within a few seconds.
+                    // Asked again soon enough that Eclipse coming back is seen within a few seconds.
                     await nap(Math.min(4000, poll * 2 ** Math.min(outages, 3))); continue;
                 }
                 if (lostSince !== null) { lostSince = null; store.upsert({id, meta: {reconnecting: null}}); }
@@ -299,7 +299,7 @@ export function imageSource(store, {client, storage = null, poll = 500, now = st
             void track(id);
             return {id};
         },
-        // The user stops waiting for FreeVideo to come back: the job ends now as lost, with what the page saw.
+        // The user stops waiting for Eclipse to come back: the job ends now as lost, with what the page saw.
         stopWaiting(id) {
             const row = store.get(id);
             if (!row?.meta?.reconnecting || FINAL.has(row.status)) return false;

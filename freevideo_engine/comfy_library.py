@@ -1,4 +1,4 @@
-"""Browse completed FreeVideo outputs across ComfyUI/browser restarts."""
+"""Browse completed Eclipse outputs across ComfyUI/browser restarts."""
 import asyncio
 import hashlib
 from contextlib import nullcontext
@@ -266,7 +266,7 @@ def list_videos(output_directory, *, before=None, limit=24, favorite=None):
                 agent = _agent(path.parent) if agent_enabled() else None
             except Exception as error:
                 # Optional attribution must not hide an otherwise valid saved video.
-                logging.getLogger(__name__).warning('[FreeVideo] Agent label unavailable: %s', error)
+                logging.getLogger(__name__).warning('[Eclipse] Agent label unavailable: %s', error)
                 agent = None
             if agent:
                 summary['agent'] = agent
@@ -506,7 +506,7 @@ def zip_stream(output_directory, input_directory, plan, left, *, workflow=False,
     yield sink.take()
 
 
-# What a FreeVideo request writes into its own run folder, including the
+# What a Eclipse request writes into its own run folder, including the
 # prompt-enhancement record and the staging copy monitoring.save keeps when
 # Windows would not let it replace a JSON record. A creation whose folder
 # holds anything else, or any link, is not deleted at all.
@@ -534,7 +534,7 @@ def _plain(path):
 
 
 def _foreign(folder):
-    """Names in a run folder that FreeVideo did not write, or that are links."""
+    """Names in a run folder that Eclipse did not write, or that are links."""
     folder = io_path(checked_real_path(folder))
     kept = []
     for entry in sorted(folder.iterdir()):
@@ -633,7 +633,7 @@ def release_decoded(folder, names=_DECODED, measure=False):
     """Delete a saved creation's decoded frames and audio, retried attempts' included.
 
     Only where the engine writes them: video.artifacts itself and its
-    attempts/NN-id folders. A folder holding anything FreeVideo did not write,
+    attempts/NN-id folders. A folder holding anything Eclipse did not write,
     or any link, is left alone, as delete_video leaves it. Paths Windows still
     has open are listed. ``names`` and ``measure`` serve clear_working_files, which
     counts what it would free before it deletes.
@@ -768,7 +768,7 @@ FAILED_KEEP = 7 * 24 * 3600.
 
 def failed_runs(output_directory, *, now=None, older=FAILED_KEEP):
     """Run folders of requests that ended without a video, untouched for ``older`` seconds and holding only what
-    FreeVideo writes, as [(id, bytes)]. A folder of a request that is still running, or of a saved video, is never one."""
+    Eclipse writes, as [(id, bytes)]. A folder of a request that is still running, or of a saved video, is never one."""
     try:
         output_directory = checked_real_path(output_directory)
     except AliasUnavailable:
@@ -994,7 +994,7 @@ def _trash_creation(output_directory, identity, queue, cache, announce=None):
             if error.name not in ('av', __package__ + '.continuation_store'):
                 raise
         except Exception as error:
-            logging.warning('[FreeVideo] Continuation cleanup failed (%s).', type(error).__name__)
+            logging.warning('[Eclipse] Continuation cleanup failed (%s).', type(error).__name__)
         trash = root / '.deleted'
         trash.mkdir(exist_ok=True)
         if not _plain(trash):
@@ -1019,7 +1019,7 @@ def _forget(identifiers, root):
             from .continuation_store import delete_id
             delete_id(identifier)
         except Exception as error:
-            logging.warning('[FreeVideo] Continuation cleanup failed (%s).', type(error).__name__)
+            logging.warning('[Eclipse] Continuation cleanup failed (%s).', type(error).__name__)
 
 
 def _work_facts(folder):
@@ -1089,7 +1089,7 @@ def _forget_works(root, facts):
         from .comfy_progress import REPORTS
         REPORTS.forget(root, {fact['run'] for fact in facts})
     except Exception:
-        logging.warning('[FreeVideo] Could not forget the report numbers of a deleted creation.', exc_info=True)
+        logging.warning('[Eclipse] Could not forget the report numbers of a deleted creation.', exc_info=True)
     try:
         kept_receipts, kept_prompts = _kept_facts(root)
     except OSError:
@@ -1121,7 +1121,7 @@ def _forget_works(root, facts):
         try:
             jobs.forget_works(sorted(runs))  # an Agent job that made the work keeps no prompt or pictures of it
         except Exception:
-            logging.warning('[FreeVideo] Could not update the Agent jobs of a deleted creation.', exc_info=True)
+            logging.warning('[Eclipse] Could not update the Agent jobs of a deleted creation.', exc_info=True)
     try:
         with queue.mutex:
             history = dict(queue.history)
@@ -1129,7 +1129,7 @@ def _forget_works(root, facts):
             if prompt_id in ids or (runs and any(run in json.dumps(entry, default=str) for run in runs)):
                 queue.delete_history_item(prompt_id)
     except Exception:
-        logging.warning('[FreeVideo] Could not remove ComfyUI\'s record of a deleted creation.', exc_info=True)
+        logging.warning('[Eclipse] Could not remove ComfyUI\'s record of a deleted creation.', exc_info=True)
 
 
 def _forget_results(identities, root):
@@ -1146,7 +1146,7 @@ def _forget_results(identities, root):
 
 
 def delete_video(output_directory, identity, *, queue=None):
-    """Delete one saved creation: its whole run folder, only when FreeVideo wrote everything in it.
+    """Delete one saved creation: its whole run folder, only when Eclipse wrote everything in it.
 
     The folder is first renamed into FreeVideo/.deleted, so it leaves the
     library at once, or, when Windows still has a file open, nothing changes.
@@ -1266,7 +1266,7 @@ def _recover(root, path, value):
         else:
             path.unlink()
     except OSError:
-        logging.warning('FreeVideo could not update the record of creations it still has to put back.')
+        logging.warning('Eclipse could not update the record of creations it still has to put back.')
         return
     _INFLIGHT.difference_update(row['name'] for row in rows if row['id'] not in failed)
 
@@ -1344,7 +1344,7 @@ def delete_videos(output_directory, identities, *, queue=None, batch=None, exten
     from .monitoring import save
     from .comfy_chain import segment_identities
     # A long video's hidden part videos leave with it, in the same undo batch; one that is not ours to delete
-    # (in use, not FreeVideo's) is skipped as any other.
+    # (in use, not Eclipse's) is skipped as any other.
     identities = list(dict.fromkeys([*identities, *segment_identities(identities)]))
     token = batch or '%d-%s' % (time.time_ns(), os.urandom(3).hex())
     manifest = root / '.deleted' / (_MANIFEST + token + '.json')
@@ -1404,7 +1404,7 @@ def delete_videos(output_directory, identities, *, queue=None, batch=None, exten
                 if not failed:
                     manifest.unlink()
                 else:
-                    logging.warning('FreeVideo could not put back %d creations after a failed delete.', len(failed))
+                    logging.warning('Eclipse could not put back %d creations after a failed delete.', len(failed))
                     # What could not be put back stays named by a record that only restores it, until it can be.
                     save(manifest, dict(schema=1, due=0, restore=True, session=_SESSION,
                                         items=[row for row in moved if row['id'] in failed]))
@@ -1430,7 +1430,7 @@ def _finish_quietly(output_directory):
     try:
         finish_deleted(output_directory)
     except Exception:
-        logging.warning('FreeVideo could not finish removing deleted creations.', exc_info=True)
+        logging.warning('Eclipse could not finish removing deleted creations.', exc_info=True)
 
 
 def finish_deleted(output_directory, *, everything=False):
@@ -1509,7 +1509,7 @@ def undo_deleted(output_directory, token):
         try:
             save(manifest, dict(value, restore=True, due=0, items=items))
         except OSError:
-            logging.warning('FreeVideo could not record an undo, so nothing was restored.')
+            logging.warning('Eclipse could not record an undo, so nothing was restored.')
             return dict(restored=[], lost=[item.get('id') for item in items])
         for item in items:
             if item not in rows:
@@ -1667,27 +1667,27 @@ def register():
         try:
             result = release_earlier(folder_paths.get_output_directory())
             if result and result['freed_bytes']:
-                logging.info('FreeVideo freed %.1f GB of decoded frames and audio from %d earlier videos.',
+                logging.info('Eclipse freed %.1f GB of decoded frames and audio from %d earlier videos.',
                              result['freed_bytes'] / 1e9, result['videos'])
         except Exception:
-            logging.warning('FreeVideo could not free the decoded files of earlier videos.', exc_info=True)
+            logging.warning('Eclipse could not free the decoded files of earlier videos.', exc_info=True)
         try:
             freed = clean_interrupted(folder_paths.get_output_directory())
             if freed:
-                logging.info('FreeVideo removed %.1f MB left by an interrupted share or export.', freed / 1e6)
+                logging.info('Eclipse removed %.1f MB left by an interrupted share or export.', freed / 1e6)
         except Exception:
-            logging.warning('FreeVideo could not remove files left by an interrupted share or export.', exc_info=True)
+            logging.warning('Eclipse could not remove files left by an interrupted share or export.', exc_info=True)
         try:
             # A deletion the last session did not finish: its undo time is long over.
             finish_deleted(folder_paths.get_output_directory(), everything=True)
         except Exception:
-            logging.warning('FreeVideo could not finish removing deleted creations.', exc_info=True)
+            logging.warning('Eclipse could not finish removing deleted creations.', exc_info=True)
         try:
             # Report numbers of works an earlier version deleted without forgetting them.
             from .comfy_progress import REPORTS
             REPORTS.forget(Path(folder_paths.get_output_directory()).resolve() / 'FreeVideo')
         except Exception:
-            logging.warning('FreeVideo could not tidy the report index.', exc_info=True)
+            logging.warning('Eclipse could not tidy the report index.', exc_info=True)
     threading.Thread(target=release, name='freevideo-release-decoded', daemon=True).start()
 
     @server.routes.get('/freevideo/sampling-estimate')
@@ -1868,10 +1868,10 @@ def register():
 
     @server.routes.post('/freevideo/library/open-folder')
     async def open_folder(request):
-        # It opens a window on the computer running FreeVideo, so only that computer may ask.
+        # It opens a window on the computer running Eclipse, so only that computer may ask.
         # The custom header keeps other websites from posting to it without the browser's pre-check.
         if request.remote not in ('127.0.0.1', '::1') or request.headers.get('X-FreeVideo-Library') != '1':
-            raise web.HTTPForbidden(text='Open the folder on the computer that runs FreeVideo')
+            raise web.HTTPForbidden(text='Open the folder on the computer that runs Eclipse')
         try:
             body = await request.json()
             identity = body.get('id') if isinstance(body, dict) else None
@@ -2005,7 +2005,7 @@ def register():
                 except ValueError:  # still reading its last piece in another thread
                     await asyncio.sleep(0.1)
             else:
-                logging.warning('FreeVideo is still preparing a video for a cancelled zip download; its copy is removed when done.')
+                logging.warning('Eclipse is still preparing a video for a cancelled zip download; its copy is removed when done.')
             for copy in copies:
                 try:
                     await asyncio.to_thread(copy.unlink, missing_ok=True)

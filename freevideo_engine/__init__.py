@@ -1,4 +1,4 @@
-"""FreeVideo inference policies layered over the pinned VDN model."""
+"""Eclipse inference policies layered over the pinned VDN model."""
 __version__ = "2026.9.16.41444"
 
 # Release builds stamp one UTC version into both the GUI and deployed engine.

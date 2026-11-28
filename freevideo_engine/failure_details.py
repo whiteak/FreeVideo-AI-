@@ -16,10 +16,10 @@ STEP_OUTPUT = '\n\nFull step output:\n'
 QUALITY_LEVELS = (('Light', '轻量'), ('Medium', '标准'), ('High', '精细'), ('Max', '极致'))  # tiers.TIERS order
 # Marks a fastest mode failure. web/error_panel.js shows its card when no more specific one applies.
 FAST_MODE_FAILED = 'FAST_MODE_FAILED: The fastest mode could not run.'
-ENGINE_BUSY_TITLE = ('FreeVideo is busy with another task', 'FreeVideo 正在处理另一个任务')
+ENGINE_BUSY_TITLE = ('Eclipse is busy with another task', 'Eclipse 正在处理另一个任务')
 ENGINE_BUSY_DETAIL = (
-    'Try again when it finishes. If nothing else is running, close duplicate FreeVideo instances, then try again.',
-    '请在它完成后重试。若没有其他任务在进行，请关闭重复运行的 FreeVideo 后重试。',
+    'Try again when it finishes. If nothing else is running, close duplicate Eclipse instances, then try again.',
+    '请在它完成后重试。若没有其他任务在进行，请关闭重复运行的 Eclipse 后重试。',
 )
 
 
@@ -30,21 +30,21 @@ IMAGE_PACK_FAILURES = {
     'integrity_failed': ('The image model files are incomplete or damaged. Repair them in the launcher.', '图像模型文件不完整或已损坏，请在启动器里修复。'),
     'write_failed': ('The image model files are in use or cannot be written or deleted. Close programs that may be using them (for example an antivirus scan), check that the model folder can be written to, then try again.',
                      '图像模型文件被占用，或无法写入／删除。请关闭可能正在使用它们的程序（例如杀毒软件扫描），确认模型文件夹可以写入，然后重试。'),
-    'invalid_catalog': ('The image model package version is incompatible; update FreeVideo and try again.', '图像模型包版本不匹配，请更新 FreeVideo 后重试。'),
+    'invalid_catalog': ('The image model package version is incompatible; update Eclipse and try again.', '图像模型包版本不匹配，请更新 Eclipse 后重试。'),
     'busy': ('Another task is using the image model package; try again when it finishes.', '图像模型包被其他任务占用，完成后再试。'),
-    'busy_engine': ('FreeVideo is busy with a task or keeping the image model ready, so the image model cannot be repaired or removed now. Wait for it to finish, or close FreeVideo, then try again.', 'FreeVideo 正在执行任务或保持图像模型就绪，暂时无法修复或删除图像模型。请等待其结束，或关闭 FreeVideo 后再试。'),
-    'busy_setup': ('FreeVideo is being installed, updated or cleaned up; try again when it finishes.', 'FreeVideo 正在安装、更新或清理，完成后再试。'),
+    'busy_engine': ('Eclipse is busy with a task or keeping the image model ready, so the image model cannot be repaired or removed now. Wait for it to finish, or close Eclipse, then try again.', 'Eclipse 正在执行任务或保持图像模型就绪，暂时无法修复或删除图像模型。请等待其结束，或关闭 Eclipse 后再试。'),
+    'busy_setup': ('Eclipse is being installed, updated or cleaned up; try again when it finishes.', 'Eclipse 正在安装、更新或清理，完成后再试。'),
     'busy_video': ('A video is using the graphics card; try again when it finishes.', '视频正在使用显卡，完成后再试。'),
     'needs_repair': ('The image model files are incomplete or damaged; repair them in the launcher.', '图像模型文件不完整或已损坏，请在启动器里修复。'),
     # The text is built in image_pack_failure from model_repair's sentence; this row only makes the code known.
     'shared_mismatch': ('The image model files are incomplete or damaged; repair them in the launcher.', '图像模型文件不完整或已损坏，请在启动器里修复。'),
     'changed': ('The image model files changed during the check; they were kept, so check again.', '图像模型文件在检查期间发生变化，已保留，请重新检查。'),
-    'unsafe_path': ("One of FreeVideo's own record files in the image model folder (image_gen) is a link or leads outside that folder, so it was not written; delete that link and try again.",
-                    '图像模型目录（image_gen）里 FreeVideo 自己的记录文件是链接或指向目录之外，所以没有写入；请删掉这个链接后重试。'),
+    'unsafe_path': ("One of Eclipse's own record files in the image model folder (image_gen) is a link or leads outside that folder, so it was not written; delete that link and try again.",
+                    '图像模型目录（image_gen）里 Eclipse 自己的记录文件是链接或指向目录之外，所以没有写入；请删掉这个链接后重试。'),
     'broken_link': ('A link in the image model folder leads to a place that does not exist, for example a drive that is not connected; connect that drive or folder, or delete the link and download the model again.',
                     '图像模型目录里有链接指向不存在的位置（例如没接上的硬盘）；请接上它指向的盘或文件夹，或删掉这个链接后重新下载模型。'),
-    'link_mismatch': ('A model file in the image model folder is a link to a file that is damaged or a different version; delete the link so FreeVideo can download the file again, or point the link to the right file.',
-                      '图像模型目录里有模型文件是链接，它指向的文件已损坏或版本不对；请删掉这个链接让 FreeVideo 重新下载，或把链接改指向正确的文件。'),
+    'link_mismatch': ('A model file in the image model folder is a link to a file that is damaged or a different version; delete the link so Eclipse can download the file again, or point the link to the right file.',
+                      '图像模型目录里有模型文件是链接，它指向的文件已损坏或版本不对；请删掉这个链接让 Eclipse 重新下载，或把链接改指向正确的文件。'),
     'failed': ('The image model operation stopped because of an unexpected error. Export the report, then use "Report a problem" and attach it.',
                '图像模型操作因意外错误停止。请先导出报告，再点击“提交问题”并附上报告。'),
 }
@@ -113,8 +113,8 @@ SHARED_MISMATCH_ELSEWHERE = (
 # A portable (offline package) installation has no Repair in its launcher.
 SHARED_MISMATCH_PORTABLE = (
     'A model file differs from the tested version and was left unchanged. '
-    'Extract the package again into a new folder and start FreeVideo from there.',
-    '一个模型文件与测试过的版本不同，这次没有改动它。请把整合包重新解压到新文件夹，再从那里启动 FreeVideo。')
+    'Extract the package again into a new folder and start Eclipse from there.',
+    '一个模型文件与测试过的版本不同，这次没有改动它。请把整合包重新解压到新文件夹，再从那里启动 Eclipse。')
 
 
 def _portable_installation():
@@ -189,7 +189,7 @@ def sampling_table_failure(value, *, zh=False):
             title = '“%s”还没有下载' % QUALITY_LEVELS[index][1]
             what = '这一档需要的文件'
         detail = ('这次生成要先下载%s（约 %s），但没能下载完。'
-                  '请确认网络连接后再生成一次，FreeVideo 会自动下载。') % (what, size)
+                  '请确认网络连接后再生成一次，Eclipse 会自动下载。') % (what, size)
         if available:
             detail += '也可以改用已经可以使用的%s档。' % available
     else:
@@ -200,7 +200,7 @@ def sampling_table_failure(value, *, zh=False):
             title = "The %s quality level's sampling table is not downloaded yet" % QUALITY_LEVELS[index][0]
             what = "that level's sampling table"
         detail = ('This video first needs %s (about %s), and it could not be downloaded this time. '
-                  'Check the network connection and generate again; FreeVideo downloads it automatically.') % (what, size)
+                  'Check the network connection and generate again; Eclipse downloads it automatically.') % (what, size)
         if available:
             detail += ' You can also switch to a quality level that is already available: %s.' % available
     return dict(kind='sampling-table', title=title, detail=detail, action='')
@@ -334,7 +334,7 @@ PYTHON_START_DENIED = r'Failed to run [^\n]*python[^\n]*\s+Caused by:[^\n]*(?:os
 
 # Leads the error of a step that needed an environment's Python file after it
 # disappeared, e.g. while security software was holding it in quarantine.
-ENVIRONMENT_PYTHON_REMOVED = 'The Python file of the FreeVideo environment is missing'
+ENVIRONMENT_PYTHON_REMOVED = 'The Python file of the Eclipse environment is missing'
 
 
 # Windows' Python launcher, when an environment's python.exe cannot find the interpreter it forwards to.
@@ -372,16 +372,16 @@ PLACE_RULES = (
       '它不能存放 4 GB 以上的文件。'
       '请选择其他硬盘上的文件夹。')),
     (r'The installation folder is on an exFAT disk', 'disk-format',
-     ('This disk cannot hold the FreeVideo environment', '这块硬盘装不了 FreeVideo 的运行环境'),
-     ("It is formatted as exFAT, where FreeVideo's Python environment does not work. "
+     ('This disk cannot hold the Eclipse environment', '这块硬盘装不了 Eclipse 的运行环境'),
+     ("It is formatted as exFAT, where Eclipse's Python environment does not work. "
       'Choose a folder on an APFS or Mac OS Extended disk.',
-      '它是 exFAT 格式，FreeVideo 的运行环境无法在上面工作。'
+      '它是 exFAT 格式，Eclipse 的运行环境无法在上面工作。'
       '请选择其他硬盘上的文件夹。')),
     (r'The installation folder is on a disk that does not support file links', 'disk-format',
-     ('This disk cannot hold the FreeVideo environment', '这块硬盘装不了 FreeVideo 的运行环境'),
-     ("It does not support the file operations that FreeVideo's Python environment needs. "
+     ('This disk cannot hold the Eclipse environment', '这块硬盘装不了 Eclipse 的运行环境'),
+     ("It does not support the file operations that Eclipse's Python environment needs. "
       "Choose a folder on the Mac's built-in disk.",
-      '它不能安装 FreeVideo。'
+      '它不能安装 Eclipse。'
       '请选择 Mac 内置硬盘上的文件夹。')),
     (r'The installation folder is on a disk formatted as FAT32', 'disk-format',
      ('This disk cannot hold the models', '这块硬盘放不下模型'),
@@ -390,13 +390,13 @@ PLACE_RULES = (
       '它不能存放 4 GB 以上的文件。'
       '请选择其他硬盘上的文件夹。')),
     (r'The installation folder is on a disk formatted as exFAT', 'disk-format',
-     ('This disk cannot hold the FreeVideo environment', '这块硬盘装不了 FreeVideo 的运行环境'),
-     ("It is formatted as exFAT, where FreeVideo's Python environment does not work. "
+     ('This disk cannot hold the Eclipse environment', '这块硬盘装不了 Eclipse 的运行环境'),
+     ("It is formatted as exFAT, where Eclipse's Python environment does not work. "
       'Choose a folder on another disk.',
-      '它是 exFAT 格式，FreeVideo 的运行环境无法在上面工作。'
+      '它是 exFAT 格式，Eclipse 的运行环境无法在上面工作。'
       '请选择其他硬盘上的文件夹。')),
     (r'The installation folder is on a disk that does not allow programs to run', 'disk-format',
-     ('FreeVideo cannot run from this disk', '这块硬盘上无法运行 FreeVideo'),
+     ('Eclipse cannot run from this disk', '这块硬盘上无法运行 Eclipse'),
      ('It is mounted so that programs cannot run from it. Choose a folder on another disk.',
       '它挂载时设置为不允许运行程序。请选择其他硬盘上的文件夹。')),
     (r'The installation folder is on a disk that is not connected', 'disk-missing',
@@ -437,8 +437,8 @@ def _model_unchanged(tail):
 WITHOUT_REPAIR_NONE = ('Return to Installation and check the same folder to restore missing dependencies.',
                        '返回安装设置，检查当前安装目录，补齐运行依赖。')
 _KEPT = ('; the models and videos in the current folder are not deleted.', '；原文件夹里的模型和作品不会被删除。')
-_EXTRACT = ('Extract the downloaded package again into a new folder and start FreeVideo from there' + _KEPT[0],
-            '请把下载的整合包重新解压到一个新文件夹，再从新文件夹启动 FreeVideo' + _KEPT[1])
+_EXTRACT = ('Extract the downloaded package again into a new folder and start Eclipse from there' + _KEPT[0],
+            '请把下载的整合包重新解压到一个新文件夹，再从新文件夹启动 Eclipse' + _KEPT[1])
 _IMPORT = ('On the Installation page in the sidebar, select New installation, change Install location to a new folder, '
            'then click Replace package… under Import environment package and choose the downloaded environment package; '
            'if you are online, you can instead choose Automatic as the install method there. '
@@ -446,7 +446,7 @@ _IMPORT = ('On the Installation page in the sidebar, select New installation, ch
            '请在左侧“安装”页选择“全新安装”，把“安装位置”改为一个新文件夹，然后在“导入运行环境包”中点击“更换环境包…”'
            '并选择下载的运行环境包；能联网时，也可以在那里把安装方式改为“自动安装”。原文件夹里的模型和作品不会被删除。')
 WITHOUT_REPAIR = {
-    # A model file that differs from the tested one; FreeVideo leaves it in place.
+    # A model file that differs from the tested one; Eclipse leaves it in place.
     'model-mismatch': dict(
         busy=_model_unchanged(MODEL_BUSY),
         bundled=_model_unchanged(('The portable package cannot switch back in one step. ' + _EXTRACT[0],
@@ -476,15 +476,15 @@ WITHOUT_REPAIR = {
     # An engine update moved the editable install back after a failure (engine_binding).
     # Offline and portable installations never reach it; their lines only say where things stand.
     'update-unfinished': dict(
-        busy=('FreeVideo is back on the previous version and works as before. When the current task ends, a Repair button appears here; '
+        busy=('Eclipse is back on the previous version and works as before. When the current task ends, a Repair button appears here; '
               'clicking it reinstalls the engine environment and updates again. The details give the reason.',
-              'FreeVideo 已退回原来的版本，可以照常使用。当前任务结束后，点这里出现的“修复”可以再次更新。'),
+              'Eclipse 已退回原来的版本，可以照常使用。当前任务结束后，点这里出现的“修复”可以再次更新。'),
         **dict.fromkeys(('bundled', 'offline'), (
-            'FreeVideo is back on the previous version and works as before; the details give the reason.',
-            'FreeVideo 已退回原来的版本，可以照常使用；原因写在详情里。')),
-        none=('FreeVideo is back on the previous version and works as before. To update again, open Installation in the sidebar, keep the same folder, '
+            'Eclipse is back on the previous version and works as before; the details give the reason.',
+            'Eclipse 已退回原来的版本，可以照常使用；原因写在详情里。')),
+        none=('Eclipse is back on the previous version and works as before. To update again, open Installation in the sidebar, keep the same folder, '
               'click Continue and then Check & continue, and finally click Install & launch on the confirmation page; the details give the reason.',
-              'FreeVideo 已退回原来的版本，可以照常使用。要再次更新，请在“安装”页保持同一个安装目录，依次点“继续”“检查并继续”和“安装并启动”。')),
+              'Eclipse 已退回原来的版本，可以照常使用。要再次更新，请在“安装”页保持同一个安装目录，依次点“继续”“检查并继续”和“安装并启动”。')),
 }
 
 
@@ -494,7 +494,7 @@ REPAIR_KINDS = tuple(WITHOUT_REPAIR)
 
 DEPENDENCIES = (('The environment needs repair', '运行环境需要修复'),
                 ('Click Repair to check this installation and restore what is missing.',
-                 '请点击“修复”，FreeVideo 将检查这份安装并补装缺失的组件。'))
+                 '请点击“修复”，Eclipse 将检查这份安装并补装缺失的组件。'))
 
 # Added by the launcher when ComfyUI exits during startup and the environment it
 # made has packages whose recorded files are missing or have another size. A
@@ -576,16 +576,16 @@ COMFY_FOLDER_STEPS = '如需下载新的副本，请将此文件夹改名或移�
 
 def comfy_folder_refused(text):
     """The Chinese text for comfy_source's refusal of a ComfyUI folder with edited files or another version, or ''."""
-    edited = re.search(r'Some files in the ComfyUI folder (.+?) differ from the version FreeVideo needs\. '
-                       r'Changed files \((\d+)\): (.+?)(?:, and (\d+) more)?\. FreeVideo left the folder unchanged\.', text)
+    edited = re.search(r'Some files in the ComfyUI folder (.+?) differ from the version Eclipse needs\. '
+                       r'Changed files \((\d+)\): (.+?)(?:, and (\d+) more)?\. Eclipse left the folder unchanged\.', text)
     if edited:
         folder, count, names, more = edited.groups()
         listed = '、'.join(names.split(', ')) + ('，另有 %s 个' % more if more else '')
-        return ('ComfyUI 文件夹 %s 中有文件与 FreeVideo 所需的版本不同。内容有改动的文件（%s 个）：%s。FreeVideo 未改动该文件夹。'
+        return ('ComfyUI 文件夹 %s 中有文件与 Eclipse 所需的版本不同。内容有改动的文件（%s 个）：%s。Eclipse 未改动该文件夹。'
                 % (folder, count, listed)) + COMFY_FOLDER_STEPS
-    other = re.search(r'The ComfyUI folder (.+?) holds a different version from the one FreeVideo needs\. FreeVideo left the folder unchanged\.', text)
+    other = re.search(r'The ComfyUI folder (.+?) holds a different version from the one Eclipse needs\. Eclipse left the folder unchanged\.', text)
     if other:
-        return 'ComfyUI 文件夹 %s 是另一个版本，与 FreeVideo 所需的版本不同。FreeVideo 未改动该文件夹。' % other.group(1) + COMFY_FOLDER_STEPS
+        return 'ComfyUI 文件夹 %s 是另一个版本，与 Eclipse 所需的版本不同。Eclipse 未改动该文件夹。' % other.group(1) + COMFY_FOLDER_STEPS
     return ''
 
 
@@ -600,9 +600,9 @@ def model_mismatch_package(value, zh=False):
 # Shown instead of the missing-driver card when the system lists no NVIDIA graphics card.
 UNSUPPORTED_VENDOR = (
     ('No NVIDIA graphics card was found',
-     'FreeVideo requires an NVIDIA RTX 30 series or newer graphics card.'),
+     'Eclipse requires an NVIDIA RTX 30 series or newer graphics card.'),
     ('未找到 NVIDIA 显卡',
-     'FreeVideo 需要 NVIDIA RTX 30 系列或更新的显卡。'))
+     'Eclipse 需要 NVIDIA RTX 30 系列或更新的显卡。'))
 
 # The system lists an NVIDIA card but no driver answers.
 DRIVER_FOR_LISTED_CARD = (
@@ -739,7 +739,7 @@ def _launcher_failure(value, *, zh=False, other_disk=False, disk_name='', can_re
     # Match only the cause position, never an echoed input or a log line below it.
     # Holder diagnostics follow this exact cause; they are not part of its signature.
     causes = [line.strip() for line in text.splitlines() if line.strip()]
-    index = 1 if causes and re.fullmatch(r'FreeVideo generation failed(?: \(exit -?\d+\))?', causes[0]) else 0
+    index = 1 if causes and re.fullmatch(r'Eclipse generation failed(?: \(exit -?\d+\))?', causes[0]) else 0
     cause = re.sub(r'^(?:[A-Za-z_][\w.]*(?:Error|Exception)):\s*', '', causes[index]) if len(causes) > index else ''
     if cause == ENGINE_BUSY:
         return dict(title=ENGINE_BUSY_TITLE[zh], detail=ENGINE_BUSY_DETAIL[zh], action='', kind='engine-busy')
@@ -750,22 +750,22 @@ def _launcher_failure(value, *, zh=False, other_disk=False, disk_name='', can_re
     summary = text.partition(STEP_OUTPUT)[0]
     from .comfy_launcher_runtime import OlderLauncher
     # Controller and offline Importer retain strings; direct callers keep the exception.
-    downgrade = re.search(r'This launcher \(([^\r\n]*?)\) is older than the installed FreeVideo '
+    downgrade = re.search(r'This launcher \(([^\r\n]*?)\) is older than the installed Eclipse '
                           r'\(([^\r\n]*?)\); nothing was changed\.', summary)
     if isinstance(value, OlderLauncher) or downgrade:
         launcher, installed = ((value.launcher_label, value.installed_label)
                                if isinstance(value, OlderLauncher) else downgrade.groups())
         if launcher and installed:
-            detail = (f'已安装的 FreeVideo 是 {installed}，这个启动器是 {launcher}。' if zh else
-                      f'The installed FreeVideo is {installed} and this launcher is {launcher}. ')
+            detail = (f'已安装的 Eclipse 是 {installed}，这个启动器是 {launcher}。' if zh else
+                      f'The installed Eclipse is {installed} and this launcher is {launcher}. ')
         else:
-            detail = ('已安装的 FreeVideo 比这个启动器新。' if zh else
-                      'The installed FreeVideo is newer than this launcher. ')
-        detail += ('为避免把 FreeVideo 换回旧版本，这次没有继续，已安装的文件均未改动。'
-                   '请从桌面快捷方式打开 FreeVideo，或下载最新的启动器。' if zh else
-                   'To avoid replacing FreeVideo with an older version, nothing was done and no installed files were changed. '
-                   'Open FreeVideo from its desktop shortcut, or download the latest launcher.')
-        return dict(title='启动器比已安装的 FreeVideo 旧' if zh else 'This launcher is older than the installed FreeVideo',
+            detail = ('已安装的 Eclipse 比这个启动器新。' if zh else
+                      'The installed Eclipse is newer than this launcher. ')
+        detail += ('为避免把 Eclipse 换回旧版本，这次没有继续，已安装的文件均未改动。'
+                   '请从桌面快捷方式打开 Eclipse，或下载最新的启动器。' if zh else
+                   'To avoid replacing Eclipse with an older version, nothing was done and no installed files were changed. '
+                   'Open Eclipse from its desktop shortcut, or download the latest launcher.')
+        return dict(title='启动器比已安装的 Eclipse 旧' if zh else 'This launcher is older than the installed Eclipse',
                     detail=detail, action='', kind='older-launcher', manual=True)
     from .model_repair import MISMATCH, MISMATCH_PATH, FAILURE_TITLE, FAILURE, CHANGED_TITLE, CHANGED_REPAIR
     mismatches = re.findall(MISMATCH + r': ([^\r\n]+)', text)
@@ -809,8 +809,8 @@ def _launcher_failure(value, *, zh=False, other_disk=False, disk_name='', can_re
     if re.search(r'Mac GPU check did not pass|Native GPU checks did not complete', summary):
         # The native check on macOS (Metal) failed: say so plainly; the report holds what it measured.
         return dict(title='这台 Mac 的 GPU 检查未通过' if zh else 'This Mac’s GPU check did not pass',
-                    detail=('这台 Mac 的图形处理器未通过 FreeVideo 的运行检查。请先导出报告，再点击“提交问题”并附上报告。' if zh else
-                            'The graphics processor of this Mac did not pass FreeVideo’s check. Export the report, '
+                    detail=('这台 Mac 的图形处理器未通过 Eclipse 的运行检查。请先导出报告，再点击“提交问题”并附上报告。' if zh else
+                            'The graphics processor of this Mac did not pass Eclipse’s check. Export the report, '
                             'then use "Report a problem" and attach it.'), action='', kind='mac-gpu-check')
     if zh:
         refused = comfy_folder_refused(text)
@@ -921,8 +921,8 @@ def _launcher_failure(value, *, zh=False, other_disk=False, disk_name='', can_re
          ('Connect up to 3 images as references, and remove video, audio and pre-encoded inputs.', '最多接 3 张图片作为参考图，并移除视频、音频参考和预编码输入。')),
         (r'Choose an existing MP4 video using its absolute path', 'continuation-file',
          ('Choose the previous video', '请选择上一段视频'),
-         ('Select an existing MP4 video generated by FreeVideo. In ComfyUI, keep it inside the output or input folder.',
-          '请选择 FreeVideo 生成且仍存在的 MP4 视频；在 ComfyUI 中，请把它放在输出或输入文件夹内。')),
+         ('Select an existing MP4 video generated by Eclipse. In ComfyUI, keep it inside the output or input folder.',
+          '请选择 Eclipse 生成且仍存在的 MP4 视频；在 ComfyUI 中，请把它放在输出或输入文件夹内。')),
         # An engine update waits for a video being generated, whoever started this installation's ComfyUI.
         (r'ComfyUI is running a job, so the engine update waits', 'update-busy',
          ('A video is still generating', '还有视频正在生成'),
@@ -937,42 +937,42 @@ def _launcher_failure(value, *, zh=False, other_disk=False, disk_name='', can_re
         # Moving the engine's editable install to the new source failed and was undone (engine_binding).
         (r'Editable install failed for|Editable verification failed for|The engine.s uv is missing', 'update-unfinished',
          ('The update did not finish', '这次更新没有完成'),
-         ('FreeVideo is back on the previous version and works as before. Click Repair to reinstall the engine environment and update again; the details give the reason.',
-          'FreeVideo 已退回原来的版本，可以照常使用。点“修复”可以再次更新，原因在详情里。')),
+         ('Eclipse is back on the previous version and works as before. Click Repair to reinstall the engine environment and update again; the details give the reason.',
+          'Eclipse 已退回原来的版本，可以照常使用。点“修复”可以再次更新，原因在详情里。')),
         (r'Git \d+\.\d+ is too old to download the pinned sources', 'git-version',
          ('Git is too old', 'Git 版本过旧'),
-         ('Click Retry installation; FreeVideo then installs its own Git. On macOS, update the Command Line Tools.',
-          '请点击“重试安装”，FreeVideo 会改用自带的 Git；macOS 请更新命令行工具（Command Line Tools）。')),
+         ('Click Retry installation; Eclipse then installs its own Git. On macOS, update the Command Line Tools.',
+          '请点击“重试安装”，Eclipse 会改用自带的 Git；macOS 请更新命令行工具（Command Line Tools）。')),
         (r'installation from offline packages; automatic installation does not change it|'
          r'Existing dependency is not a Git checkout of the pinned source', 'offline-installation',
          ('This folder holds an offline installation', '这个位置是离线包安装'),
          ('Open it from the launcher. For an automatic installation, go back to Setup and choose another folder.',
           '请在启动页直接打开这份安装。如需自动安装，请回到安装设置，换一个安装位置。')),
         # offline_packages.inspect_archive and check_runtime_platform.
-        (r'The file is not a FreeVideo offline package', 'not-offline-package',
-         ('This is not a FreeVideo offline package', '这不是 FreeVideo 离线包'),
-         ('Choose a FreeVideo model package or Environment ZIP.', '请选择 FreeVideo 的模型包或运行环境包（ZIP 文件）。')),
+        (r'The file is not a Eclipse offline package', 'not-offline-package',
+         ('This is not a Eclipse offline package', '这不是 Eclipse 离线包'),
+         ('Choose a Eclipse model package or Environment ZIP.', '请选择 Eclipse 的模型包或运行环境包（ZIP 文件）。')),
         (r'The Windows runtime package cannot be used on macOS', 'runtime-platform',
          ('This Environment ZIP is for Windows', '这个运行环境包只能用于 Windows'),
-         ('Import only the model packages and continue; FreeVideo downloads the Mac environment automatically.',
-          '请只导入模型包并继续安装，FreeVideo 会自动下载 Mac 的运行环境。')),
+         ('Import only the model packages and continue; Eclipse downloads the Mac environment automatically.',
+          '请只导入模型包并继续安装，Eclipse 会自动下载 Mac 的运行环境。')),
         # Both carry ComfyUI's log, whose unrelated lines must not pick the card.
-        (r'ComfyUI is still starting or could not load FreeVideo', 'comfy-nodes',
-         ('ComfyUI did not load FreeVideo', 'ComfyUI 没有加载 FreeVideo'),
-         ('Click Retry. If it stops here again, the ComfyUI log in the details shows why the FreeVideo nodes did not load; export the report to send it.',
+        (r'ComfyUI is still starting or could not load Eclipse', 'comfy-nodes',
+         ('ComfyUI did not load Eclipse', 'ComfyUI 没有加载 Eclipse'),
+         ('Click Retry. If it stops here again, the ComfyUI log in the details shows why the Eclipse nodes did not load; export the report to send it.',
           '请点“重试”。仍然停在这里时，可以导出报告。')),
         (r'ComfyUI is already running\. Restart it once', 'comfy-restart',
-         ('Restart ComfyUI to load FreeVideo', '需要重启 ComfyUI 才能加载 FreeVideo'),
+         ('Restart ComfyUI to load Eclipse', '需要重启 ComfyUI 才能加载 Eclipse'),
          ('Close the ComfyUI that is running now, then click "Connect again".', '请关闭正在运行的 ComfyUI，然后点击“重新连接”。')),
         # web/health.js lists the failed files and what to do on the page itself.
-        (r'The browser page did not load FreeVideo completely|浏览器页面没有完整加载 FreeVideo', 'page',
-         ('FreeVideo did not load completely in the browser', '浏览器里的 FreeVideo 没有完整加载'),
+        (r'The browser page did not load Eclipse completely|浏览器页面没有完整加载 Eclipse', 'page',
+         ('Eclipse did not load completely in the browser', '浏览器里的 Eclipse 没有完整加载'),
          ('The browser page names the files that failed and what to do. Follow it, then reload the page; if it happens again, export the report.',
           '请按浏览器页面上的提示处理后刷新；仍然出现时，可以导出报告。')),
-        (r'The browser has not opened FreeVideo yet|浏览器还没有打开 FreeVideo', 'page-silent',
-         ('The browser has not opened FreeVideo', '浏览器还没有打开 FreeVideo'),
-         ('Click “Open FreeVideo”. If the page stays blank or keeps loading, open it in a current Chrome or Edge.',
-          '请点击“打开 FreeVideo”。如果页面空白或一直在加载，请用最新版 Chrome 或 Edge 打开。')),
+        (r'The browser has not opened Eclipse yet|浏览器还没有打开 Eclipse', 'page-silent',
+         ('The browser has not opened Eclipse', '浏览器还没有打开 Eclipse'),
+         ('Click “Open Eclipse”. If the page stays blank or keeps loading, open it in a current Chrome or Edge.',
+          '请点击“打开 Eclipse”。如果页面空白或一直在加载，请用最新版 Chrome 或 Edge 打开。')),
         (r'NVIDIA driver/nvidia-smi is missing\.', 'gpu-driver-missing',
          ('No NVIDIA driver was found', '未找到 NVIDIA 显卡驱动'),
          ('If this computer has an NVIDIA graphics card, install NVIDIA driver 580 or newer, '
@@ -982,9 +982,9 @@ def _launcher_failure(value, *, zh=False, other_disk=False, disk_name='', can_re
         # a driver update cannot help a card below the hardware floor, so that card comes first.
         (r'CUDA_ARCH_UNSUPPORTED', 'gpu-architecture',
          ('This GPU is not supported', '这张显卡不受支持'),
-         ('FreeVideo requires a GPU with compute capability 8.0 or higher, such as an NVIDIA GeForce RTX 30 series card or newer. '
+         ('Eclipse requires a GPU with compute capability 8.0 or higher, such as an NVIDIA GeForce RTX 30 series card or newer. '
           'This requirement does not depend on the amount of VRAM, and a driver update cannot change it.',
-          'FreeVideo 需要计算能力 8.0 及以上的显卡，例如 NVIDIA GeForce RTX 30 系列及更新型号。这一要求与显存大小无关，更新驱动也无法改变。')),
+          'Eclipse 需要计算能力 8.0 及以上的显卡，例如 NVIDIA GeForce RTX 30 系列及更新型号。这一要求与显存大小无关，更新驱动也无法改变。')),
         (r'NVIDIA driver(?: [\w.]+)?(?: \([^)]*\))? is older than 580', 'gpu-driver-old',
          ('The NVIDIA driver is too old', 'NVIDIA 显卡驱动版本过低'),
          ('Update the NVIDIA driver to version 580 or newer, restart the computer, then click "Retry installation".',
@@ -997,15 +997,15 @@ def _launcher_failure(value, *, zh=False, other_disk=False, disk_name='', can_re
          ('GPU information could not be read', '未能读取显卡信息'),
          ('Retry hardware detection. If it still fails, export the report; it includes the GPU identity and the raw driver query.',
           '请点“重新检查”。仍然失败时，可以导出报告。')),
-        # Windows PowerShell 5.1 itself failed to initialize (.NET), before any FreeVideo script ran.
+        # Windows PowerShell 5.1 itself failed to initialize (.NET), before any Eclipse script ran.
         (r'The shell cannot be started\. A failure occurred during initialization', 'powershell-start',
          ('Windows PowerShell could not start', 'Windows PowerShell 无法启动'),
-         ('FreeVideo uses Windows PowerShell to inspect this computer, but Windows PowerShell could not start. Restart the computer, then click "Retry installation". If it fails again, export the report.',
-          'FreeVideo 要用 Windows PowerShell 检查这台电脑，但 Windows PowerShell 没能启动。请重启电脑，然后点击“重试安装”。仍然失败时，可以导出报告。')),
+         ('Eclipse uses Windows PowerShell to inspect this computer, but Windows PowerShell could not start. Restart the computer, then click "Retry installation". If it fails again, export the report.',
+          'Eclipse 要用 Windows PowerShell 检查这台电脑，但 Windows PowerShell 没能启动。请重启电脑，然后点击“重试安装”。仍然失败时，可以导出报告。')),
         (r'\[CUDA_INIT_FAILED\]', 'gpu-cuda-init',
          ('CUDA could not start on this GPU', 'CUDA 未能在这张显卡上启动'),
-         ('The NVIDIA driver is installed. Restart the computer, then open FreeVideo again. If it still fails, export the report.',
-          'NVIDIA 显卡驱动已安装。请重启电脑，然后重新打开 FreeVideo。仍然失败时，可以导出报告。')),
+         ('The NVIDIA driver is installed. Restart the computer, then open Eclipse again. If it still fails, export the report.',
+          'NVIDIA 显卡驱动已安装。请重启电脑，然后重新打开 Eclipse。仍然失败时，可以导出报告。')),
         (r'CURL_REPAIR_(?:TIMEOUT|HTTP|TLS|DNS|FAILED|PROXY_UNSUPPORTED|PROXY_MISSING|REDIRECT|SIZE|INTEGRITY)', 'download-tool-network',
          ('The download tool could not be prepared', '下载工具自动补齐失败'),
          ('Check the connection mode in Downloads and retry. Export the report for the source, route and failure code.',
@@ -1020,12 +1020,12 @@ def _launcher_failure(value, *, zh=False, other_disk=False, disk_name='', can_re
           '请点“重试安装”，启动器会自动修复下载工具。仍然失败时，可以导出报告。')),
         (r'ComfyUI is still running a job', 'busy',
          ('A video is still generating', '还有视频正在生成'),
-         ('The update is installed. Click Connect again after the job finishes to restart FreeVideo with it.',
-          '更新已装好。等当前任务完成后点“重新连接”，FreeVideo 会重启并使用新版。')),
+         ('The update is installed. Click Connect again after the job finishes to restart Eclipse with it.',
+          '更新已装好。等当前任务完成后点“重新连接”，Eclipse 会重启并使用新版。')),
         (r'WinError 206|The filename or extension is too long|is too long for Git to read', 'path-too-long',
          ("The installation folder's path is too long", '安装文件夹的路径太长'),
-         ('Install FreeVideo in a folder with a shorter path, such as D:\\FreeVideo, then click "Retry installation".',
-          '请把 FreeVideo 安装到路径较短的文件夹，例如 D:\\FreeVideo，然后点击“重试安装”。')),
+         ('Install Eclipse in a folder with a shorter path, such as D:\\FreeVideo, then click "Retry installation".',
+          '请把 Eclipse 安装到路径较短的文件夹，例如 D:\\FreeVideo，然后点击“重试安装”。')),
         (r'Installation paused: Windows commit headroom', 'memory-commit',
          ('Windows is low on available memory', 'Windows 可用内存不足'),
          ('Close memory-heavy applications, then retry. Downloaded files are retained.',
@@ -1053,12 +1053,12 @@ def _launcher_failure(value, *, zh=False, other_disk=False, disk_name='', can_re
         (r'Model download paused|unexpected-transfer-size|ConnectionError|ConnectTimeout|ReadTimeout|HTTP probe failed|Could not resolve host|SSL certificate|Every download source failed|All Git sources failed|All package sources failed|Python download failed on every route', 'download',
          ('Download interrupted', '下载中断了'),
          ('Check your network or change the source or connection mode in Settings → Downloads, then retry.', '检查网络，或在“设置 → 下载”中切换下载源、连接模式后重试。')),
-        (r'FreeVideo cannot read its program files', 'unreadable-files',
-         ('FreeVideo cannot read its own files', 'FreeVideo 读不到自己的程序文件'),
-         ('Windows denies this account access to them, usually because they were created while FreeVideo ran as administrator. '
-          'Open FreeVideo normally and import the offline packages again; the files already there are reused.',
+        (r'Eclipse cannot read its program files', 'unreadable-files',
+         ('Eclipse cannot read its own files', 'Eclipse 读不到自己的程序文件'),
+         ('Windows denies this account access to them, usually because they were created while Eclipse ran as administrator. '
+          'Open Eclipse normally and import the offline packages again; the files already there are reused.',
           'Windows 不允许当前账户读取它们，通常是因为这些文件是在“以管理员身份运行”时创建的。'
-          '请正常打开 FreeVideo，重新导入一次离线包，已有的文件会直接复用。')),
+          '请正常打开 Eclipse，重新导入一次离线包，已有的文件会直接复用。')),
         (r'A file in the installation folder changed after the review', 'plan-changed-files', CHANGED_TITLE,
          _joined(CHANGED_WHY['files'], CHANGED_REPAIR)),
         (r'The installation plan changed\. Detect configuration again', 'plan-changed', CHANGED_TITLE,
@@ -1066,27 +1066,27 @@ def _launcher_failure(value, *, zh=False, other_disk=False, disk_name='', can_re
         (FILE_IN_USE, 'file-in-use',
          ('A file is in use by another program', '文件被其他程序占用'),
          ('Security software or another program is holding a file that setup needs. Wait a moment and click Retry installation; '
-          'if it happens again, allow the FreeVideo folder in the security software.',
-          '安全软件或其他程序正在占用安装所需的文件。请稍候后点“重试安装”；仍然失败时，请在安全软件中允许 FreeVideo 所在的文件夹。')),
+          'if it happens again, allow the Eclipse folder in the security software.',
+          '安全软件或其他程序正在占用安装所需的文件。请稍候后点“重试安装”；仍然失败时，请在安全软件中允许 Eclipse 所在的文件夹。')),
         # Windows' Python launcher: the environment's python.exe is there but the interpreter it forwards to is gone.
         (ORPHANED_PYTHON, 'environment-python-orphaned',
-         ('The FreeVideo Python environment cannot start', 'FreeVideo 的 Python 环境无法启动'),
+         ('The Eclipse Python environment cannot start', 'Eclipse 的 Python 环境无法启动'),
          ('The Python program that the environment relies on is missing, possibly removed by security software or a cleanup tool. '
-          'Click "Retry installation": FreeVideo sets the environment up again.',
-          '运行环境所依赖的 Python 程序已经不在，可能被安全软件或清理工具删除。请点“重试安装”，FreeVideo 会重新建立运行环境。')),
+          'Click "Retry installation": Eclipse sets the environment up again.',
+          '运行环境所依赖的 Python 程序已经不在，可能被安全软件或清理工具删除。请点“重试安装”，Eclipse 会重新建立运行环境。')),
         (ENVIRONMENT_PYTHON_REMOVED, 'environment-python-removed',
          ('A program file is missing', '缺少一个程序文件'),
-         ('It may have been quarantined by security software. Restore the file or allow the FreeVideo folder, '
+         ('It may have been quarantined by security software. Restore the file or allow the Eclipse folder, '
           'then click "Retry installation".',
-          '可能被安全软件隔离了。恢复这个文件或允许 FreeVideo 所在的文件夹后，点“重试安装”。')),
+          '可能被安全软件隔离了。恢复这个文件或允许 Eclipse 所在的文件夹后，点“重试安装”。')),
         # uv could not start an environment's Python and Windows answered "access denied". The error code
         # is matched, not the text, which Windows writes in the system language.
         (PYTHON_START_DENIED, 'python-start-denied',
          ('Windows refused to run the Python program', 'Windows 拒绝运行 Python 程序'),
-         ('Security software or a Windows protection feature is blocking the Python file of the FreeVideo environment. '
-          'Allow the FreeVideo folder there (for Windows Security: Virus & threat protection → Manage ransomware protection → '
+         ('Security software or a Windows protection feature is blocking the Python file of the Eclipse environment. '
+          'Allow the Eclipse folder there (for Windows Security: Virus & threat protection → Manage ransomware protection → '
           'Controlled folder access, and the exclusions list), then click Retry installation.',
-          '安全软件或 Windows 的保护功能拦截了 FreeVideo 运行环境中的 Python 文件。请在其中允许 FreeVideo 所在的文件夹'
+          '安全软件或 Windows 的保护功能拦截了 Eclipse 运行环境中的 Python 文件。请在其中允许 Eclipse 所在的文件夹'
           '（Windows 安全中心：病毒和威胁防护 → 管理勒索软件防护 → 受控文件夹访问，以及排除项），然后点“重试安装”。')),
         # Windows refuses PyTorch's unsigned DLLs under Smart App Control; reinstalling changes nothing.
         (APPLICATION_CONTROL, 'app-control',
@@ -1100,7 +1100,7 @@ def _launcher_failure(value, *, zh=False, other_disk=False, disk_name='', can_re
         (r"FreeVideo's PyTorch library files do not match", 'runtime-libraries',
          ('Runtime files have been changed', '运行组件已被更改'),
          ('Click Repair to reinstall a complete copy of PyTorch. Models and videos are kept.',
-          '请点“修复”，FreeVideo 会重新安装运行组件，模型和视频都会保留。')),
+          '请点“修复”，Eclipse 会重新安装运行组件，模型和视频都会保留。')),
         # runtime_libraries.summary names packages whose files are gone (a numpy extension that cannot load).
         (r'ModuleNotFoundError|No module named|DLL load failed|Files of these Python packages are missing or have changed',
          'dependencies', *DEPENDENCIES),
@@ -1122,8 +1122,8 @@ def _launcher_failure(value, *, zh=False, other_disk=False, disk_name='', can_re
                     detail='', action=action[zh], kind='memory-budget')
     # The Linux setup script names the missing basic tools and the command that installs them; without a terminal
     # that sentence is the whole next step, so it stays on the card with the command under it.
-    tools = (re.search(r'^FreeVideo: (缺少基础工具：[^\r\n]*)(?:\r?\n  ([^\r\n]+))?', text, re.M) if zh else None) \
-        or re.search(r'^FreeVideo: (Missing basic tools: [^\r\n]*)(?:\r?\n  ([^\r\n]+))?', text, re.M)
+    tools = (re.search(r'^Eclipse: (缺少基础工具：[^\r\n]*)(?:\r?\n  ([^\r\n]+))?', text, re.M) if zh else None) \
+        or re.search(r'^Eclipse: (Missing basic tools: [^\r\n]*)(?:\r?\n  ([^\r\n]+))?', text, re.M)
     if tools and tools.group(1).endswith((':', '：', '.', '。')):
         return dict(title=('缺少基础工具' if zh else 'Basic tools are missing'),
                     detail='\n'.join(part for part in tools.groups() if part), action='', kind='system-tools')
@@ -1260,7 +1260,7 @@ _OWN_TYPES = {'ValueError', 'RuntimeError', 'TimeoutError'}
 
 def raised_at(error):
     """Where an exception was raised, for a log line that leaves out its message (which can carry paths or prompt
-    text): the innermost frame as file name, line and function, and FreeVideo's own innermost frame when that differs."""
+    text): the innermost frame as file name, line and function, and Eclipse's own innermost frame when that differs."""
     import traceback
     frames = traceback.extract_tb(getattr(error, '__traceback__', None))
     if not frames:
@@ -1273,8 +1273,8 @@ def raised_at(error):
 
 
 def _raised_by_freevideo(exception):
-    """The launcher's record says FreeVideo's own code raised this, in its own words: the first exception is one of
-    the types it raises itself, carries no OS error number, and its innermost frame (when known) is FreeVideo's."""
+    """The launcher's record says Eclipse's own code raised this, in its own words: the first exception is one of
+    the types it raises itself, carries no OS error number, and its innermost frame (when known) is Eclipse's."""
     first = next((row for row in exception or () if isinstance(row, dict)), None)
     if not first or first.get('exception_type') not in _OWN_TYPES or first.get('errno') is not None or first.get('winerror') is not None:
         return False
@@ -1283,7 +1283,7 @@ def _raised_by_freevideo(exception):
 
 
 def _traceback_raised_by_freevideo(text, causes):
-    """The same for a traceback: its last line is one of those types and its innermost file is FreeVideo's."""
+    """The same for a traceback: its last line is one of those types and its innermost file is Eclipse's."""
     found = re.match(r'(?:[\w.]+\.)?(\w+):', causes[-1] if causes else '')
     files = re.findall(r'^\s*File "([^"]+)"', text, re.M)
     return bool(found and found.group(1) in _OWN_TYPES and files and 'freevideo_engine' in files[-1].replace('\\', '/'))
@@ -1291,14 +1291,14 @@ _NETWORK_ERRNO = {101, 104, 110, 111, 113, 10050, 10051, 10053, 10054, 10060, 10
 _IN_USE_ERRNO, _IN_USE_WINERROR = {16, 26}, {32, 33}
 _MISSING_ERRNO, _MISSING_WINERROR = {2}, {2, 3}
 PLAIN_CAUSES = {
-    'network': (('FreeVideo could not reach the network.', 'FreeVideo 无法连接网络。'),
+    'network': (('Eclipse could not reach the network.', 'Eclipse 无法连接网络。'),
                 ('Check the network connection, then try again. ' + REPORT_STEP[0], '请检查网络连接后重试。' + REPORT_STEP[1])),
-    'in-use': (('Another program is using a file FreeVideo needs.', '有其他程序正在使用 FreeVideo 需要的文件。'),
-               ('Close programs that may be using FreeVideo\'s files, such as another FreeVideo window or a virus scan, '
+    'in-use': (('Another program is using a file Eclipse needs.', '有其他程序正在使用 Eclipse 需要的文件。'),
+               ('Close programs that may be using FreeVideo\'s files, such as another Eclipse window or a virus scan, '
                 'then try again. ' + REPORT_STEP[0],
-                '请关闭可能正在使用 FreeVideo 文件的程序，例如另一个 FreeVideo 窗口或病毒扫描，然后重试。' + REPORT_STEP[1])),
-    'missing': (('A file or folder FreeVideo needs is missing.', '缺少 FreeVideo 需要的文件或文件夹。'), UNKNOWN_NEXT_STEP),
-    'other': (('FreeVideo ran into an unexpected problem.', 'FreeVideo 遇到了意外问题。'), UNKNOWN_NEXT_STEP),
+                '请关闭可能正在使用 Eclipse 文件的程序，例如另一个 Eclipse 窗口或病毒扫描，然后重试。' + REPORT_STEP[1])),
+    'missing': (('A file or folder Eclipse needs is missing.', '缺少 Eclipse 需要的文件或文件夹。'), UNKNOWN_NEXT_STEP),
+    'other': (('Eclipse ran into an unexpected problem.', 'Eclipse 遇到了意外问题。'), UNKNOWN_NEXT_STEP),
 }
 
 
@@ -1513,7 +1513,7 @@ def generation_failure(run, exit_code=None, *, repair=None):
     prompt = _read(run / 'prompt.txt', 128*1024).strip()
     if prompt:
         redactor.prompts.add(prompt)
-    lines = ['FreeVideo generation failed' + (' (exit %s)' % exit_code if exit_code is not None else '')]
+    lines = ['Eclipse generation failed' + (' (exit %s)' % exit_code if exit_code is not None else '')]
     report = _report(run)
     redactor.structured(report)  # Collect prompt values without showing the request.
     # Read the whole bounded log, not a tail that could hide other output.

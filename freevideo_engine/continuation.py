@@ -30,7 +30,7 @@ FIRST_SOUND_SECONDS = 6
 FIRST_FRAME_REFERENCE_SHORT = 384
 VERSION = 1
 
-MISSING = 'The previous video lacks the data needed to extend it. Generate it again with this version of FreeVideo.'
+MISSING = 'The previous video lacks the data needed to extend it. Generate it again with this version of Eclipse.'
 SIZE_MISMATCH = 'Use the same aspect ratio as the previous video.'
 # Every refusal starts with UNSUPPORTED, then says what to change.
 UNSUPPORTED = 'Extend from video cannot be used with these settings.'

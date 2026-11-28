@@ -1,4 +1,4 @@
-"""Which of FreeVideo's own input files the records on this machine still use.
+"""Which of Eclipse's own input files the records on this machine still use.
 
 Read-only: it lists (kind, key) tokens as ``private_store.classify`` gives them, from every record
 that can name an input file: kept and recently deleted works, Agent jobs, cards and productions,
@@ -133,9 +133,9 @@ def scrub_draft(user_root=None, input_root=None):
                     break
                 os.unlink(temporary)
             else:
-                logging.warning('[FreeVideo] The saved creation draft kept changing; it was left as it is.')
+                logging.warning('[Eclipse] The saved creation draft kept changing; it was left as it is.')
     except Exception:
-        logging.warning('[FreeVideo] Could not tidy the saved creation draft.', exc_info=True)
+        logging.warning('[Eclipse] Could not tidy the saved creation draft.', exc_info=True)
     return removed
 
 
@@ -158,7 +158,7 @@ def scan(*, output_root=None, user_root=None, queue=None, extra=(), roots=()):
                 continue
             found |= tokens(_read_text(path))
     if user_root is not None:
-        # ComfyUI's saved workflows and FreeVideo's own page records in the user folder.
+        # ComfyUI's saved workflows and Eclipse's own page records in the user folder.
         for path in _walk(Path(user_root), ('.json',)):
             if not _is_draft(path):
                 found |= tokens(_read_text(path))
@@ -201,7 +201,7 @@ def run_sweep(*, input_root, output_root=None, user_root=None, queue=None, extra
     try:
         referenced = scan(output_root=output_root, user_root=user_root, queue=queue, extra=extra)
     except OSError as error:
-        logging.warning('[FreeVideo] Private file cleanup skipped: a record could not be read (%s).',
+        logging.warning('[Eclipse] Private file cleanup skipped: a record could not be read (%s).',
                         type(error).__name__)
         return None
     summary = private_store.sweep(input_root, referenced, root=root, now=now, released=released(output_root))
@@ -221,7 +221,7 @@ def run_sweep(*, input_root, output_root=None, user_root=None, queue=None, extra
                     try:
                         status = 'removed' if remove_failed_run(output_root, identity) else 'kept'
                     except Exception:
-                        logging.warning('[FreeVideo] Could not remove a request folder.', exc_info=True)
+                        logging.warning('[Eclipse] Could not remove a request folder.', exc_info=True)
                         status = 'kept'
                 summary['items'].append(dict(path='FreeVideo/' + identity, kind='run', bytes=size, status=status))
                 if status in ('removed', 'would-remove'):
@@ -253,20 +253,20 @@ def start_sweeps(context, *, delay=SWEEP_DELAY, every=SWEEP_EVERY):
                 from .paths import data_root
                 removed = private_store.purge_prompt_text(data_root() / 'input-cache', data_root() / 'tuning')
                 if removed:
-                    logging.info('[FreeVideo] Removed %d cached encodings that kept a prompt as text.', removed)
+                    logging.info('[Eclipse] Removed %d cached encodings that kept a prompt as text.', removed)
             except Exception:
-                logging.warning('[FreeVideo] Could not check cached encodings.', exc_info=True)
+                logging.warning('[Eclipse] Could not check cached encodings.', exc_info=True)
             try:
                 from . import private_store
                 left = private_store.clean_temp()
                 if left:
-                    logging.info('[FreeVideo] Removed %d working folders a stopped picture request left.', left)
+                    logging.info('[Eclipse] Removed %d working folders a stopped picture request left.', left)
             except Exception:
-                logging.warning('[FreeVideo] Could not remove left working folders.', exc_info=True)
+                logging.warning('[Eclipse] Could not remove left working folders.', exc_info=True)
             try:
                 run_sweep(**context())
             except Exception:
-                logging.warning('[FreeVideo] Private file cleanup failed.', exc_info=True)
+                logging.warning('[Eclipse] Private file cleanup failed.', exc_info=True)
     thread = threading.Thread(target=loop, name='freevideo-private-cleanup', daemon=True)
     thread.start()
     return thread
@@ -307,7 +307,7 @@ def review(context, *, root=None, now=None):
 
 
 def clean(context, tokens, *, root=None, now=None):
-    """Remove the listed files the user confirmed, each checked again first: still FreeVideo's own name, still
+    """Remove the listed files the user confirmed, each checked again first: still Eclipse's own name, still
     used by nothing, still past its grace (or its owner deleted). Anything else on the list stays."""
     from . import private_store
     if not isinstance(tokens, list) or len(tokens) > 20000 or not all(isinstance(t, str) for t in tokens):
@@ -341,7 +341,7 @@ def clean(context, tokens, *, root=None, now=None):
                 freed += size
     if removed:
         scrub_draft(context.get('user_root'), context['input_root'])
-    logging.info('[FreeVideo] Private file cleanup confirmed by the user: %d files, %.1f MB.', removed, freed / 1e6)
+    logging.info('[Eclipse] Private file cleanup confirmed by the user: %d files, %.1f MB.', removed, freed / 1e6)
     return dict(removed=removed, freed_bytes=freed)
 
 
@@ -351,7 +351,7 @@ LEGACY_SKIP = ('example.png',)
 
 
 def legacy(input_root):
-    """Pictures in the input folder itself that are not FreeVideo's own names: earlier image pages put reference
+    """Pictures in the input folder itself that are not Eclipse's own names: earlier image pages put reference
     pictures there under the user's file names, and they cannot be told apart from the user's own files."""
     from . import private_store
     rows = []
@@ -529,7 +529,7 @@ def release_attachments(context, names):
     try:
         held = _held(context)
     except OSError:
-        logging.warning('[FreeVideo] Kept the pictures of a deleted conversation: a record could not be read.')
+        logging.warning('[Eclipse] Kept the pictures of a deleted conversation: a record could not be read.')
         return 0
     removed = 0
     for name in sorted(wanted):
@@ -560,7 +560,7 @@ def input_directory():
 
 
 def refs_in(values, input_root):
-    """The input-relative names, in FreeVideo's own naming, of the files under ``input_root`` that ``values`` (paths,
+    """The input-relative names, in Eclipse's own naming, of the files under ``input_root`` that ``values`` (paths,
     or records holding paths) point at. Anything else is left out."""
     from . import private_store
     if input_root is None:
@@ -590,7 +590,7 @@ def refs_in(values, input_root):
 
 
 def hold(owner_id, values=(), *, receipts=(), input_root=None):
-    """Record that ``owner_id`` (video:<run>, image:<file>) uses the FreeVideo input files ``values`` point at and the
+    """Record that ``owner_id`` (video:<run>, image:<file>) uses the Eclipse input files ``values`` point at and the
     input-cache ``receipts`` its run wrote or read, so deleting it can remove them. Never raises."""
     from . import private_store
     try:
@@ -600,7 +600,7 @@ def hold(owner_id, values=(), *, receipts=(), input_root=None):
         if refs or derived:
             private_store.hold(owner_id, refs=refs, derived=derived)
     except Exception:
-        logging.warning('[FreeVideo] Could not note the files a request uses.', exc_info=True)
+        logging.warning('[Eclipse] Could not note the files a request uses.', exc_info=True)
 
 
 def release_owner(owner_id, context=None, *, input_root=None):
@@ -621,14 +621,14 @@ def release_owner(owner_id, context=None, *, input_root=None):
                         queue=context.get('queue'), extra=context.get('extra', ()), roots=context.get('roots', ()))
             keep |= private_store.pinned()
         except OSError:
-            logging.warning('[FreeVideo] Kept the files of a deleted work: a record could not be read.')
+            logging.warning('[Eclipse] Kept the files of a deleted work: a record could not be read.')
             return None
         released = private_store.release(owner_id, input_root=context['input_root'], cache_root=data_root() / 'input-cache',
                                          keep=keep)
         scrub_draft(context.get('user_root'), context['input_root'])
         return released
     except Exception:
-        logging.warning('[FreeVideo] Could not release what a deleted work held.', exc_info=True)
+        logging.warning('[Eclipse] Could not release what a deleted work held.', exc_info=True)
         return None
 
 
@@ -647,7 +647,7 @@ def default_context():
 
 
 def release_tokens(context, tokens):
-    """Remove at once the FreeVideo files of an item the user deleted (a card) that nothing else uses: no record,
+    """Remove at once the Eclipse files of an item the user deleted (a card) that nothing else uses: no record,
     queued job or open page names them. Anything still used stays for the cleanup to look at again. Returns how many
     files went."""
     from . import private_store
@@ -657,7 +657,7 @@ def release_tokens(context, tokens):
     try:
         held = _held(context)
     except OSError:
-        logging.warning('[FreeVideo] Kept the files of a deleted card: a record could not be read.')
+        logging.warning('[Eclipse] Kept the files of a deleted card: a record could not be read.')
         return 0
     removed = 0
     with private_store.LOCK:

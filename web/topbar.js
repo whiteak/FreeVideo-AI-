@@ -392,9 +392,9 @@ function buildActivity(t) {
             big.append(value, unit);
             const fraction = state.memory_used / state.memory_total, bar = el('span', `fv-tb-bar${fraction >= 0.95 ? ' is-warn' : ''}`), fill = el('i'); fill.style.setProperty('--p', String(Math.min(1, fraction))); bar.append(fill);
             computer.append(big, bar);
-            // FreeVideo keeps the video model on the card between runs, so the next video skips the reload. When another
+            // Eclipse keeps the video model on the card between runs, so the next video skips the reload. When another
             // program needs the card (a game, another app), this gives it back now; ComfyUI's own unload command reaches
-            // FreeVideo's idle worker too. Only offered when nothing runs.
+            // Eclipse's idle worker too. Only offered when nothing runs.
             const idle = !state.busy && !jobs.list().some(row => row.status === 'running' || row.status === 'cancelling');
             if (idle && state.memory_used > 2 * 2 ** 30) {
                 const row = el('div', 'fv-tb-act-row'), free = el('button', 'fv-tb-act-btn', t('Free video memory', '释放显存')); free.type = 'button';

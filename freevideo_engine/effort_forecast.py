@@ -260,7 +260,7 @@ def _near(left, right):
 
 
 def stage_forecast(records, request, cold_flags, prior, version=None):
-    """Prefer runs of this FreeVideo version; older runs stay in use until then.
+    """Prefer runs of this Eclipse version; older runs stay in use until then.
 
     An update can change stage times, so when any run of the current version
     matches the whole request, only runs of that version are used.

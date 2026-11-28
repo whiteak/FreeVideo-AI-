@@ -10,9 +10,9 @@
       "Compact layout: turn on Compact layout in Settings > Appearance to keep only the prompt, the video and Generate in the create panel.",
       "Queue: each task has its own stop or remove button, which asks before it acts, in both the create panel and the image view.",
       "Traditional Chinese: the web interface and the launcher are available in Traditional Chinese, with Taiwan wording that also serves Hong Kong and Macau.",
-      "Choosing the interface language: the launcher's globe button opens a list of the languages, and Settings > Language in the web interface offers the same list. Until a language is chosen, FreeVideo follows the system language.",
+      "Choosing the interface language: the launcher's globe button opens a list of the languages, and Settings > Language in the web interface offers the same list. Until a language is chosen, Eclipse follows the system language.",
       "Messages in the chosen language: failure cards for videos, images and the launcher, and the reasons the engine gives, are shown in the interface language.",
-      "Fast level: the new Fast quality level generates faster than Light; in shots with a lot of motion, fine detail may flicker. The first time you choose it, FreeVideo downloads about 2.2 GB, only once.",
+      "Fast level: the new Fast quality level generates faster than Light; in shots with a lot of motion, fine detail may flicker. The first time you choose it, Eclipse downloads about 2.2 GB, only once.",
       "Windows on Arm installation: on Windows on Arm computers, installation no longer fails while preparing packages and can continue. When a required package has no version for the computer, the launcher names the package instead of showing an interrupted download. Generating videos and images works as usual; editing projects and images with the Agent is not available yet, because a component it needs has no Arm version.",
       "Privacy in reports: diagnostic reports and problem reports remove your user folder name from more forms of local file paths. Problem reports and download failure records also remove email addresses and sign-in details sent to download servers, while keeping the reason a file or connection failed.",
       "Options row in narrow windows: when the editor's options row is short of room, Media and LoRA fold to their icon and count, then Enhance to its icon, and then the duration, size and quality keys take their short form, instead of the row wrapping or cutting keys off."
@@ -27,7 +27,7 @@
       "简洁模式：在“设置 > 外观”中打开“简洁模式”后，创作面板只保留提示词、视频和生成。",
       "队列：每个任务都有自己的停止或移出键，操作前会先确认；创作面板和图像视图都一样。",
       "繁体中文：网页界面和启动器都提供繁体中文，用词按台湾习惯，香港和澳门也适用。",
-      "选择界面语言：启动器右上角的地球按钮打开语言列表，网页的“设置 > 语言”里是同样的列表。没有选过时，FreeVideo 跟随系统语言。",
+      "选择界面语言：启动器右上角的地球按钮打开语言列表，网页的“设置 > 语言”里是同样的列表。没有选过时，Eclipse 跟随系统语言。",
       "提示用所选语言显示：视频、图片和启动器的失败卡片，以及引擎给出的原因，都按界面语言显示。",
       "极速档：质量档位新增“极速”，生成比轻量档更快；动作较多的镜头里，画面细节可能闪烁。第一次选用时需下载约 2.2 GB，只需下载一次。",
       "Windows on Arm 安装：在 Windows on Arm 电脑上，安装不再在准备软件包时失败，可以继续进行。所需软件包没有适用于这台电脑的版本时，启动器会写明是哪个软件包，不再显示为下载中断。生成视频和图片照常可用；用 Agent 编辑项目和图片暂不可用，因为所需组件尚无 Arm 版本。",
@@ -44,8 +44,8 @@
           "Linux and Mac: the 0.6.11 launcher failed to open ComfyUI; it now opens normally.",
           "Prompt enhancement keeps dialogue in more languages: when a scene is written in Russian, Ukrainian, Spanish, French, German, Turkish, Vietnamese or a similar language, the quoted lines are passed to the voice word for word instead of being left out, and text on signs and posters stays on screen.",
           "Ukrainian dialogue is voiced more accurately: lines are passed to the model as Ukrainian instead of Russian, so they no longer take on a Russian accent, while Russian lines that mention a Ukrainian place are still spoken as Russian.",
-          "Picture editing on Windows: when Windows has little memory left to commit, FreeVideo now places less of the text encoder on the graphics card and tries once more if that is still not enough, so editing with several reference pictures is less likely to stop at the text step for lack of memory.",
-          "More complete diagnostic reports: when the engine stops answering for more than five seconds, FreeVideo records what each part was doing at the time and includes it in feedback and diagnostic reports, to help find the cause.",
+          "Picture editing on Windows: when Windows has little memory left to commit, Eclipse now places less of the text encoder on the graphics card and tries once more if that is still not enough, so editing with several reference pictures is less likely to stop at the text step for lack of memory.",
+          "More complete diagnostic reports: when the engine stops answering for more than five seconds, Eclipse records what each part was doing at the time and includes it in feedback and diagnostic reports, to help find the cause.",
           "Feedback and diagnostic reports keep numbers such as \"2.00 GiB\" intact when a field holds a short value."
         ]
       },
@@ -55,8 +55,8 @@
           "Linux 和 Mac：0.6.11 的启动器打开 ComfyUI 时会失败，现在可以正常打开。",
           "提示词改写能保留更多语言的台词：用俄语、乌克兰语、西班牙语、法语、德语、土耳其语、越南语等写场景时，引号里的台词会原样交给模型配音，不再被漏掉；招牌、海报上的文字仍作为画面中的文字。",
           "乌克兰语台词的配音更准：台词按乌克兰语交给模型，不再标成俄语，发音不再带俄语腔；俄语台词里提到乌克兰地名时仍按俄语念。",
-          "Windows 上编辑图片：当 Windows 可提交的内存所剩不多时，FreeVideo 在文本编码时少放一部分到显卡上，仍不足时再试一次，带多张参考图编辑时，文本这一步不容易再因内存不足停下。",
-          "诊断报告更完整：引擎停止应答超过五秒时，FreeVideo 会记下各部分当时在做什么，并随反馈和诊断报告一起带出，便于找出原因。",
+          "Windows 上编辑图片：当 Windows 可提交的内存所剩不多时，Eclipse 在文本编码时少放一部分到显卡上，仍不足时再试一次，带多张参考图编辑时，文本这一步不容易再因内存不足停下。",
+          "诊断报告更完整：引擎停止应答超过五秒时，Eclipse 会记下各部分当时在做什么，并随反馈和诊断报告一起带出，便于找出原因。",
           "反馈和诊断报告里，输入框中的短内容不再改坏“2.00 GiB”这类数字。"
         ]
       }
@@ -66,16 +66,16 @@
       "en": {
         "summary": "0.6.11 can write a prompt from a picture or a video, makes local network access and first, middle and last frames on the Mac work as expected, and no longer stops a second generation on two graphics cards with an error on Windows. Failure messages now also say what went wrong and what to do next.",
         "changes": [
-          "Reverse prompt: in the image view and the create panel, choose a picture or a video and FreeVideo writes the description.",
-          "Fuller local network access: when FreeVideo is opened through its local network address, you can generate with reference pictures, edit generated pictures and copy prompts.",
+          "Reverse prompt: in the image view and the create panel, choose a picture or a video and Eclipse writes the description.",
+          "Fuller local network access: when Eclipse is opened through its local network address, you can generate with reference pictures, edit generated pictures and copy prompts.",
           "First, middle and last frames on the Mac: generating with a first, middle and last frame works on the Mac.",
           "Two graphics cards at once: on Windows, a generation started on the second graphics card no longer stops with an error while the first one is working.",
           "Clearer failure messages: every kind of failure says what to do next. When a prompt enhancement result is incomplete, the message says what was wrong.",
           "More accurate driver messages: when no working driver is found, the launcher shows the graphics card it detected and tells \"driver not installed\" apart from \"driver not working\".",
-          "LoRAs and reference pictures are kept: the LoRAs and reference pictures set in the create panel are still there after FreeVideo restarts, and scene and prop cards remember the LoRAs used to make their picture.",
-          "Steadier running: FreeVideo commands use the installed program from any folder. When graphics memory runs short while the prompt is processed, FreeVideo retries once instead of failing.",
-          "Easier image models: Repair asks you first and keeps the original shared file under a new name. A download that starts while FreeVideo is installing, updating or cleaning up continues by itself when that finishes.",
-          "Saved prompts work right after an update: prompts saved before updating FreeVideo do not need to be processed again.",
+          "LoRAs and reference pictures are kept: the LoRAs and reference pictures set in the create panel are still there after Eclipse restarts, and scene and prop cards remember the LoRAs used to make their picture.",
+          "Steadier running: Eclipse commands use the installed program from any folder. When graphics memory runs short while the prompt is processed, Eclipse retries once instead of failing.",
+          "Easier image models: Repair asks you first and keeps the original shared file under a new name. A download that starts while Eclipse is installing, updating or cleaning up continues by itself when that finishes.",
+          "Saved prompts work right after an update: prompts saved before updating Eclipse do not need to be processed again.",
           "More reliable long video redo: after a lost or late reply, choosing \"Redo from here\" again shows the part already started instead of making another one.",
           "A steadier first generation after an update: cleaning up old versions no longer changes the model files in use, so the first generation after an update is not interrupted by it."
         ]
@@ -84,15 +84,15 @@
         "summary": "0.6.11 新增从图片或视频反推提示词，局域网访问和 Mac 首中尾帧生成可以正常使用，Windows 上两张显卡同时生成也不再报错停下。失败提示会说明原因和下一步。",
         "changes": [
           "反推提示词：在图像视图和创作面板中，可以选一张图片或一段视频，自动写出描述。",
-          "局域网访问更完整：通过局域网地址打开 FreeVideo 时，可以带参考图生成、编辑已生成的图片，也可以复制提示词。",
+          "局域网访问更完整：通过局域网地址打开 Eclipse 时，可以带参考图生成、编辑已生成的图片，也可以复制提示词。",
           "Mac 首中尾帧生成：在 Mac 上同时使用首帧、中间帧和尾帧，可以正常生成。",
           "多显卡同时生成：在 Windows 上使用两张显卡时，第二张显卡开始的生成不再因等待第一张而报错停下。",
           "失败提示更清楚：各类失败都会说明下一步怎么做。提示词增强的结果不完整时，会写明是哪里不对。",
           "显卡驱动提示更准确：缺少可用驱动时，启动器会显示检测到的显卡型号，并区分“未安装驱动”和“驱动未正常工作”。",
-          "LoRA 和参考图会保留：创作面板设置的 LoRA 和参考图在重启 FreeVideo 后仍在；场景卡和道具卡也会记住生成图片时用的 LoRA。",
-          "运行更稳定：从任何文件夹运行 FreeVideo 命令，都会使用已安装的程序。处理提示词时显存不足，会自动重试一次，不再直接失败。",
-          "图像模型更省心：修复时会先请您确认，原有的共用文件改名保留。FreeVideo 正在安装、更新或清理时开始的下载，会在结束后自动继续。",
-          "更新后可直接使用已保存的提示词：更新 FreeVideo 后，已保存的提示词不需要重新处理。",
+          "LoRA 和参考图会保留：创作面板设置的 LoRA 和参考图在重启 Eclipse 后仍在；场景卡和道具卡也会记住生成图片时用的 LoRA。",
+          "运行更稳定：从任何文件夹运行 Eclipse 命令，都会使用已安装的程序。处理提示词时显存不足，会自动重试一次，不再直接失败。",
+          "图像模型更省心：修复时会先请您确认，原有的共用文件改名保留。Eclipse 正在安装、更新或清理时开始的下载，会在结束后自动继续。",
+          "更新后可直接使用已保存的提示词：更新 Eclipse 后，已保存的提示词不需要重新处理。",
           "长视频重新生成更可靠：在网络回复丢失或延迟后再次点击“从这段重新生成”，会继续显示已经开始的那一段，不会多生成一段。",
           "更新后第一次生成更稳定：清理旧版本时不再改动正在使用的模型文件，更新后的第一次生成不会因此中断。"
         ]
@@ -120,7 +120,7 @@
     {
       "product_version": "0.6.9",
       "en": {
-        "summary": "0.6.9 improves canceling, track display and continuation in the Edit view; has the launcher restore missing program files and give clearer messages; explains more clearly when a performance measurement stops for lack of memory, when FreeVideo does not answer in time and when no NVIDIA graphics card is found; and adds three tutorial chapters.",
+        "summary": "0.6.9 improves canceling, track display and continuation in the Edit view; has the launcher restore missing program files and give clearer messages; explains more clearly when a performance measurement stops for lack of memory, when Eclipse does not answer in time and when no NVIDIA graphics card is found; and adds three tutorial chapters.",
         "changes": [
           "More tracks in view in the Edit view: when the timeline cannot show every track, the sound tracks become slightly shorter so that as many as possible are visible; if they still do not fit, a fade at the bottom of the timeline shows that more tracks are below.",
           "Smoother continuation in the Edit view: when a continued video finishes, its next part is made ready and the creation preview being watched stays open.",
@@ -128,16 +128,16 @@
           "More recordings can be imported in the Edit view: WebM and MKV recordings that do not state their length can now be imported.",
           "Clearer prompt when dubbing is stopped: in the Edit view, the confirmation says that lines already dubbed are kept and the rest can be dubbed again later.",
           "The launcher restores missing program files: when files in its saved program folder are missing or empty, the launcher restores them from its built-in copy before setup or launch, then continues as usual. When a Windows setup step ends like a crash, the setup log gains one line with the exit code, a short check of that step's Python and its path.",
-          "Clearer launcher wording: the status heading says FreeVideo (such as Starting FreeVideo and FreeVideo stopped), and on the setup page the first step and the first option are called Runtime and New installation. The setting \"ComfyUI address\" is now called \"Server address\", and the message for a port in use says the same; when the LAN access ports are in use, the message says to close the programs using them, then turn LAN access on again.",
-          "Clearer explanation of the graphics card at setup: on Windows, when no NVIDIA driver is found and the computer lists only display devices from other makers, a virtual machine's included, the launcher says that no NVIDIA graphics card was found; when the graphics list cannot be read, the setup report says which step failed. FreeVideo still needs an NVIDIA graphics card with compute capability 8.0 or higher (such as the RTX 30 series or newer, professional cards included).",
+          "Clearer launcher wording: the status heading says Eclipse (such as Starting Eclipse and Eclipse stopped), and on the setup page the first step and the first option are called Runtime and New installation. The setting \"ComfyUI address\" is now called \"Server address\", and the message for a port in use says the same; when the LAN access ports are in use, the message says to close the programs using them, then turn LAN access on again.",
+          "Clearer explanation of the graphics card at setup: on Windows, when no NVIDIA driver is found and the computer lists only display devices from other makers, a virtual machine's included, the launcher says that no NVIDIA graphics card was found; when the graphics list cannot be read, the setup report says which step failed. Eclipse still needs an NVIDIA graphics card with compute capability 8.0 or higher (such as the RTX 30 series or newer, professional cards included).",
           "Clearer message when a performance measurement stops: when it stops because the computer ran out of available memory, Settings states the cause and the next step, and a problem can be reported. In a narrow window, a failure message in Settings grows with its text and shows in full.",
-          "Clearer notice when an answer is late: when FreeVideo does not answer in time, some cases that used to read as a lost connection now say FreeVideo is not responding and suggest checking the queue first; when a queue action gets no answer, the card suggests checking the queue's current state.",
+          "Clearer notice when an answer is late: when Eclipse does not answer in time, some cases that used to read as a lost connection now say Eclipse is not responding and suggest checking the queue first; when a queue action gets no answer, the card suggests checking the queue's current state.",
           "Three new tutorial chapters: Upscale a video, how to upscale a video to a larger size or to about 4K; making several videos at once (batch, one prompt per line, loop); and organizing creations (tags, filters, compare, recently deleted). The tutorial also covers \"Composition only\" for reference videos and running the second pass from a preview's right-click menu in Creations, and updates how characters, scenes and props work with first and last frames and the steps for selecting creations and finding Favorites.",
           "NVIDIA computers whose video memory and system memory are one pool (such as DGX Spark): the plan counts the pool once and leaves a part of it for the system. Windows on Arm computers: setup chooses its downloads by the processor of the computer, and dubbing is not available on them."
         ]
       },
       "zh": {
-        "summary": "0.6.9 改进剪辑视图的取消、轨道显示和接续生成；启动器自动补回缺失的程序文件，提示更清楚；性能测量因内存不足停止、FreeVideo 没有及时应答、没有找到 NVIDIA 显卡时，说明更清楚；教程新增三章。",
+        "summary": "0.6.9 改进剪辑视图的取消、轨道显示和接续生成；启动器自动补回缺失的程序文件，提示更清楚；性能测量因内存不足停止、Eclipse 没有及时应答、没有找到 NVIDIA 显卡时，说明更清楚；教程新增三章。",
         "changes": [
           "剪辑视图轨道多时看得更全：时间线放不下所有轨道时，声音轨会略微变矮，让轨道尽量全部显示；仍放不下时，时间线下沿出现渐隐，提示下面还有轨道。",
           "剪辑视图接续生成更顺畅：接续生成的视频完成后，下一段会照常备好，正在看的作品预览保持打开。",
@@ -145,10 +145,10 @@
           "剪辑视图可以导入更多录制文件：文件中没有写明时长的 WebM、MKV 录制文件现在可以导入。",
           "停止配音时说明更准确：在剪辑视图中停止配音，确认框会说明已配好的台词会保留，其余台词可以稍后重新配音。",
           "启动器自动补回缺失的程序文件：已保存的程序文件夹中有文件缺失或被清空时，启动器会在安装或启动前从自带的副本补回，然后照常继续。Windows 安装中某一步像崩溃一样结束时，安装日志会多记一行，写明退出码、对该步 Python 的简短检查和 Python 路径。",
-          "启动器用词更清楚：状态标题改用“FreeVideo”（如“正在启动 FreeVideo”“FreeVideo 已停止”），安装页的第一步和第一个选项改称“环境”和“全新安装”。设置项“ComfyUI 地址”改称“服务地址”，端口被占用时的提示也用这个名字；局域网访问的端口被占用时，提示关闭占用端口的程序，再重新开启局域网访问。",
-          "安装时的显卡说明更清楚：在 Windows 上找不到 NVIDIA 驱动、电脑里只有其他厂商的显示设备（包括虚拟机的）时，启动器会说明没有找到 NVIDIA 显卡；读不出显卡列表时，安装报告写明是哪一步。FreeVideo 仍需要计算能力 8.0 及以上的 NVIDIA 显卡（如 RTX 30 系列及更新，包括专业卡）。",
+          "启动器用词更清楚：状态标题改用“Eclipse”（如“正在启动 Eclipse”“Eclipse 已停止”），安装页的第一步和第一个选项改称“环境”和“全新安装”。设置项“ComfyUI 地址”改称“服务地址”，端口被占用时的提示也用这个名字；局域网访问的端口被占用时，提示关闭占用端口的程序，再重新开启局域网访问。",
+          "安装时的显卡说明更清楚：在 Windows 上找不到 NVIDIA 驱动、电脑里只有其他厂商的显示设备（包括虚拟机的）时，启动器会说明没有找到 NVIDIA 显卡；读不出显卡列表时，安装报告写明是哪一步。Eclipse 仍需要计算能力 8.0 及以上的 NVIDIA 显卡（如 RTX 30 系列及更新，包括专业卡）。",
           "性能测量停止时说明更清楚：性能测量因电脑可用内存不足而停止时，设置页会写明原因和下一步，并可以提交问题。设置页的失败说明在窄窗口中随文字变高，完整显示。",
-          "应答超时的提示更准确：FreeVideo 没有及时应答时，部分原先显示“连接已断开”的情况改为显示“FreeVideo 没有响应”，并提醒先查看队列；队列操作没有得到应答时，提醒查看队列中的实际状态。",
+          "应答超时的提示更准确：Eclipse 没有及时应答时，部分原先显示“连接已断开”的情况改为显示“Eclipse 没有响应”，并提醒先查看队列；队列操作没有得到应答时，提醒查看队列中的实际状态。",
           "教程新增三章：“放大视频”，说明如何把视频放大到更大的尺寸或 4K 级别；“一次生成多条”（批量、每行一条描述、循环）；“整理作品”（标签、筛选、对比、最近删除）。另补充参考视频“仅参考构图”和在作品库中右键预览继续二采的用法，更新角色、场景和道具与首帧、尾帧搭配使用的说明，以及作品库多选和收藏位置的说明。",
           "显存与内存为同一片的 NVIDIA 电脑（如 DGX Spark）：规划时这片内存只算一次，并为系统留出一部分。Windows on Arm 电脑：安装时按电脑架构选择下载内容，这类电脑上无法使用配音。"
         ]
@@ -188,14 +188,14 @@
     {
       "product_version": "0.6.7",
       "en": {
-        "summary": "0.6.7 improves prompt enhancement for MOSS-Image, lets merged videos be upscaled, offers lossless sound on export, gives videos, audio and dropdowns FreeVideo's own play bar and menu, makes the Edit view smoother, explains more failures, and cleans up more thoroughly when a work is deleted.",
+        "summary": "0.6.7 improves prompt enhancement for MOSS-Image, lets merged videos be upscaled, offers lossless sound on export, gives videos, audio and dropdowns Eclipse's own play bar and menu, makes the Edit view smoother, explains more failures, and cleans up more thoroughly when a work is deleted.",
         "changes": [
           "Prompt enhancement for MOSS-Image: with MOSS-Image, prompts are enhanced the way Qwen-Image's are; when the service refuses an enhancement request, the cause is named.",
           "Prompt enhancement is steadier on smaller graphics cards: on cards with less video memory, such as 8 GB, enhancing a prompt no longer fails for lack of video memory.",
           "Steadier use of Qwen-Image and MOSS-Image together: on a 12 GB card, making a picture with Qwen-Image and then switching to MOSS-Image no longer fails for lack of memory.",
           "Upscale takes merged videos: a merged video can be upscaled to the largest size, and a video that cannot be enlarged says why.",
           "Sound format on export: the export window adds a Sound option beside the frame rate, Compatible or Lossless. Lossless exports a .mov with uncompressed sound; it is not available with Audio only or for a range without sound.",
-          "One play bar and one menu: videos and audio use FreeVideo's own play bar, where a click plays or pauses a video and long audio and video can be dragged to any point; every dropdown in FreeVideo pages opens the FreeVideo menu instead of the system list.",
+          "One play bar and one menu: videos and audio use Eclipse's own play bar, where a click plays or pauses a video and long audio and video can be dragged to any point; every dropdown in Eclipse pages opens the Eclipse menu instead of the system list.",
           "A smoother Edit view: the preview has more room, the Media, LoRA and Advanced windows are no longer covered by the timeline, the buttons stay on one line in a narrow window, and Escape during a replace-audio step cancels only the replacement.",
           "Over-long prompts are explained first: in the Image view and the Edit view, a prompt over the engine's limit says by how much before it is submitted, instead of being refused afterwards.",
           "More failures explain what happened: a picture failure names the step where it failed, and a picture moved or deleted in the Edit view is named with a way to import it again.",
@@ -205,14 +205,14 @@
         ]
       },
       "zh": {
-        "summary": "0.6.7 改进 MOSS-Image 的提示词增强，合并后的视频可以放大，导出可选无损声音；播放条和下拉菜单统一为 FreeVideo 自己的样式，剪辑视图更顺手，更多失败会说明原因，删除作品时清理得更干净。",
+        "summary": "0.6.7 改进 MOSS-Image 的提示词增强，合并后的视频可以放大，导出可选无损声音；播放条和下拉菜单统一为 Eclipse 自己的样式，剪辑视图更顺手，更多失败会说明原因，删除作品时清理得更干净。",
         "changes": [
           "提示词增强适配 MOSS-Image：使用 MOSS-Image 时，提示词按 Qwen-Image 的改写方式增强；改写请求被服务拒绝时，会说明原因。",
           "提示词增强在显存较小的显卡上更稳：在 8 GB 等显存较小的显卡上，提示词增强不再因显存不足而失败。",
           "先后使用 Qwen-Image 和 MOSS-Image 更稳：12 GB 显存的显卡上，先用 Qwen-Image 出图再换 MOSS-Image，不再因内存不足而失败。",
           "视频放大支持合并后的视频：合并后的视频可以放大到最大尺寸；无法放大的视频会说明原因。",
           "导出可选声音格式：导出窗口在帧率旁新增“声音”选项，可选“通用”或“无损”。选择“无损”时导出为 .mov 文件，声音不压缩；内容选“只声音”或所选范围没有声音时不可选。",
-          "播放条和下拉菜单统一：视频和音频使用 FreeVideo 自己的播放条，点击视频即可播放或暂停，长音频和视频可拖动进度；页面中的所有下拉选择都使用 FreeVideo 菜单，不再弹出系统列表。",
+          "播放条和下拉菜单统一：视频和音频使用 Eclipse 自己的播放条，点击视频即可播放或暂停，长音频和视频可拖动进度；页面中的所有下拉选择都使用 Eclipse 菜单，不再弹出系统列表。",
           "剪辑视图更顺手：预览更宽敞，“素材”“LoRA”“高级选项”窗口不再被时间线遮住，窄窗口下按钮保持在一行，替换声音时按 Esc 只取消替换。",
           "提示词过长时先说明：图像视图和剪辑视图中，超过引擎限制的提示词在提交前就会提示超出多少，不再提交后才被拒绝。",
           "更多失败会说明原因：图片失败会指出出错的步骤；剪辑中的图片被移动或删除时，会说明并给出重新导入的办法。",
@@ -234,7 +234,7 @@
           "Original sound plays on phones: an MP3 used as the original sound stays an MP3 in the finished video, so phones and system players can play it.",
           "Frames saved in the Edit view also go to the output folder: with Also save pictures to the output folder on in Settings, a frame saved in the Edit view is copied there as well.",
           "More failures explain what happened and what to do next, including a task that gets no answer after it is submitted, a picture the assistant cannot start and a Git error during setup.",
-          "Smoother on slower computers: with fewer processor cores or slow view switches, FreeVideo turns off the switch animation, and the library and short clips play more smoothly.",
+          "Smoother on slower computers: with fewer processor cores or slow view switches, Eclipse turns off the switch animation, and the library and short clips play more smoothly.",
           "The Edit view is easier to use in a narrow window: the preview and buttons no longer cover each other, and the tracks and the update bar are shown in full.",
           "Dialogs and tips are easier to read: their text is no longer disturbed by what lies behind them, and a hover tip appears only when a name is cut short.",
           "Fields are easier to fill in: a number typed outside its range is brought back into range with a note under the field. An emptied LoRA strength returns to the strength in use.",
@@ -250,7 +250,7 @@
           "MP3 原声可在手机上直接播放：作为原声的 MP3 在成片中保持原样，手机和系统播放器均可直接播放。",
           "剪辑视图保存的画面也会存入 output 文件夹：开启设置中的“同时将图片保存到 output 文件夹”后，在剪辑视图中保存的画面同样会复制到 output 文件夹。",
           "更多失败会说明原因和下一步：任务提交后无应答、助手请求的图片无法开始、安装时 Git 出错，都会说明发生了什么以及接下来该怎么做。",
-          "低配电脑上更流畅：处理器核心较少或视图切换较慢时，FreeVideo 会自动关闭切换动画，作品库和短视频播放更加顺畅。",
+          "低配电脑上更流畅：处理器核心较少或视图切换较慢时，Eclipse 会自动关闭切换动画，作品库和短视频播放更加顺畅。",
           "窄窗口下的剪辑视图更易用：预览与按钮不再互相遮挡，轨道和更新栏均完整显示。",
           "对话框和提示更易阅读：对话框与提示的文字不再受背景内容干扰，悬停提示只在名称显示不全时出现。",
           "输入更省心：数字框中输入超出范围的值时，会自动改回范围内并给出提示。清空 LoRA 强度后，会恢复为正在使用的强度。",
@@ -261,26 +261,26 @@
     {
       "product_version": "0.6.5",
       "en": {
-        "summary": "Image model downloads no longer pause while the image view only warms a model; export supports 48 and 60 fps; pictures are also saved to the output folder; LoRA choice uses FreeVideo's own menu; and face close-ups and failure messages are improved.",
+        "summary": "Image model downloads no longer pause while the image view only warms a model; export supports 48 and 60 fps; pictures are also saved to the output folder; LoRA choice uses Eclipse's own menu; and face close-ups and failure messages are improved.",
         "changes": [
           "Image models: a download no longer pauses as if a video were generating when the image view only keeps or warms a model, a paused download says why, and Continue download starts it at once; a model folder or its files may be symbolic links (junctions on Windows) to another drive; a link that leads nowhere or to a damaged or different file says why and what to do next, and only that model fails; MOSS-Image warms up from its own files and renders normally on Windows with less than 24 GB of video memory; and when opened from ComfyUI, H3 Image allocates GPU memory as video generation does.",
           "Export at 48 or 60 fps: Frame rate in the Export window now offers 48 and 60, with the frames in between made on the graphics card, cuts and still frames kept as they are and the sound copied unchanged; a full disk is reported as a full disk, and plainly too little space is said before the graphics card starts.",
           "Face pictures of a character after a change of clothes: a Face picture framed too wide is redrawn larger once, a repaint that kept the old clothes is tried again, and when no face box is found the clothes are repainted inside a fixed area.",
           "Pictures and seeds: each picture made or imported is also copied into the output folder as a file of its own, removed when the picture is deleted for good and switchable off in Settings; the dice next to Seed in the Image view fills in a random seed, and an empty Seed still draws a new one each time.",
-          "Choosing a LoRA: the LoRA choice opens FreeVideo's own menu, where a long list scrolls, typing filters it, LoRAs are grouped by folder and the keyboard works, in the dark and light themes and in narrow windows.",
+          "Choosing a LoRA: the LoRA choice opens Eclipse's own menu, where a long list scrolls, typing filters it, LoRAs are grouped by folder and the keyboard works, in the dark and light themes and in narrow windows.",
           "Failures say why and what to do next, continued: in the Edit view, the Image view, the Create panel, the generation progress card and notifications a failure states the cause and the next step and offers Report a problem, never a raw failure code; an engine stop, a failed model download and a video closed from its history name their reason, and a full disk during a download is named; a LoRA that stores one alpha for layers of different ranks is marked unusable before generation with the reason; an out-of-range picture setting is named.",
           "Report a problem: for a known failure with a clear fix, that fix is shown first and the report can still be sent after it; the issue text the launcher fills in starts with the display adapter model for every kind of error.",
           "Edit view subtitles: when the subtitle track holds only an empty line just added, Auto subtitles places the lines it heard without saying they replaced the subtitles there; when the lines there have words, the notice and its Undo are as before."
         ]
       },
       "zh": {
-        "summary": "图像模型下载不再在预热时误停；导出支持 48 和 60 fps；图片同时保存到 output 文件夹；LoRA 选择改用 FreeVideo 自己的菜单，脸部特写与失败说明更完善。",
+        "summary": "图像模型下载不再在预热时误停；导出支持 48 和 60 fps；图片同时保存到 output 文件夹；LoRA 选择改用 Eclipse 自己的菜单，脸部特写与失败说明更完善。",
         "changes": [
           "图像模型：图像视图只是预热或保留模型时，图像模型下载不再以“视频生成中”暂停，暂停时写明实际原因，可用“继续下载”立即开始；模型文件夹、其子文件夹或模型文件通过符号链接（Windows 上也可用目录联接）放在其他磁盘时照常使用，链接失效或指向损坏、不同的文件时说明原因和下一步，图片页只把该模型标为出错；MOSS-Image 预热只读取自己的模型文件，Windows 上显存小于 24 GB 时可以正常出图；由 ComfyUI 打开时，H3 Image 使用与视频生成相同的显存分配方式。",
           "导出 48 或 60 fps：导出窗口的“帧率”新增 48 和 60，中间帧在显卡上补出，剪切处和静止画面保持原样，声音原样复制；磁盘写满时直接说明磁盘已满，空间明显不足时在显卡开始工作前就会提示。",
           "角色更换服装后的脸部特写：脸部特写取景过宽时放大重画一次；重画后仍是原来的衣服时自动重试；识别不到脸部位置时，在固定区域内重画衣服。",
           "图片保存与种子：生成或导入的图片同时复制一份到 output 文件夹，副本是独立文件，图片永久删除时一并删除，可在设置中关闭；图像视图种子旁的骰子会填入一个随机种子，留空时仍每次随机。",
-          "LoRA 选择：选择 LoRA 时打开 FreeVideo 自己的菜单，长列表可以滚动，输入文字即可筛选，按文件夹分组，可用键盘操作，深色、浅色主题和窄窗口下都能正常使用。",
+          "LoRA 选择：选择 LoRA 时打开 Eclipse 自己的菜单，长列表可以滚动，输入文字即可筛选，按文件夹分组，可用键盘操作，深色、浅色主题和窄窗口下都能正常使用。",
           "失败时说明原因和下一步（续）：剪辑视图、图像视图、创作面板、生成进度卡片和通知中的失败都写明原因和下一步并可提交问题，不再显示原始错误代码；引擎停止、模型下载失败、从历史中关闭的视频也说明原因，下载时磁盘已满会直接说明；同一个 alpha 对应不同秩的 LoRA 在生成前即标为不可用并说明原因；图片设置超出范围时分别说明是哪一项。",
           "提交问题：已知错误且已有明确建议时，先显示该建议，看完仍可继续提交；启动器预填的问题正文对各类错误都以显示适配器型号开头。",
           "剪辑视图的字幕：字幕轨上只有刚添加的空字幕时，自动字幕直接写入识别结果，不再提示“识别出的字幕已替换原有字幕”；原有字幕带文字时，提示与“撤销”照旧。"
@@ -299,7 +299,7 @@
           "Edit view generation bar: the frame pop-up shows the first-frame reference switch and saves it with the edit's own setting; choosing parts apart on the timeline no longer breaks the bar; on a narrow window Generate stays inside the bar instead of falling under the track toolbar; a blank edit takes the quality level chosen in the creation panel while the editor was away, and a saved edit or one with parts keeps its own.",
           "Edit view timeline and panel: Ctrl+wheel zoom keeps the time under the pointer in place; with a part that is not generated yet selected, the side panel says it can be adjusted once generated; and a hidden editor no longer reads its import list every 2 seconds, reading it at once when shown again.",
           "Settings improvements: a model folder that was not found is shown on one line at any width, its start giving way with an ellipsis and its last folder whole, and a copy takes the whole path; a save that fails after Settings was closed is shown as a failure notice with a way back to that setting.",
-          "Launcher and installation: the release-notes button under the notes in the update window wraps at the window's width; the desktop shortcut of a source installation starts the launcher directly; failures in the launcher, installation, downloads and the offline package state the cause, the next step and how to report them; and when another program holds a file that an update or a package installation needs, FreeVideo waits and installs again before reporting an error.",
+          "Launcher and installation: the release-notes button under the notes in the update window wraps at the window's width; the desktop shortcut of a source installation starts the launcher directly; failures in the launcher, installation, downloads and the offline package state the cause, the next step and how to report them; and when another program holds a file that an update or a package installation needs, Eclipse waits and installs again before reporting an error.",
           "Creations and menus: Creations opened over a view keeps the keyboard after its opening fade, so Escape and the arrows work at once; the Info item of a creation's menu shows an information mark instead of the warning triangle; and the undo bar and the selection bar at the bottom of Creations are fully opaque, so thumbnails no longer show through at phone width.",
           "At phone width: an attached picture's remove button in Autopilot keeps its corner size, so tapping a picture that failed to upload retries it instead of removing it; and the phone connection panel sits right below its button, aligned to its right edge and at least 8 pixels from the screen edge.",
           "Tutorial improvements: after Get started on the featured example the caret is in the Autopilot box, also when the box turns on a moment after the view opens; the System status steps and pictures follow the top bar's status and its Run status panel; and the tutorial book's pictures and text follow the redesigned panels, with Edit view pictures matching the borrowed generation bar, continuing a part adding pictures from Media, and the save-frame notice naming Works.",
@@ -330,7 +330,7 @@
         "summary": "Image generation adds the MOSS-Image model, failures state the cause and the next step, touch and portrait screens are improved, and a number of problems are fixed.",
         "changes": [
           "Image generation adds the MOSS-Image model, installed in one click, and better queueing and model loading: several pictures can wait in line and the status shows the place; models that made room for another program load again once the room is free; opening the image view loads the image model where it fits; when another program holds the graphics card, H3 Image plans against the memory actually free and no longer runs short at the first step; and the second-pass upscale no longer reloads the video model when memory suffices, so the wait is shorter.",
-          "Failures say why and what to do next: a launcher crash, an incomplete installation file, a failed model upgrade, an unfinished assistant task, a ComfyUI start failure, an unreadable folder or undeletable video in the library or when sharing, a prompt rewrite cancelled before generation, release notes that cannot be loaded, a tutorial example that cannot be filled in, and a stopped FreeVideo on this computer each state the cause and the next step instead of a raw error or no response. When an update fails, both buttons sit under the reason, and a full disk comes with the step to free space.",
+          "Failures say why and what to do next: a launcher crash, an incomplete installation file, a failed model upgrade, an unfinished assistant task, a ComfyUI start failure, an unreadable folder or undeletable video in the library or when sharing, a prompt rewrite cancelled before generation, release notes that cannot be loaded, a tutorial example that cannot be filled in, and a stopped Eclipse on this computer each state the cause and the next step instead of a raw error or no response. When an update fails, both buttons sit under the reason, and a full disk comes with the step to free space.",
           "The computer stays awake while a video is made: Windows and Linux no longer go to sleep on their own during generation, except on battery.",
           "Touch and portrait screen improvements: actions that a mouse reveals on hover are shown on touch screens; tall portrait windows use their full height; on touch screens wider than a phone the editor's and the image view's controls are larger and top-bar links and number steppers have larger tap areas; on a phone Creations in the top bar opens the works without a second entry under the picture; on a narrow screen Generate and Cancel stay whole and easy to tap; and the phone page no longer comes up blank when opened over the local network or a remote link.",
           "The library opens the folder that holds the videos: a Video folder button, and Show in folder for every video; when the folder cannot be opened, the reason is stated.",
@@ -347,7 +347,7 @@
         "summary": "图片生成新增 MOSS-Image 模型，失败时说明原因和下一步，触屏与竖屏显示改进，并修复了多项问题。",
         "changes": [
           "图片生成新增 MOSS-Image 模型，可一键安装；排队与模型载入改进：可同时排队多张图片，状态显示排队位置；为其他程序让出显存的模型在空间恢复后重新载入；打开图像视图时，显存够用就载入图像模型；显卡被其他程序占用时，H3 Image 按实际空闲显存安排，不再在第一步显存不足；二采放大时，显存足够则不再重新载入视频模型，等待更短。",
-          "失败时说明原因和下一步：启动器意外退出、安装文件不完整、模型升级失败、助手任务未完成、ComfyUI 启动失败、作品库与分享中无法读取的文件夹或无法删除的视频、生成前被取消的提示词改写、更新说明读取不到、教程示例无法填入、本机上的 FreeVideo 已停止，都写明原因和下一步，不再显示原始错误行或没有反应。更新失败时，两个按钮排在原因下方；磁盘空间不足时提示清理后重试。",
+          "失败时说明原因和下一步：启动器意外退出、安装文件不完整、模型升级失败、助手任务未完成、ComfyUI 启动失败、作品库与分享中无法读取的文件夹或无法删除的视频、生成前被取消的提示词改写、更新说明读取不到、教程示例无法填入、本机上的 Eclipse 已停止，都写明原因和下一步，不再显示原始错误行或没有反应。更新失败时，两个按钮排在原因下方；磁盘空间不足时提示清理后重试。",
           "生成视频时电脑不再自行睡眠：Windows 与 Linux 在制作视频期间不会自动进入睡眠；使用电池时不启用。",
           "触屏与竖屏显示改进：触屏上显示原本要鼠标悬停才出现的操作；竖屏窗口使用全部高度；比手机宽的触屏上，剪辑视图和图像视图的按键加大，顶栏链接和数值调节按钮的点按范围也加大，更易点中；手机上从顶栏的“作品库”进入作品，画面下方不再重复显示入口；窄屏下生成与取消按钮保持完整、易于点按；通过局域网或远程链接打开手机页时不再空白。",
           "作品库可直接打开视频所在文件夹：新增“视频文件夹”按钮，每个视频都能“在文件夹中显示”；无法打开时说明原因。",
@@ -366,7 +366,7 @@
       "en": {
         "summary": "ComfyUI opened by other means is no longer affected, the Creations entry is always shown, deleting a work also removes the data only it used, and more creation options are available.",
         "changes": [
-          "ComfyUI no longer affected: ComfyUI opened other than from the launcher no longer shows FreeVideo notices or a FreeVideo backdrop; FreeVideo opens only from the launcher.",
+          "ComfyUI no longer affected: ComfyUI opened other than from the launcher no longer shows Eclipse notices or a Eclipse backdrop; Eclipse opens only from the launcher.",
           "Creations entry always shown: every view has a Creations entry at the top right, and the works strip no longer hides on wide screens.",
           "Deletion removes related data: deleting a work, edit, conversation, character or film also deletes the prompts, uploads, imports, voiceovers and stems used only by it, and its prompt no longer appears in the history or the search; every AI-generated picture is kept as a work in the library.",
           "Smooth interface during playback: playing a video in Create no longer slows the interface over time.",
@@ -383,7 +383,7 @@
       "zh": {
         "summary": "其他方式打开的 ComfyUI 不再受影响，作品库入口常驻，删除作品时一并删除其专用数据，并增加了创作选项。",
         "changes": [
-          "不再影响 ComfyUI：从启动器以外的方式打开 ComfyUI 时，不再显示 FreeVideo 的提示和背景；仅从启动器打开时进入 FreeVideo。",
+          "不再影响 ComfyUI：从启动器以外的方式打开 ComfyUI 时，不再显示 Eclipse 的提示和背景；仅从启动器打开时进入 Eclipse。",
           "作品库入口常驻：各视图右上角均提供“作品库”入口，宽屏下作品条不再隐藏。",
           "删除时清除相关数据：删除作品、剪辑、对话、角色或影片时，仅由其使用的提示词、上传文件、导入素材、配音和分轨一并删除，历史提示词和搜索结果中也不再出现；所有 AI 生成的图片均作为作品保存在作品库中。",
           "视频播放时界面保持流畅：在创作页播放视频时，界面不再随时间变慢。",
@@ -403,7 +403,7 @@
       "en": {
         "summary": "Fixes ComfyUI being taken over and image failures without explanation, and makes character creation and image generation better.",
         "changes": [
-          "ComfyUI is no longer taken over: only the FreeVideo launcher opens FreeVideo, and ComfyUI opened any other way stays as it is.",
+          "ComfyUI is no longer taken over: only the Eclipse launcher opens Eclipse, and ComfyUI opened any other way stays as it is.",
           "Image failures explain themselves: the reason and the next step are shown, with export report and open issue, and a new request now waits for the image in progress instead of failing.",
           "Image view: the left panel is no longer cut off in Chinese, and the \"Clear\" button under the prompt is gone.",
           "Calmer background: it no longer flickers while playing or switching and its colour is softer; the update notice can be closed and returns next time.",
@@ -420,7 +420,7 @@
       "zh": {
         "summary": "修复了打开 ComfyUI 被接管、出图失败没有提示等问题，角色创建和出图更好用。",
         "changes": [
-          "ComfyUI 不再被接管：只有从 FreeVideo 启动器打开才进入 FreeVideo，其他方式打开的 ComfyUI 保持原样。",
+          "ComfyUI 不再被接管：只有从 Eclipse 启动器打开才进入 Eclipse，其他方式打开的 ComfyUI 保持原样。",
           "出图失败说清原因：显示原因和下一步，可以导出报告、提交问题；有图片正在生成时，新的请求会排队，不再直接失败。",
           "图像视图：中文界面下左栏不再被切掉，提示词下去掉了“清空”键。",
           "背景更舒服：播放和切换时背景不再闪烁，颜色更柔和；更新提示可以关闭，下次打开再提醒。",

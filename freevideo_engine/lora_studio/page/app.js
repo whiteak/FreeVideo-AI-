@@ -27,7 +27,7 @@ function toast(text, bad = false) {
     clearTimeout(toastTimer); toastTimer = setTimeout(() => { box.hidden = true; }, bad ? 9000 : 4000);
 }
 const ERRORS = {
-    reload: 'FreeVideo restarted. Reload this page.', unknown_dataset: 'That LoRA set no longer exists.',
+    reload: 'Eclipse restarted. Reload this page.', unknown_dataset: 'That LoRA set no longer exists.',
     invalid_media: 'That file could not be read as a picture.', too_large: 'That picture is too large (40 MB at most).',
     trainer_missing: 'The trainer (ai-toolkit) was not found. Set its folder in Train → Trainer setup, or run scripts\\install-lora-trainer.ps1.',
     gpu_busy: 'A video is being made right now. Train when the queue is empty.', training_busy: 'A training run is already going.',
@@ -35,7 +35,7 @@ const ERRORS = {
     invalid_trigger: 'The trigger word can use letters, numbers, spaces, _ and - (40 at most).', too_many_items: 'A set holds 400 pictures at most.',
     segment_not_installed: 'Background removal needs the small selection model. Install it from the Pictures tab.',
     busy: 'The model is busy with another job; trying again shortly.', busy_video: 'A video is being made; pictures wait until it ends.',
-    model_missing: 'The prompt model is not installed. Install it in FreeVideo (Create → Enhance prompt) first.',
+    model_missing: 'The prompt model is not installed. Install it in Eclipse (Create → Enhance prompt) first.',
     lora_not_found: 'That LoRA file is not in ComfyUI\'s LoRA list.', unknown_checkpoint: 'That checkpoint is gone.',
 };
 const message = error => ERRORS[error?.code] || error?.message || String(error);
@@ -146,7 +146,7 @@ const agent = {
     async headers() {
         if (!this.csrf) {
             const response = await fetch('/freevideo/agent/session', {cache: 'no-store', credentials: 'same-origin'});
-            if (!response.ok) throw new Failure('agent_off', {message: 'Cast cards need FreeVideo\'s assistant features. Turn them on in FreeVideo settings, or link the LoRA by hand from the creation panel.'});
+            if (!response.ok) throw new Failure('agent_off', {message: 'Cast cards need FreeVideo\'s assistant features. Turn them on in Eclipse settings, or link the LoRA by hand from the creation panel.'});
             this.csrf = (await response.json()).csrf;
         }
         return {'X-FreeVideo-CSRF': this.csrf};
@@ -537,7 +537,7 @@ async function renderTrain() {
                 act(`Save ${layout} folder`, async () => { await save(); const result = await studio('export', {dataset: ds.id, layout}); toast(`Saved to ${result.path}`); }),
                 el('a', {class: 'btn small ghost', href: `/freevideo/lora-studio/api/zip?${new URLSearchParams({dataset: ds.id, layout, token: studioToken})}`, text: 'zip'}))))),
         el('div', {class: 'card'}, el('h2', {text: 'Trainer setup'}),
-            el('p', {class: 'muted'}, 'LoRA Studio runs ', el('a', {href: 'https://github.com/ostris/ai-toolkit', target: '_blank', rel: 'noopener', text: 'ai-toolkit'}), ' in its own Python. Install it once with ', el('code', {text: 'scripts\\install-lora-trainer.ps1'}), ' in your FreeVideo folder, then accept the MiniMax H3 licence on Hugging Face (', el('a', {href: 'https://huggingface.co/Comfy-Org/MiniMax-H3', target: '_blank', rel: 'noopener', text: 'Comfy-Org/MiniMax-H3'}), ').'),
+            el('p', {class: 'muted'}, 'LoRA Studio runs ', el('a', {href: 'https://github.com/ostris/ai-toolkit', target: '_blank', rel: 'noopener', text: 'ai-toolkit'}), ' in its own Python. Install it once with ', el('code', {text: 'scripts\\install-lora-trainer.ps1'}), ' in your Eclipse folder, then accept the MiniMax H3 licence on Hugging Face (', el('a', {href: 'https://huggingface.co/Comfy-Org/MiniMax-H3', target: '_blank', rel: 'noopener', text: 'Comfy-Org/MiniMax-H3'}), ').'),
             el('label', {class: 'f'}, 'ai-toolkit folder', folder), el('label', {class: 'f', style: 'margin-top:8px'}, 'Its Python (optional)', python),
             el('label', {class: 'f', style: 'margin-top:8px'}, 'Models folder (MODELS_PATH, optional)', models),
             el('div', {class: 'row'}, act('Save trainer setup', async () => {
@@ -552,7 +552,7 @@ async function renderTrain() {
             el('div', {class: 'row'},
                 el('button', {class: 'btn primary', text: 'Start training', disabled: !plan.trainer.ready || plan.training.phase === 'running', onclick: async event => {
                     event.currentTarget.disabled = true;
-                    try { await save(); await studio('train-start', {dataset: ds.id}); toast('Training started. FreeVideo can\'t make videos while it runs.'); pollTraining(progressBox); }
+                    try { await save(); await studio('train-start', {dataset: ds.id}); toast('Training started. Eclipse can\'t make videos while it runs.'); pollTraining(progressBox); }
                     catch (error) { toast(message(error), true); event.currentTarget.disabled = false; }
                 }}),
                 el('details', {}, el('summary', {class: 'muted', text: 'Show the trainer config'}), el('pre', {class: 'log', text: plan.config}))));
@@ -745,7 +745,7 @@ function datasetDialog(existing = null) {
 
 // ── Start ──────────────────────────────────────────────────────────────────────────────────────────────────────
 async function start() {
-    try { state.info = await studioInfo(); } catch (error) { document.body.prepend(el('div', {class: 'card', style: 'margin:20px', text: 'LoRA Studio could not reach FreeVideo: ' + message(error)})); return; }
+    try { state.info = await studioInfo(); } catch (error) { document.body.prepend(el('div', {class: 'card', style: 'margin:20px', text: 'LoRA Studio could not reach Eclipse: ' + message(error)})); return; }
     imageGen.load().catch(() => {});
     $('#new-btn').addEventListener('click', () => datasetDialog());
     $('#welcome-new').addEventListener('click', () => datasetDialog());

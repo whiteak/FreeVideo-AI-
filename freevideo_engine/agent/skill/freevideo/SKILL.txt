@@ -1,18 +1,18 @@
 ---
 name: freevideo
-description: Make videos and pictures with the user's local FreeVideo through its MCP tools or the `freevideo agent` command line. Use when the user asks to generate or continue a video, make or edit a picture, cut a timeline or make a multi-shot film in FreeVideo.
+description: Make videos and pictures with the user's local Eclipse through its MCP tools or the `freevideo agent` command line. Use when the user asks to generate or continue a video, make or edit a picture, cut a timeline or make a multi-shot film in Eclipse.
 ---
 
-# FreeVideo
+# Eclipse
 
-FreeVideo runs on the user's own computer. Everything below goes through its MCP server (tools named `freevideo_*`) or the same operations from a shell: `./freevideo agent <command>` (Windows: `freevideo.cmd agent`).
+Eclipse runs on the user's own computer. Everything below goes through its MCP server (tools named `freevideo_*`) or the same operations from a shell: `./freevideo agent <command>` (Windows: `freevideo.cmd agent`).
 
 ## Before anything else
 
 1. Call `freevideo_status`. If it is not ready, tell the user what is missing; do not retry in a loop.
 2. Before writing a video prompt, read `freevideo_prompt_guide` once (not needed for a picture alone). Prompts are English sections; dialogue and on-screen text stay in the user's language.
 3. Before a video, call `freevideo_plan` with the job you intend to run (it plans videos only). It returns the real frame count, the number of parts and a time estimate for this computer. Tell the user the estimate before a long run.
-4. The user sees the same work in the FreeVideo window. A tool may answer `needs_confirmation`: wait for the user (`freevideo_wait` without an id), then repeat the identical call once approved. If the user declines, stop and say so; do not retry with a changed reference.
+4. The user sees the same work in the Eclipse window. A tool may answer `needs_confirmation`: wait for the user (`freevideo_wait` without an id), then repeat the identical call once approved. If the user declines, stop and say so; do not retry with a changed reference.
 
 ## Pick the right task
 
@@ -51,4 +51,4 @@ Before each generation: one card per person (`freevideo_cast_list` first), cloth
 
 - Do not start a second generation while one for the same request is running; the computer has one GPU.
 - Never claim a video is good without looking at it.
-- Keep your own chat short; the user is watching progress in FreeVideo.
+- Keep your own chat short; the user is watching progress in Eclipse.

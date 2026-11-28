@@ -1,4 +1,4 @@
-"""FreeVideo as an MCP server (stdio, JSON-RPC 2.0), for Claude Code, Claude Desktop, Cursor and other agents.
+"""Eclipse as an MCP server (stdio, JSON-RPC 2.0), for Claude Code, Claude Desktop, Cursor and other agents.
 
     ./freevideo mcp                     # Linux x86_64
     freevideo.cmd mcp                   # Windows
@@ -23,7 +23,7 @@ from .client import ApiError, Client, DONE
 
 JOB_WAIT = 45.  # freevideo_wait only; the other waits keep 25 s. Fewer empty turns, each of which carries the whole context again.
 PROTOCOLS = ('2025-06-18', '2025-03-26', '2024-11-05')
-INSTRUCTIONS = """FreeVideo generates videos (MiniMax H3) and pictures on this computer's GPU. A request for a picture alone is one freevideo_generate_image call: no video prompt guide, no plan, no video job.
+INSTRUCTIONS = """Eclipse generates videos (MiniMax H3) and pictures on this computer's GPU. A request for a picture alone is one freevideo_generate_image call: no video prompt guide, no plan, no video job.
 Start with freevideo_status and freevideo_capabilities. Picture editing, storyboards (submit_batch), editor operations and plan are not listed in full: freevideo_tool_help {name} gives the schema, freevideo_call runs them. If a parameter is unclear, read the schema or check with freevideo_plan; do not submit a test job. Write prompts as the guide says (freevideo_prompt_guide): English sections
 integrated_multimodal_description / overall_soundscape / non_diegetic_music, [Shot N] cuts, (S1) <d>[Language] ...</d>
 dialogue. Generation uses continuous chains and takes minutes: submit, then call freevideo_wait (up to 45 seconds; it returns as soon as the job ends)
@@ -44,7 +44,7 @@ def tool_list():
     from .schema import mcp_tool_schema
     read = {'readOnlyHint': True, 'openWorldHint': False}
     write = {'readOnlyHint': False, 'destructiveHint': False, 'openWorldHint': False}
-    rows = [dict(name='freevideo_status', title='FreeVideo status', description='Readiness, limits, quality levels, aspects, installed LoRAs, local VLM and the queue.', annotations=read),
+    rows = [dict(name='freevideo_status', title='Eclipse status', description='Readiness, limits, quality levels, aspects, installed LoRAs, local VLM and the queue.', annotations=read),
         dict(name='freevideo_capabilities', title='Device capabilities', description='Read the same capability cache as the studio. computing means retry after retry_after_seconds.', annotations=read),
         dict(name='freevideo_asset', title='Retrieve a library asset', description='Download a saved video or thumbnail through authenticated HTTP to target. Use a library_id from a job or library.', annotations=write),
         dict(name='freevideo_prompt_guide', title='H3 prompt guide', description='How to write prompts: sections, shots and cuts, camera motion, dialogue, references, short-drama tips, and a full example.', annotations=read),
@@ -52,9 +52,9 @@ def tool_list():
         dict(name='freevideo_plan', title='Plan a job', description="Validate a job without running it: actual frames/seconds, sampling passes, warnings and a time estimate from this computer's history. Same fields as freevideo_generate.", annotations=read),
         dict(name='freevideo_generate', title='Generate a video', description='Generate one video from an H3 prompt, up to 60 seconds. Under 30 s defaults to one generation if the device supports this size and quality; unknown limits use 15 s. Otherwise the video is cut into as few parts as possible, each continuing part 10 s or longer where the length allows and never under 5 s, and how many parts depends on how long this computer can generate in one run; the parts continue and join automatically. Prefer a new shot with its reference pictures wherever the film can cut; continue only a take, action or sound that must stay unbroken. Use this for any single video, also after freevideo_enhance_prompt (pass its job id as prompt, {from_job: id}); the drama tools are only for a film of several separately chosen shots. Optionally from first/last frames or references (files, local paths, or frames of earlier jobs). Returns the job; with wait, its result (video path and URL).', annotations=write),
         dict(name='freevideo_generate_image', title='Generate a picture', description='Generate a picture from a prompt, on its own or as a first frame, with the installed picture model (MiniMax H3 Image, or Qwen-Image 2.1; the one chosen on the picture page when both are installed; model names one). With aspect, H3 Image makes about 4 MP, or about 16 MP with tier high; a smaller width and height gives the same shape at 4 MP, not scaled back (the result states the real width and height; make it smaller with the picture editing tool). With images, change or combine input pictures; with people, make a first frame with them near the places you say, in the scene from scene_image or the prompt. The result is an input file to use as a first frame, as a reference, or in images again.', annotations=write),
-        dict(name='freevideo_submit_batch', title='Submit a storyboard', description='Submit several jobs at once. Each row is a job object with "kind" (generate default, assemble, vlm, enhance, image) and an optional "ref"; later rows use "@ref" wherever a job id is expected (from_job, after, clips, refine_from). FreeVideo runs them in dependency order.', annotations=write),
+        dict(name='freevideo_submit_batch', title='Submit a storyboard', description='Submit several jobs at once. Each row is a job object with "kind" (generate default, assemble, vlm, enhance, image) and an optional "ref"; later rows use "@ref" wherever a job id is expected (from_job, after, clips, refine_from). Eclipse runs them in dependency order.', annotations=write),
         dict(name='freevideo_job', title='Job status', description='Status, progress, result or error of a job.', annotations=read),
-        dict(name='freevideo_wait', title='Wait for a job or the user', description="Wait up to 45 seconds for a job (with id) or, without id, at most 50 seconds for what the user says in FreeVideo (inbox). again=true means nothing new yet: call it again. A job wait returns early when the user says something. If the job is still active, call it again with the same ID; do not resubmit. A job queued behind other work reports queue (jobs ahead, estimated_wait_seconds): keep waiting until it ends, even for many minutes; the final answer comes only when it has succeeded or failed.", annotations=read),
+        dict(name='freevideo_wait', title='Wait for a job or the user', description="Wait up to 45 seconds for a job (with id) or, without id, at most 50 seconds for what the user says in Eclipse (inbox). again=true means nothing new yet: call it again. A job wait returns early when the user says something. If the job is still active, call it again with the same ID; do not resubmit. A job queued behind other work reports queue (jobs ahead, estimated_wait_seconds): keep waiting until it ends, even for many minutes; the final answer comes only when it has succeeded or failed.", annotations=read),
         dict(name='freevideo_jobs', title='List jobs', description='Recent agent jobs, optionally by status (comma-separated), project or kind.', annotations=read),
         dict(name='freevideo_cancel', title='Cancel a job', description='Cancel a waiting, queued or running job.', annotations={'readOnlyHint': False, 'destructiveHint': True, 'openWorldHint': False}),
         dict(name='freevideo_resume', title='Resume generation', description='Resume a failed, interrupted or cancelled generation; only unfinished blocks run. Poll the same job ID.', annotations=write),
@@ -62,12 +62,12 @@ def tool_list():
         dict(name='freevideo_import_media', title='Import footage', description='Read a local video or audio file and upload it into the editor. Returns import.source (import:<id>) and state. Poll freevideo_imports until ready, then insert that source into a project. Same ref and content safely replay.', annotations=write),
         dict(name='freevideo_imports', title='Imported footage', description='List editor imports with source, state (preparing/ready/failed), fraction and authenticated preview URLs. Wait for ready before insert; failed is terminal.', annotations=read),
         dict(name='freevideo_look', title='Look at media', description='Return a picture you can see: one frame of a video (at = first, last or seconds) or a contact sheet of timed frames (mode = sheet), or an image file. Use it to review shots.', annotations=read),
-        dict(name='freevideo_edit_image', title='Edit an image', description="Crop/rotate/flip/pad/adjust an image, add text, shapes or image overlays, or remove burned-in captions (remove_text), without the browser. The result is a new input file plus an editor document a person can reopen in FreeVideo's image editor.", annotations=write),
+        dict(name='freevideo_edit_image', title='Edit an image', description="Crop/rotate/flip/pad/adjust an image, add text, shapes or image overlays, or remove burned-in captions (remove_text), without the browser. The result is a new input file plus an editor document a person can reopen in Eclipse's image editor.", annotations=write),
         dict(name='freevideo_ask', title='Ask the local VLM', description='Ask FreeVideo\'s local vision-language model about images or sampled frames of a video (e.g. "Does this shot match its description? Answer as JSON {score, issues}").', annotations=write),
         dict(name='freevideo_enhance_prompt', title='Enhance a prompt', description='Rewrite a rough idea (any language) into a complete H3 prompt with the local VLM. Images become <Picture N> references. To generate from the result, pass the enhance job id as the prompt, {"from_job": id}; do not retype the text.', annotations=write),
         dict(name='freevideo_assemble', title='Assemble clips', description='Join finished clips (job ids, saved video ids or files) into one video with cuts or crossfades; trims with start/end.', annotations=write),
         dict(name='freevideo_release_gpu', title='Release the card', description='Free the graphics card and memory the video model holds; call before running another model. released=false while a video runs.', annotations=write),
-        dict(name='freevideo_library', title='Saved videos', description='Saved FreeVideo videos, newest first, with prompts and the agent job that made them.', annotations=read)]
+        dict(name='freevideo_library', title='Saved videos', description='Saved Eclipse videos, newest first, with prompts and the agent job that made them.', annotations=read)]
     from .schema import DRAMA_OPERATIONS
     rows.extend(dict(name='freevideo_drama_' + name, title='Film: ' + name, description=summary,
                      annotations=read if method == 'GET' or name == 'plan' else write)
@@ -138,7 +138,7 @@ def short_drama(arguments):
     idea = arguments.get('idea') or 'a short story'
     shots = arguments.get('shots') or '4'
     aspect = arguments.get('aspect') or '9:16'
-    return f"""Produce a {shots}-shot short drama with FreeVideo from this idea: {idea}
+    return f"""Produce a {shots}-shot short drama with Eclipse from this idea: {idea}
 
 1. Call freevideo_status and freevideo_prompt_guide. Write a screenplay with characters and {shots} shots.
 2. Call freevideo_drama_plan with screenplay and takes_per_shot. Inspect the prompts, then freevideo_drama_start.
@@ -182,7 +182,7 @@ class Server:
         try:
             self.client.hello(via='mcp')
         except (ApiError, AttributeError):
-            pass  # Starting before FreeVideo is allowed; later authenticated requests mark it online.
+            pass  # Starting before Eclipse is allowed; later authenticated requests mark it online.
         preload()
         for line in stream:
             line = line.strip()
@@ -544,8 +544,8 @@ def print_config(root):
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(prog='freevideo mcp', description='FreeVideo MCP server (stdio)')
-    parser.add_argument('--root', type=Path, help='FreeVideo installation folder')
+    parser = argparse.ArgumentParser(prog='freevideo mcp', description='Eclipse MCP server (stdio)')
+    parser.add_argument('--root', type=Path, help='Eclipse installation folder')
     parser.add_argument('--url', help='ComfyUI address (default: from the installation, else http://127.0.0.1:8188)')
     parser.add_argument('--print-config', action='store_true', help='Print client configuration and exit')
     args = parser.parse_args(argv)

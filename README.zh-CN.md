@@ -1,7 +1,7 @@
 <div align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="web/assets/freevideo.svg">
-    <img alt="FreeVideo" src="web/assets/freevideo-light.svg" width="65%">
+    <img alt="Eclipse Image and Video Creator" src="web/assets/freevideo-light.svg" width="65%">
   </picture>
 </div>
 
@@ -11,7 +11,7 @@
 
 <p align="center"><a href="README.md">English</a> · 中文</p>
 
-FreeVideo 由 [Video DeltaNet（VDN）](https://openvdn.github.io/) 驱动，让 MiniMax H3 能够在计算能力 8.0 及以上的 NVIDIA 显卡（如 RTX 30 系列及更新，包括专业卡）上本地运行，最低只需 8GB 显存和 16GB 内存，并会根据硬件配置自动选择合适的加速路径。Apple 芯片 Mac 为预览版。
+Eclipse 由 [Video DeltaNet（VDN）](https://openvdn.github.io/) 驱动，让 MiniMax H3 能够在计算能力 8.0 及以上的 NVIDIA 显卡（如 RTX 30 系列及更新，包括专业卡）上本地运行，最低只需 8GB 显存和 16GB 内存，并会根据硬件配置自动选择合适的加速路径。Apple 芯片 Mac 为预览版。
 
 https://github.com/user-attachments/assets/ecda7d0d-7fbe-4e0c-8c29-8f3315bafc15
 
@@ -23,18 +23,18 @@ https://github.com/user-attachments/assets/ecda7d0d-7fbe-4e0c-8c29-8f3315bafc15
 - **2026-10-13** · **[v0.4.0](https://github.com/FlashML-org/FreeVideo/releases/tag/v0.4.0)：Agent 全自动生成、分钟级长视频和剪辑视图。** 连接 Claude Code、Codex 等 AI Agent，让它全自动生成视频；一条视频可以生成到一分钟以上；在时间线上剪辑。
 - **2026-10-07** · **[v0.3.2](https://github.com/FlashML-org/FreeVideo/releases/tag/v0.3.2)：先出预览。** 先看半分辨率预览，满意的再继续生成。
 - **2026-10-07** · **[v0.3.0](https://github.com/FlashML-org/FreeVideo/releases/tag/v0.3.0)：更快的 int8 模型。** GeForce 和 RTX 30 系显卡改用 int8，RTX 3090 生成 5 秒视频快约 2.3 倍。
-- **2026-10-06** · **[作品展示](https://freevideo-community.pages.dev/#gallery)上线。** 观看 FreeVideo 生成的 20 秒视频，以及四档质量的并排对比。
-- **2026-10-06** · **[v0.2.3](https://github.com/FlashML-org/FreeVideo/releases/tag/v0.2.3)：视频自带工作流。** 把 FreeVideo 生成的视频拖到 ComfyUI 画布上，即可还原提示词、种子和全部参数，之前的视频也能补上。
+- **2026-10-06** · **[作品展示](https://freevideo-community.pages.dev/#gallery)上线。** 观看 Eclipse 生成的 20 秒视频，以及四档质量的并排对比。
+- **2026-10-06** · **[v0.2.3](https://github.com/FlashML-org/FreeVideo/releases/tag/v0.2.3)：视频自带工作流。** 把 Eclipse 生成的视频拖到 ComfyUI 画布上，即可还原提示词、种子和全部参数，之前的视频也能补上。
 - **2026-10-05** · **[v0.2.0](https://github.com/FlashML-org/FreeVideo/releases/tag/v0.2.0)：四档质量。** 每次生成可选择轻量、标准、精细或极致，档位越高，生成质量越高，但耗时更长；生成结果可导出为带生成耗时和显卡信息的分享图片或视频。
 - **2026-10-05** · **[v0.1.2](https://github.com/FlashML-org/FreeVideo/releases/tag/v0.1.2)：支持 Mac。** Apple 芯片 Mac 也能本地生成 MiniMax H3 视频（预览版）。
 - **2026-10-03** · **支持社区 LoRA。** 在工作流中直接使用 MiniMax H3 LoRA，参见[示例](docs/LoRA.zh-CN.md)。
-- **2026-10-02** · **FreeVideo 开源。** 最低 8GB 显存，即可在消费级显卡上运行 MiniMax H3。
+- **2026-10-02** · **Eclipse 开源。** 最低 8GB 显存，即可在消费级显卡上运行 MiniMax H3。
 
 ## 简介
 
-FreeVideo 是面向消费级显卡的 MiniMax H3 本地推理引擎，基于 [OpenVDN](https://github.com/OpenVDN) 的 8 步模型 [VDN-H3](https://huggingface.co/OpenVDN/vdn-minimax-h3) 和 [Video DeltaNet](https://openvdn.github.io/) 的混合注意力。
+Eclipse 是面向消费级显卡的 MiniMax H3 本地推理引擎，基于 [OpenVDN](https://github.com/OpenVDN) 的 8 步模型 [VDN-H3](https://huggingface.co/OpenVDN/vdn-minimax-h3) 和 [Video DeltaNet](https://openvdn.github.io/) 的混合注意力。
 
-它统一调度显存、内存与磁盘，并根据硬件条件调整权重放置、计算精度和注意力内核。FreeVideo 以 ComfyUI 插件形式提供，配备 Windows、macOS 和 Linux 启动器。主要特性包括：
+它统一调度显存、内存与磁盘，并根据硬件条件调整权重放置、计算精度和注意力内核。Eclipse 以 ComfyUI 插件形式提供，配备 Windows、macOS 和 Linux 启动器。主要特性包括：
 
 - **硬件自适应**：针对不同显卡选择权重格式（GeForce RTX 30、40、50 系列和其他 Ampere 架构的显卡用 int8，更新架构的专业卡和数据中心卡用 FP8），并自动探测可用的注意力内核，无需手动配置。
 - **低显存推理**：通过权重流式加载、异步预取与分块计算降低峰值显存，最低只需 8GB 显存和 16GB 内存。
@@ -49,25 +49,25 @@ FreeVideo 是面向消费级显卡的 MiniMax H3 本地推理引擎，基于 [Op
 
 1. [下载 FreeVideo.exe](https://github.com/FlashML-org/FreeVideo/releases/latest/download/FreeVideo.exe) 并运行。
 2. 选择已有的 ComfyUI 目录或安装新的 ComfyUI。可添加已有的模型目录以复用文件，缺失的模型会自动下载。
-3. 点击 **安装并启动**，浏览器中会打开带有 FreeVideo 创作面板的 ComfyUI。
+3. 点击 **安装并启动**，浏览器中会打开带有 Eclipse 创作面板的 ComfyUI。
 
 <div align="center">
-  <img alt="FreeVideo 创作面板" src="https://github.com/user-attachments/assets/f4719079-bb48-4836-9c64-2473477cd1a0" width="92%">
+  <img alt="Eclipse 创作面板" src="https://github.com/user-attachments/assets/f4719079-bb48-4836-9c64-2473477cd1a0" width="92%">
 </div>
 
-**安全软件：** FreeVideo.exe 已进行代码签名。如果安全软件拦截 FreeVideo.exe，或隔离了 FreeVideo 文件夹中的文件，请先核对 FreeVideo.exe 的 SHA-256 与发布页列出的值一致，再恢复文件，并把 FreeVideo 文件夹加入该软件的排除列表。
+**安全软件：** FreeVideo.exe 已进行代码签名。如果安全软件拦截 FreeVideo.exe，或隔离了 Eclipse 文件夹中的文件，请先核对 FreeVideo.exe 的 SHA-256 与发布页列出的值一致，再恢复文件，并把 Eclipse 文件夹加入该软件的排除列表。
 
 **离线安装：** 从[夸克网盘](https://pan.quark.cn/s/c51235b84618)下载离线包，将 ZIP 文件直接拖入启动器，无需解压。完全离线安装需要「视频模型」「文本编码器」「视频与音频解码器」「采样缓存」四个模型包，全新安装 ComfyUI 时还需要「运行环境」包。也可以只导入「运行环境」包，再在模型来源中选择**自动下载**（v0.3.12 及以上）。「音频参考缓存」为可选包，仅在参考素材带有音频时使用。
 
 ### macOS（Apple 芯片预览版）
 
 1. [下载 FreeVideo-Mac-arm64.dmg](https://github.com/FlashML-org/FreeVideo/releases/latest/download/FreeVideo-Mac-arm64.dmg)，打开后将 **FreeVideo.app** 拖入 **应用程序**。
-2. 打开 FreeVideo，选择已有的 ComfyUI 目录或安装新的 ComfyUI。可添加已有的模型目录以复用文件，缺失的运行环境和模型会自动下载。
-3. 点击 **安装并启动**，浏览器中会打开带有 FreeVideo 创作面板的 ComfyUI。
+2. 打开 Eclipse，选择已有的 ComfyUI 目录或安装新的 ComfyUI。可添加已有的模型目录以复用文件，缺失的运行环境和模型会自动下载。
+3. 点击 **安装并启动**，浏览器中会打开带有 Eclipse 创作面板的 ComfyUI。
 
 预览版已在 24GB 统一内存的 M5 Mac 上测试，生成耗时与内存说明见 [Mac 说明](docs/Mac.zh-CN.md)。
 
-Mac 预览版暂未进行 Apple 公证，首次打开时 macOS 会拦截。请只从 Release 页面下载，按 [Mac 说明](docs/Mac.zh-CN.md#首次打开)核对文件后再放行。这只对 FreeVideo 生效，不影响其他安全设置。
+Mac 预览版暂未进行 Apple 公证，首次打开时 macOS 会拦截。请只从 Release 页面下载，按 [Mac 说明](docs/Mac.zh-CN.md#首次打开)核对文件后再放行。这只对 Eclipse 生效，不影响其他安全设置。
 
 ### 已有 ComfyUI
 
@@ -78,7 +78,7 @@ cd ComfyUI/custom_nodes
 git clone https://github.com/FlashML-org/FreeVideo.git
 ```
 
-重启 ComfyUI，打开 **工作流 → 浏览模板 → FreeVideo → FreeVideo-All-in-One**，然后在 FreeVideo 的 **设置** 中完成安装。
+重启 ComfyUI，打开 **工作流 → 浏览模板 → Eclipse → FreeVideo-All-in-One**，然后在 Eclipse 的 **设置** 中完成安装。
 
 更新时，在 `custom_nodes/FreeVideo` 中运行 `git pull`（或在 ComfyUI-Manager 中更新该节点），然后重启 ComfyUI。
 
@@ -89,15 +89,15 @@ git clone https://github.com/FlashML-org/FreeVideo.git
 **终端或服务器：**
 
 ```bash
-git clone https://github.com/FlashML-org/FreeVideo.git && cd FreeVideo
+git clone https://github.com/FlashML-org/FreeVideo.git && cd Eclipse
 ./setup.sh
 ```
 
-安装程序会装好 FreeVideo、ComfyUI 和模型，然后在浏览器中打开 FreeVideo。之后输入 `freevideo` 即可再次打开。在服务器上，可以通过 SSH 从自己的电脑访问，或运行 `freevideo server --listen 0.0.0.0` 获取局域网访问链接。详见 [Linux 说明](docs/Linux.zh-CN.md)。
+安装程序会装好 Eclipse、ComfyUI 和模型，然后在浏览器中打开 Eclipse。之后输入 `freevideo` 即可再次打开。在服务器上，可以通过 SSH 从自己的电脑访问，或运行 `freevideo server --listen 0.0.0.0` 获取局域网访问链接。详见 [Linux 说明](docs/Linux.zh-CN.md)。
 
 ### 更多文档
 
-- [FreeVideo Adaptive Execution Planner](docs/zh-CN/execution-planning.md)
+- [Eclipse Adaptive Execution Planner](docs/zh-CN/execution-planning.md)
 - [社区实测](docs/zh-CN/community-results.md)
 - [感谢社区](docs/zh-CN/community-thanks.md)
 
@@ -107,7 +107,7 @@ git clone https://github.com/FlashML-org/FreeVideo.git && cd FreeVideo
 
 ## 引用
 
-FreeVideo 基于 VDN-H3。如在研究中使用 FreeVideo，请引用 [Video DeltaNet 论文](https://arxiv.org/abs/2609.20744)：
+Eclipse 基于 VDN-H3。如在研究中使用 Eclipse，请引用 [Video DeltaNet 论文](https://arxiv.org/abs/2609.20744)：
 
 ```bibtex
 @article{xi2026videodeltanet,

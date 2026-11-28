@@ -105,7 +105,7 @@ class Whitebox:
         result = {k: record[k] for k in ('id', 'status', 'summary', 'created_at')}
         result['page_open'] = self.page_open()
         if record['status'] in ('waiting', 'rendering'):
-            result['notice'] = ('The open FreeVideo page renders the scene by itself; no user action is needed. '
+            result['notice'] = ('The open Eclipse page renders the scene by itself; no user action is needed. '
                                 'Read it again until it is ready or failed.')
         if record['status'] == 'ready':
             result.update(work=record['work'], seconds=record['seconds'], early_steps=EARLY_STEPS, early_ratio=FOLLOW_RATIO,

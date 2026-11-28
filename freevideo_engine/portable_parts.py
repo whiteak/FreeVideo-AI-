@@ -12,7 +12,7 @@ def assemble_manifest(root):
     root = Path(root).resolve()
     runtime = json.loads(inside(root, 'runtime.json').read_text(encoding='utf-8'))
     if runtime.get('schema_version') != 1:
-        raise ValueError('Unsupported FreeVideo runtime package')
+        raise ValueError('Unsupported Eclipse runtime package')
     marker = inside(root, 'models/model-pack.json')
     if not marker.is_file():
         raise ValueError('尚未放入模型包。请将对应显卡的纯模型包解压到同一位置，'

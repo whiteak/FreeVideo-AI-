@@ -4,7 +4,7 @@ import {issueButton} from './issue_button.js';
 import {tip} from './autopilot_tips.js';
 import {failureAdvice} from './error_panel.js';
 import {engineReason} from './other_usage.js';
-// What agents connected to this FreeVideo are doing. Their requests share the
+// What agents connected to this Eclipse are doing. Their requests share the
 // studio's queue, so people can see them, follow progress and stop them.
 const css = document.createElement('link'); css.rel = 'stylesheet'; css.href = new URL('./agent_activity.css', import.meta.url).href; document.head.append(css);
 
@@ -32,7 +32,7 @@ const NAMES = {generate: ['Video', '视频'], assemble: ['Sequence', '成片'], 
 const REASONS = {
     out_of_memory: ['Out of memory', '显存或内存不足'],
     insufficient_memory: ['Not enough memory for this video', '可用显存或内存不足，无法生成这段视频'],
-    interrupted: ['FreeVideo restarted during this task', 'FreeVideo 中途重启了'],
+    interrupted: ['Eclipse restarted during this task', 'Eclipse 中途重启了'],
     lost: ['Ended without a result', '没有返回结果'],
     dependency_failed: ['An earlier step did not succeed', '前序任务未成功'],
 };
@@ -285,11 +285,11 @@ export function createAgentActivity(t, api, host, {interval = [1500, 8000], open
         } catch { failures++; }
         if (disposed) return;
         render();
-        // Fast while agents work; slow when idle or when an older FreeVideo has no activity route.
+        // Fast while agents work; slow when idle or when an older Eclipse has no activity route.
         const wait = data.active ? interval[0] : interval[1] * Math.min(4, 1 + failures);
         timer = setTimeout(poll, document.hidden ? Math.max(wait, interval[1]) : wait);
     }
-    // Agent features can be off in this FreeVideo: ask once, and stay out of sight unless they are on.
+    // Agent features can be off in this Eclipse: ask once, and stay out of sight unless they are on.
     (async () => {
         try {
             const response = await api.fetchApi('/freevideo/agent', {cache: 'no-store'});

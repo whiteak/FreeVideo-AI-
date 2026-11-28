@@ -1,4 +1,4 @@
-// The thin play bar FreeVideo uses under a video instead of the browser's controls: play or pause, the position (click
+// The thin play bar Eclipse uses under a video instead of the browser's controls: play or pause, the position (click
 // or drag to seek), the time, and sound. One bar per video; the library stage and the creation panel share it.
 //
 //   import {attach, detach} from './glass/player_bar.js';

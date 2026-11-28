@@ -224,7 +224,7 @@ def generate(*, local=False):
             'video. It holds framing and motion close to that frame.'},
         part_prompts=array(string(20000), 1, 5, description='One description per part of a video made in several '
             'parts, in order, so each part plays its own share of the story. The count must equal the '
-            'chain_plan.blocks POST /plan gives for this length. Omitted: FreeVideo splits prompt into parts before the first part.'),
+            'chain_plan.blocks POST /plan gives for this length. Omitted: Eclipse splits prompt into parts before the first part.'),
         takes=number(1, 8, integer=True, default=1), **common()),
         allOf=[{'if': {'required': ['refine_from'], 'properties': {'refine_from': {'type': 'string'}}},
                 'then': {'properties': {k: False for k in ('prompt', 'width', 'height', 'aspect', 'megapixels',
@@ -927,7 +927,7 @@ IMAGE_TOOLS = dict(create='freevideo_image_create', get='freevideo_image_read', 
 
 
 WHITEBOX_OPERATIONS = {
-    'submit': ('POST', '/whitebox', 'Send the white-model scene code you wrote (build(THREE), see GET /guide). The user\'s open FreeVideo page renders it by itself to a short reference clip in the library; no user action is needed to start the rendering. The clip is not the requested video: it only fixes layout and motion, so the video itself is still to be generated from it (media.references with early_steps) once the scene is ready.'),
+    'submit': ('POST', '/whitebox', 'Send the white-model scene code you wrote (build(THREE), see GET /guide). The user\'s open Eclipse page renders it by itself to a short reference clip in the library; no user action is needed to start the rendering. The clip is not the requested video: it only fixes layout and motion, so the video itself is still to be generated from it (media.references with early_steps) once the scene is ready.'),
     'get': ('GET', '/whitebox/{id}', 'Read a white-model scene: waiting or rendering (the page is working on it, usually under a minute: read again), ready (work = library ID for media.references with early_steps; generate the requested video from it) or failed (error).'),
 }
 WHITEBOX_TOOLS = dict(submit='freevideo_whitebox_submit', get='freevideo_whitebox_read')
@@ -1716,7 +1716,7 @@ def openapi():
         error={'$ref': '#/components/schemas/Error'})}
     job_view['allOf'] = [{'if': {'required': ['kind'], 'properties': {'kind': {'const': 'image'}}},
                          'then': {'properties': {'result': image_result()}}}]
-    return dict(openapi='3.1.0', info=dict(title='FreeVideo Agent API', version=str(API_VERSION)), paths=paths,
+    return dict(openapi='3.1.0', info=dict(title='Eclipse Agent API', version=str(API_VERSION)), paths=paths,
         components=dict(securitySchemes={'bearer': {'type': 'http', 'scheme': 'bearer'},
             'page': {'type': 'apiKey', 'in': 'cookie', 'name': 'freevideo_agent_page'}}, schemas={
             'Session': session_view(), 'SessionEvent': session_event(stored=True),

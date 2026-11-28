@@ -2,7 +2,7 @@
 
 [English](LoRA.md) · 中文
 
-FreeVideo 支持 MiniMax H3 社区 LoRA。每组对照使用相同的提示词和 seed。
+Eclipse 支持 MiniMax H3 社区 LoRA。每组对照使用相同的提示词和 seed。
 
 ## [VHS 录像带](https://huggingface.co/KennethFal/vh5tape-vhs-lora-minimax-h3)
 

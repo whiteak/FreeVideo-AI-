@@ -1,4 +1,4 @@
-# Bring this personal fork up to date with upstream FreeVideo, only when you run it.
+# Bring this personal fork up to date with upstream Eclipse, only when you run it.
 # Shows what is new, asks before merging, keeps your own changes on top, and stops
 # cleanly (nothing changed) if the merge would conflict.
 $ErrorActionPreference = 'Stop'
@@ -48,7 +48,7 @@ $answer = Read-Host 'Merge these into your fork now? [y/N]'
 if ($answer -notmatch '^(y|yes)$') { Write-Host 'Nothing changed.'; exit 0 }
 
 $before = & git rev-parse HEAD
-& git merge --no-edit --no-ff -m "Merge upstream FreeVideo $latest" upstream/main
+& git merge --no-edit --no-ff -m "Merge upstream Eclipse $latest" upstream/main
 if ($LASTEXITCODE -ne 0) {
     $conflicts = & git diff --name-only --diff-filter=U
     & git merge --abort
@@ -68,10 +68,10 @@ Write-Host "Merged. Your fork is now on upstream version $latest with your chang
 $changed = & git diff --name-only $before HEAD -- pyproject.toml constraints freevideo_engine/bootstrap_versions.json
 if ($changed) {
     Write-Host ''
-    Write-Host 'Upstream changed the Python packages. Before starting FreeVideo, run setup again:' -ForegroundColor Yellow
+    Write-Host 'Upstream changed the Python packages. Before starting Eclipse, run setup again:' -ForegroundColor Yellow
     Write-Host '  setup.cmd --reuse-models <the model folder you installed with>'
 }
-Write-Host 'Restart FreeVideo to use the new version.'
+Write-Host 'Restart Eclipse to use the new version.'
 Write-Host ''
 $push = Read-Host 'Push the merged main to your GitHub fork too? [y/N]'
 if ($push -match '^(y|yes)$') { Invoke-Git push origin main; Write-Host 'Pushed.' -ForegroundColor Green }

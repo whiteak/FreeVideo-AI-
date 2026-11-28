@@ -212,7 +212,7 @@ def _windows_lock_holders(paths, deadline, lines):
                     size = c_uint32(len(image))
                     if kernel.QueryFullProcessImageNameW(handle, 0, image, ctypes.byref(size)):
                         lines[position] = _holder_line(pid, image.value, seconds=seconds)
-                        # The image is python.exe for every FreeVideo process; its -m module (allowlisted, as on
+                        # The image is python.exe for every Eclipse process; its -m module (allowlisted, as on
                         # Linux) tells a warm-up worker from a compile or a generation.
                         command = _windows_command(pid) if time.monotonic() < deadline else ''
                         if command:

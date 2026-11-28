@@ -368,8 +368,8 @@ function saveTriggers(name, words) {
 const put = (target, key, value) => { if (target[key] !== value) target[key] = value; };
 const setAttr = (node, key, value) => { if (node.getAttribute(key) !== value) node.setAttribute(key, value); };
 export const loraWarning = () => t(
-    'FreeVideo needs no acceleration LoRA.',
-    'FreeVideo 无需添加加速 LoRA');
+    'Eclipse needs no acceleration LoRA.',
+    'Eclipse 无需添加加速 LoRA');
 
 // The last three LoRAs chosen, kept in this browser. Names that are no longer in the folder are never offered.
 const LORA_RECENT = 'freevideo_lora_recent', LORA_RECENT_MAX = 3;
@@ -393,7 +393,7 @@ export function loraPanel(node, panel, {promptNode = null} = {}) {
     let rowChecks = [];
     const strengthSaid = new Map(); // row index -> {text}: the "At most 100" line of its strength box
     let focusGrip = null;
-    // The list lives in the node as JSON; a broken list is not a reply from FreeVideo, so it gets its own sentence.
+    // The list lives in the node as JSON; a broken list is not a reply from Eclipse, so it gets its own sentence.
     const listProblem = error => {
         const unreadable = t('The LoRA list cannot be read. Add the LoRAs again.', 'LoRA 列表无法读取，请重新添加 LoRA。');
         return error?.name === 'SyntaxError' ? unreadable : userMessage(error, t, unreadable);
@@ -739,7 +739,7 @@ export async function openExtendEditor(record, node = current?.node || app.graph
 
 export function openStudio(node, {extendFrom = null} = {}) {
     // The page-wide task list (the top bar's status and its panel) follows this panel's videos, waiting ones included.
-    try { startJobSources(); } catch (error) { console.warn('FreeVideo tasks:', error); }
+    try { startJobSources(); } catch (error) { console.warn('Eclipse tasks:', error); }
     if (current?.node === node && current.dialog.open) {
         if (extendFrom) current.enterExtend(extendFrom); else current.dialog.focus();
         viewChanged('studio', node); return current.dialog;
@@ -754,7 +754,7 @@ export function openStudio(node, {extendFrom = null} = {}) {
     if (current?.dialog.dataset.fvParked === 'true') current.dispose?.(); else current?.dialog.close();
     const extension = createExtendState(node, name => value(node, name), (name, v) => set(node, name, v));
     if (extendFrom && !extension.enter(extendFrom)) throw new Error(extendText(t, 'unavailable'));
-    const dialog = el('dialog', null, 'fv-studio fv-create'); dialog.setAttribute('aria-label', t('FreeVideo creative workspace', 'FreeVideo 创作面板'));
+    const dialog = el('dialog', null, 'fv-studio fv-create'); dialog.setAttribute('aria-label', t('Eclipse creative workspace', 'Eclipse 创作面板'));
     // The shell holds the previous view's picture until both are "true": ready = final geometry, loaded = first content.
     dialog.dataset.fvReady = 'false'; dialog.dataset.fvLoaded = 'false';
     // ComfyUI's background dialogs can lock body pointer events. This native
@@ -849,7 +849,7 @@ export function openStudio(node, {extendFrom = null} = {}) {
             linked: ['Some settings this example needs are connected to other nodes, so it cannot fill them in. Disconnect those links in the node view, then try again.', '示例要改的设置已连到别的节点，无法填入；在节点视图断开这些连线后再试'],
             unavailable: ['The current model cannot use this example\'s settings.', '当前模型用不了这个示例的设置'],
             asset: missing ? ['An example file is missing from this installation. Select "Repair" under Settings > Environment, then try again.', '示例素材不在本机安装里，在“设置 → 环境”里点“修复”后重试']
-                : ['The example files could not be read from FreeVideo. Check that FreeVideo is still running, then try again.', '没能从 FreeVideo 读取示例素材，确认 FreeVideo 仍在运行后再试'],
+                : ['The example files could not be read from Eclipse. Check that Eclipse is still running, then try again.', '没能从 Eclipse 读取示例素材，确认 Eclipse 仍在运行后再试'],
             write: ['The example files could not be added to this panel\'s media list. Try again.', '示例素材没能加入这个面板的素材列表，请再试一次'],
             workspace_changed: ['Another view was opened, so the example was not filled in. Go back to the creation panel and try again.', '已切到别的视图，示例没有填入，回到创作面板再试'],
             no_editor: ['The editor did not open, so the start clip was not placed. Open the editor, then select the example again.', '剪辑视图没有打开，起始片段没有放上去；打开剪辑视图后再点一次示例'],
@@ -1320,7 +1320,7 @@ export function openStudio(node, {extendFrom = null} = {}) {
     let releaseExtendThumbnail = () => {};
     cleanup.push(() => releaseExtendThumbnail());
     if (mediaNode?.freevideoCreateMediaEditor) { cleanup.push(mediaNode.freevideoCreateMediaEditor(mediaMount)); mediaDetails.open = mediaFilled(); }
-    else mediaMount.append(el('p', t('Connect a FreeVideo Media panel in node view to upload here.', '在节点视图连接 FreeVideo 素材面板，可在这里上传。'), 'fv-legacy'));
+    else mediaMount.append(el('p', t('Connect a Eclipse Media panel in node view to upload here.', '在节点视图连接 Eclipse 素材面板，可在这里上传。'), 'fv-legacy'));
     mediaTitle.addEventListener('click', () => {
         queueMicrotask(() => { if (mediaDetails.open && mediaDetails.dataset.expanded !== 'false') { firstStart?.dismiss(); triggerFeatureTour('media'); } });
     });
@@ -2601,7 +2601,7 @@ export function openStudio(node, {extendFrom = null} = {}) {
             && node.freevideoFailureReport && node.freevideoFailureReport.stage !== 'queue') return;
         status.textContent = error?.schema === 'freevideo.error-report'
             ? t('Could not start. See the details on the picture.', '没能开始生成，原因见画面上的说明。')
-            : extensionCause(error) ? t('A browser extension is interfering with FreeVideo. See the details on the picture.', '浏览器扩展干扰了 FreeVideo，详见画面上的说明。')
+            : extensionCause(error) ? t('A browser extension is interfering with Eclipse. See the details on the picture.', '浏览器扩展干扰了 Eclipse，详见画面上的说明。')
             : queueError(error);
         // Recoverable chain actions need one visible sentence, not a second error card.
         if (error?.action) { status.scrollIntoView({block: 'nearest'}); return; }
@@ -3023,7 +3023,7 @@ export function openStudio(node, {extendFrom = null} = {}) {
                 set(node, 'seed', next); seed.value = next;
             }
             if (!queueController.state().error) status.textContent = held
-                ? t('The FreeVideo node was off in Nodes view. It has been turned back on.', 'FreeVideo 节点在节点视图里是关闭的，已自动打开。') : '';
+                ? t('The Eclipse node was off in Nodes view. It has been turned back on.', 'Eclipse 节点在节点视图里是关闭的，已自动打开。') : '';
         } catch (error) { showQueueError(createErrorReport(error, {stage: 'submission', snapshot, node, graph: app.graph})); }
         finally {
             if (accepted) held?.done(); else held?.restore();

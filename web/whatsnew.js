@@ -354,7 +354,7 @@ export function showWhatsNew(cn, {openedBy = 'user', pages = PAGES} = {}) {
         dialog.close();
         try { await (await import('./shell.js')).go('image'); return; } catch { /* No shell view switch: the node opens it. */ }
         try { const node = imageNode(); if (node) (await import('./view_navigation.js')).openImage(node); }
-        catch (error) { console.warn('FreeVideo image view:', error); }
+        catch (error) { console.warn('Eclipse image view:', error); }
     };
     dialog.addEventListener('keydown', event => event.stopPropagation());
     dialog.addEventListener('close', () => { closed = true; stop(); remember(pages); dialog.remove(); }, {once: true});
@@ -391,7 +391,7 @@ export function startWhatsNew({api, cn, productVersion, inFront = () => true}) {
     const timer = setInterval(() => {
         const version = productVersion();
         if (done || (version && !unseen(version).length)) { done = true; clearInterval(timer); return; }
-        if (!inFront()) return; // Kept for the next time FreeVideo is in front.
+        if (!inFront()) return; // Kept for the next time Eclipse is in front.
         if (maybeShowWhatsNew({cn, version, busy: () => queued > 0})) { done = true; clearInterval(timer); }
     }, 5000);
 }

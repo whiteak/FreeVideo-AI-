@@ -26,7 +26,7 @@ export async function agentGet(api, path, options = {}) {
     }
 }
 
-// A restarted FreeVideo forgets page sessions: fetch a new one once and repeat.
+// A restarted Eclipse forgets page sessions: fetch a new one once and repeat.
 export async function agentPost(api, path, body) {
     return agentSend(api, 'POST', path, body);
 }

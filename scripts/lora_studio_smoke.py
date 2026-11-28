@@ -1,4 +1,4 @@
-"""LoRA Studio check against a running FreeVideo (fork addition). Uses the real picture and prompt models.
+"""LoRA Studio check against a running Eclipse (fork addition). Uses the real picture and prompt models.
 
     envs\\unified\\python.exe scripts\\lora_studio_smoke.py [--url http://127.0.0.1:8188] [--keep] [--slots 2]
     envs\\unified\\python.exe scripts\\lora_studio_smoke.py --slots all --name Ava --train   (a whole set, then training)
@@ -224,7 +224,7 @@ def main():
             t = step('Start training')
             started = client.studio('train-start', dict(dataset=ds))
             done(t, json.dumps(started)[:400])
-            print('Training runs inside FreeVideo; watch it in LoRA Studio > Train. Set %s.' % ds)
+            print('Training runs inside Eclipse; watch it in LoRA Studio > Train. Set %s.' % ds)
         print('\nALL STEPS PASSED')
     finally:
         if not args.keep:

@@ -168,7 +168,7 @@ export function openFeedback(t, { open = openPage, version = productVersion,
             setPicture(await capturePage(() => { dialog.style.visibility = 'hidden'; return () => { dialog.style.visibility = ''; }; }));
         } catch (error) {
             setPicture(null);
-            console.warn('FreeVideo feedback screenshot:', error);
+            console.warn('Eclipse feedback screenshot:', error);
             // Declining the browser's prompt is the user's own answer; anything else is said once.
             if (error?.name !== 'NotAllowedError') status.textContent = t("Couldn't capture this page. You can submit without it.", '没能截取这一页，可以不带截图提交。');
         } finally { shotCheck.box.disabled = false; }

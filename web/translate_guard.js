@@ -1,5 +1,5 @@
-// Browser auto-translate reads ComfyUI's lang="en" page and rewrites FreeVideo's own text: "MP"
-// became 兆帕. FreeVideo writes both languages itself, so its surfaces opt out of translation and
+// Browser auto-translate reads ComfyUI's lang="en" page and rewrites Eclipse's own text: "MP"
+// became 兆帕. Eclipse writes both languages itself, so its surfaces opt out of translation and
 // an interface in another language than English says which on the document (its lang attribute).
 const OWN_CLASS = /(^|\s)fv-/;
 

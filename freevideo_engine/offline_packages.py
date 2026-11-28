@@ -281,7 +281,7 @@ def _inspect_archive(path):
         marker = next((name for name in ('offline-package.json', 'runtime.json')
                        if PREFIX + name in names), None)
         if marker is None:
-            raise ValueError('The file is not a FreeVideo offline package.')
+            raise ValueError('The file is not a Eclipse offline package.')
         info = archive.getinfo(PREFIX + marker)
         if info.file_size > 16 * 2**20:
             raise ValueError('Oversized offline inventory')

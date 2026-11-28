@@ -158,7 +158,7 @@ def dedicated_room(torch, reader=None, budget=None, detail=None):
     PyTorch's cached free blocks count. cudaMemGetInfo is not the WDDM budget:
     after a load that left 1.9 GiB by its count, the 4060 Ti above reported no
     free memory at all, so on Windows the DXGI budget bounds it as well.
-    `budget` is what this process may hold in total under FreeVideo's plan.
+    `budget` is what this process may hold in total under Eclipse's plan.
     `detail`, when given, receives each reading and which bound decided.
     """
     free = torch.cuda.mem_get_info()[0]

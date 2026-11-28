@@ -20,7 +20,7 @@ import {
 	Vector3
 } from './three.module.min.js';
 
-// FreeVideo: handles are one quiet slate; the handle under the pointer takes HIGHLIGHT, which the page sets to its accent.
+// Eclipse: handles are one quiet slate; the handle under the pointer takes HIGHLIGHT, which the page sets to its accent.
 export const HIGHLIGHT = { color: 0x3d9dff, rest: 0x5b6475 };
 
 const _raycaster = new Raycaster();

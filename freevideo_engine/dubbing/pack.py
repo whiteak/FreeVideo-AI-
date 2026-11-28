@@ -193,7 +193,7 @@ def status(root=None):
 
 
 def remote(spec, row):
-    """One catalog file with every source FreeVideo may fetch it from (ModelScope, Hugging Face, mirror)."""
+    """One catalog file with every source Eclipse may fetch it from (ModelScope, Hugging Face, mirror)."""
     from ..network import source_url
     sources = []
     mirror = spec.get('modelscope')

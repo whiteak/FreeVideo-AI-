@@ -438,7 +438,7 @@ class ProcessMemory:
                     errors.append(dict(pid=pid, parent_pid=parents.get(pid), exe=names.get(pid),
                         error=str(error), winerror=5, exited=None))
                 else:
-                    # FreeVideo starts its helpers under the same account, so it
+                    # Eclipse starts its helpers under the same account, so it
                     # can always open them. A descendant refused even limited
                     # query was started by Windows in another context (a crash
                     # reporter, for one); its pages are not this request's

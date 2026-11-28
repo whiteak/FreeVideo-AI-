@@ -113,7 +113,7 @@ class DecoderReadAhead:
         if os.environ.get('FREEVIDEO_DECODE_READ_AHEAD', 'auto').lower() in ('off', '0', 'false'):
             self.result.update(state='skipped', reason='Disabled by FREEVIDEO_DECODE_READ_AHEAD')
             return
-        self.thread = threading.Thread(target=self._run, name='FreeVideo decoder read-ahead', daemon=True)
+        self.thread = threading.Thread(target=self._run, name='Eclipse decoder read-ahead', daemon=True)
         self.thread.start()
 
     def _run(self):

@@ -322,8 +322,8 @@ export const TUTORIAL_CHAPTERS = [
             en: ['Put the LoRA file (.safetensors) in the models/loras folder.', 'Choose "LoRA" in the creation panel, then "Add LoRA", and pick the file from the list.', 'Change the strength on the right if needed; the default is 1. Clear the checkbox at the start of the row to switch the LoRA off for now. With more than one LoRA, drag the handle on the left to change the order.', 'If the LoRA asks for trigger words, enter them in "Trigger words". They are added to the prompt, and removed again with the LoRA.', 'Choose "Generate video".'],
         },
         limits: {
-            zh: ['一次最多使用 32 个 LoRA。', '只列出 .safetensors 格式的文件。', 'FreeVideo 无需添加加速 LoRA。'],
-            en: ['Up to 32 LoRAs can be used at a time.', 'Only .safetensors files are listed.', 'FreeVideo needs no acceleration LoRA.'],
+            zh: ['一次最多使用 32 个 LoRA。', '只列出 .safetensors 格式的文件。', 'Eclipse 无需添加加速 LoRA。'],
+            en: ['Up to 32 LoRAs can be used at a time.', 'Only .safetensors files are listed.', 'Eclipse needs no acceleration LoRA.'],
         },
     },
     {
@@ -796,7 +796,7 @@ export const TUTORIAL_CHAPTERS = [
         },
         limits: {
             zh: ['删除作品前会确认；被剪辑使用的作品不能删除。', '导出窗口每次打开时，“内容”默认选“画面和声音”，“画质”默认选“高”；窗口里没有“帧率”时，这台电脑不支持 48 和 60 帧导出。', '导出过程中取消不会留下不完整的文件。'],
-            en: ['FreeVideo asks before deleting a video, and a video used in an edit cannot be deleted.', 'The export window always opens with "Video and audio" as the content and "High" as the quality; when it has no "Frame rate", this computer cannot export at 48 or 60 fps.', 'Cancelling an export leaves no unfinished file.'],
+            en: ['Eclipse asks before deleting a video, and a video used in an edit cannot be deleted.', 'The export window always opens with "Video and audio" as the content and "High" as the quality; when it has no "Frame rate", this computer cannot export at 48 or 60 fps.', 'Cancelling an export leaves no unfinished file.'],
         },
     },
     {
@@ -839,19 +839,19 @@ export const TUTORIAL_CHAPTERS = [
     {
         id: 'launcher-close',
         title: {zh: '关闭启动器：退出或后台运行', en: 'Closing the launcher: exit or keep running'},
-        summary: {zh: '关闭启动器窗口时，可以选择停止 FreeVideo 退出，或让 FreeVideo 在后台继续运行。', en: 'When the launcher window is closed, choose to stop FreeVideo and exit, or keep FreeVideo running in the background.'},
+        summary: {zh: '关闭启动器窗口时，可以选择停止 Eclipse 退出，或让 Eclipse 在后台继续运行。', en: 'When the launcher window is closed, choose to stop Eclipse and exit, or keep Eclipse running in the background.'},
         media: {
             type: 'image',
             src: {zh: 'launcher-close-1.webp', en: 'launcher-close-2.webp'},
-            alt: {zh: '启动器的“关闭 FreeVideo？”对话框：“退出”和“后台运行”按钮已用红框标出。', en: 'The launcher\'s "Close FreeVideo?" dialog, with the "Exit" and "Run in background" buttons outlined in red.'},
+            alt: {zh: '启动器的“关闭 Eclipse？”对话框：“退出”和“后台运行”按钮已用红框标出。', en: 'The launcher\'s "Close Eclipse?" dialog, with the "Exit" and "Run in background" buttons outlined in red.'},
         },
         steps: {
-            zh: ['FreeVideo 运行时关闭启动器窗口，会出现“关闭 FreeVideo？”。', '点“后⁠台⁠运⁠行”（默认按钮，按 Enter 也可以），窗口关闭，FreeVideo 和正在生成的视频继续运行。', '点“退⁠出”，FreeVideo 停止；正在生成的视频也会停止。', '后台运行时，点托盘图标（macOS 为菜单栏图标）或在它的菜单中选“打开 FreeVideo”，重新打开窗口。', '在托盘菜单中选“退⁠出”可以完全退出；只有视频正在生成时会再确认一次。'],
-            en: ['Close the launcher window while FreeVideo is running and "Close FreeVideo?" appears.', 'Choose "Run in background" (the default; Enter also works). The window closes, and FreeVideo and any video being generated keep running.', 'Choose "Exit" to stop FreeVideo. A video being generated stops as well.', 'While it runs in the background, click the tray icon (the menu bar icon on macOS) or choose "Open FreeVideo" in its menu to bring the window back.', 'Choose "Exit" in the tray menu to exit completely. It asks again only while a video is being generated.'],
+            zh: ['Eclipse 运行时关闭启动器窗口，会出现“关闭 Eclipse？”。', '点“后⁠台⁠运⁠行”（默认按钮，按 Enter 也可以），窗口关闭，Eclipse 和正在生成的视频继续运行。', '点“退⁠出”，Eclipse 停止；正在生成的视频也会停止。', '后台运行时，点托盘图标（macOS 为菜单栏图标）或在它的菜单中选“打开 Eclipse”，重新打开窗口。', '在托盘菜单中选“退⁠出”可以完全退出；只有视频正在生成时会再确认一次。'],
+            en: ['Close the launcher window while Eclipse is running and "Close Eclipse?" appears.', 'Choose "Run in background" (the default; Enter also works). The window closes, and Eclipse and any video being generated keep running.', 'Choose "Exit" to stop Eclipse. A video being generated stops as well.', 'While it runs in the background, click the tray icon (the menu bar icon on macOS) or choose "Open Eclipse" in its menu to bring the window back.', 'Choose "Exit" in the tray menu to exit completely. It asks again only while a video is being generated.'],
         },
         limits: {
-            zh: ['只在 FreeVideo 由启动器启动时询问；由其他方式启动的不会被停止。', '启动器正在安装或下载时关闭窗口，会先询问“暂停并退出？”。', '系统没有托盘时，窗口缩到任务栏。'],
-            en: ['It asks only when the launcher started FreeVideo. FreeVideo started another way is not stopped.', 'Closing the window while the launcher is installing or downloading first asks "Pause and close?".', 'Without a system tray, the window goes to the taskbar.'],
+            zh: ['只在 Eclipse 由启动器启动时询问；由其他方式启动的不会被停止。', '启动器正在安装或下载时关闭窗口，会先询问“暂停并退出？”。', '系统没有托盘时，窗口缩到任务栏。'],
+            en: ['It asks only when the launcher started Eclipse. Eclipse started another way is not stopped.', 'Closing the window while the launcher is installing or downloading first asks "Pause and close?".', 'Without a system tray, the window goes to the taskbar.'],
         },
     },
     {
@@ -864,8 +864,8 @@ export const TUTORIAL_CHAPTERS = [
             alt: {zh: '错误提示：“导出报告”和“提交问题”按钮已用红框标出。', en: 'An error message, with the "Export report" and "Report a problem" buttons outlined in red.'},
         },
         steps: {
-            zh: ['先阅读错误提示，其中已写明可尝试的操作。', '仍然失败时，点“导出报告”保存诊断信息。', '点“提交问题”，把报告发给我们。', '提示需要重启时，重新启动 FreeVideo。'],
-            en: ['Read the error message first. It names what to try.', 'If it still fails, choose "Export report" to save the diagnostic information.', 'Choose "Report a problem" to send us the report.', 'When asked to restart, restart FreeVideo.'],
+            zh: ['先阅读错误提示，其中已写明可尝试的操作。', '仍然失败时，点“导出报告”保存诊断信息。', '点“提交问题”，把报告发给我们。', '提示需要重启时，重新启动 Eclipse。'],
+            en: ['Read the error message first. It names what to try.', 'If it still fails, choose "Export report" to save the diagnostic information.', 'Choose "Report a problem" to send us the report.', 'When asked to restart, restart Eclipse.'],
         },
         limits: {
             zh: ['报告中的路径已做脱敏处理。', '全部下载源都失败时，错误卡片会逐个列出下载源和失败原因。'],
@@ -882,8 +882,8 @@ export const TUTORIAL_CHAPTERS = [
             alt: {zh: '启动器的“确认安装”页：与测试版本不同的文件说明和“确认并继续”按钮已用红框标出。', en: 'The launcher\'s "Ready to install" page, with the note about a file that differs from the tested version and the "Confirm & continue" button outlined in red.'},
         },
         steps: {
-            zh: ['在启动器左侧点“安装”，保持原来的安装目录，点“继续”到模型一步。', '选择“离线包安装”，点“选择模型包…”，或把模型 ZIP 拖到“将模型 ZIP 拖到这里，无需解压”处，再点“检查并继续”。', '在“确认安装”页查看“安装内容”：已经装好的模型显示“已安装，无需改动”，与 FreeVideo 测试过的版本不同的文件会列出改名后的名字和大小。', '勾选“我同意安装计划及模型／工具包许可证。”，点“确⁠认⁠并⁠继⁠续”。'],
-            en: ['Choose "Installation" on the left of the launcher, keep the same installation folder, and choose "Continue" to reach the models step.', 'Choose "Offline packages", then "Choose model packages…", or drop the model ZIPs on "Drop model ZIPs here — no extraction needed", and choose "Check & continue".', 'Look over "Installation details" on the "Ready to install" page. Models already in place show "Installed; no change needed", and a file that differs from the version FreeVideo tests is listed with the name it will be kept under and its size.', 'Tick "I accept the installation plan and model / toolkit licenses." and choose "Confirm & continue".'],
+            zh: ['在启动器左侧点“安装”，保持原来的安装目录，点“继续”到模型一步。', '选择“离线包安装”，点“选择模型包…”，或把模型 ZIP 拖到“将模型 ZIP 拖到这里，无需解压”处，再点“检查并继续”。', '在“确认安装”页查看“安装内容”：已经装好的模型显示“已安装，无需改动”，与 Eclipse 测试过的版本不同的文件会列出改名后的名字和大小。', '勾选“我同意安装计划及模型／工具包许可证。”，点“确⁠认⁠并⁠继⁠续”。'],
+            en: ['Choose "Installation" on the left of the launcher, keep the same installation folder, and choose "Continue" to reach the models step.', 'Choose "Offline packages", then "Choose model packages…", or drop the model ZIPs on "Drop model ZIPs here — no extraction needed", and choose "Check & continue".', 'Look over "Installation details" on the "Ready to install" page. Models already in place show "Installed; no change needed", and a file that differs from the version Eclipse tests is listed with the name it will be kept under and its size.', 'Tick "I accept the installation plan and model / toolkit licenses." and choose "Confirm & continue".'],
         },
         limits: {
             zh: ['已装好的模型直接沿用，不重复占用硬盘空间；下载中断留下的不完整文件会自动补齐。', '内容不同的文件改名保留在原文件夹，确认不再需要后可以自行删除。', '网页里提示模型文件不完整时，同样按本章重新导入。'],

@@ -1,4 +1,4 @@
-// Settings opens as a room in the FreeVideo shell (settings_room.js). Every caller keeps importing openSetup from here.
+// Settings opens as a room in the Eclipse shell (settings_room.js). Every caller keeps importing openSetup from here.
 // setup.css stays loaded for the small sheets that still use its look (feedback, the compatibility fallback).
 import { openSetup } from './settings_room.js';
 

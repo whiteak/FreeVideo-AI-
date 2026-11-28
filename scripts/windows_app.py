@@ -15,7 +15,7 @@ def _failed():
             sys.stderr.write(detail)
         elif sys.platform == 'win32':
             import ctypes
-            ctypes.windll.user32.MessageBoxW(None, detail, 'FreeVideo startup error', 0x10)
+            ctypes.windll.user32.MessageBoxW(None, detail, 'Eclipse startup error', 0x10)
     raise SystemExit(1)
 
 

@@ -24,7 +24,7 @@ PATH = re.compile(r'''(?<![\w/])(?i:file):(?://[^/\s"'<>]*)?(?:/+|(?=[A-Za-z]:[\
 AFTER_FILE_NAME = re.compile(r'\.[A-Za-z0-9]{1,8}(?=[\s:,;)])')
 USER_FOLDERS = ('users', 'home', 'documents and settings')
 TOKEN = re.compile(r'\b[A-Za-z0-9_\-]{32,}\b')
-# A web address loses its user, password, query and fragment. On a public download host FreeVideo uses
+# A web address loses its user, password, query and fragment. On a public download host Eclipse uses
 # (public_hosts) it keeps its path, which names the file that failed; on any other host, or an IP
 # address (replaced too), only the scheme, host and port stay. The reason after it stays as well.
 URL = re.compile(r'''\b(?P<scheme>[A-Za-z][A-Za-z0-9+.-]*://)(?P<authority>[^\s/?#'"<>]*)(?P<rest>[^\s'"<>]*)''')
@@ -38,7 +38,7 @@ DOWNLOAD_CONFIGS = ('bootstrap_versions.json', 'curl_windows.json', 'dependencie
                     'prepared_models.json', 'rife_interp_model.json', 'subtitle_pack.json', 'swap_lora.json',
                     'torch_downloads.json', 'uv_downloads.json', 'windows_arm64.json')
 # Hosts that keep anyone's repositories, shares or channels: the first part of a path there is usually
-# its owner's name, so only the repositories FreeVideo itself uses (own_repositories: "owner/name", or the
+# its owner's name, so only the repositories Eclipse itself uses (own_repositories: "owner/name", or the
 # channel alone on conda.anaconda.org, after the parts the host puts before it; "x.git" is "x") keep
 # their path. Package hosts (pypi.org, files.pythonhosted.org,
 # download.pytorch.org ...) hold public packages only and keep any path.
@@ -74,7 +74,7 @@ def _place(match):
 
 @lru_cache(maxsize=1)
 def _shipped():
-    """The download addresses FreeVideo names and the repository values ("owner/name") of its configuration."""
+    """The download addresses Eclipse names and the repository values ("owner/name") of its configuration."""
     addresses, repositories = [], []
     try:
         from . import network
@@ -118,7 +118,7 @@ def _host(address):
 
 @lru_cache(maxsize=1)
 def public_hosts():
-    """The public hosts FreeVideo downloads from: the download sources and mirrors, the release hosts and
+    """The public hosts Eclipse downloads from: the download sources and mirrors, the release hosts and
     every host in the shipped download configuration. A host that cannot be read is simply not on it."""
     return frozenset(filter(None, map(_host, _shipped()[0])))
 
@@ -136,7 +136,7 @@ def _repository_name(value):
 
 @lru_cache(maxsize=1)
 def own_repositories():
-    """The repositories, shares and channels FreeVideo itself uses on the repository hosts."""
+    """The repositories, shares and channels Eclipse itself uses on the repository hosts."""
     addresses, repositories = _shipped()
     own = {_repository_name(value) for value in repositories}
     for address in addresses:

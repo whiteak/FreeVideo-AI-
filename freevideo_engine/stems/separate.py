@@ -191,7 +191,7 @@ def separate_file(source, out_dir, weights, *, device='cuda', progress=lambda fr
         write_mp4(paths[track].with_suffix('.mp4'), stems[name].numpy())
     numbers = {'seconds': round(seconds, 3), 'elapsed': round(time.monotonic() - began, 2),
                'peak_gib': None if peak is None else round(peak, 2)}
-    logging.info('[FreeVideo] Separated %.1f s of sound in %.1f s, GPU peak %s GiB', seconds, numbers['elapsed'],
+    logging.info('[Eclipse] Separated %.1f s of sound in %.1f s, GPU peak %s GiB', seconds, numbers['elapsed'],
                  numbers['peak_gib'])
     return paths, numbers
 

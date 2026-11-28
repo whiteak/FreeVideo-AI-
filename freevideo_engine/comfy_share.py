@@ -235,7 +235,7 @@ def register():
                 if ran_out(error):
                     raise web.HTTPInsufficientStorage(text='disk_full') from None
                 if not isinstance(error, InterruptedError):
-                    logging.warning('FreeVideo sharing export failed.', exc_info=error)
+                    logging.warning('Eclipse sharing export failed.', exc_info=error)
                 if isinstance(error, OSError) and not isinstance(error, InterruptedError):
                     # A file problem, not an encoder one: name it (in_use, not_writable, not_readable) without the path.
                     from .disk_space import file_reason

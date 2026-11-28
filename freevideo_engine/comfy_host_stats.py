@@ -75,7 +75,7 @@ def _managed(comfy_root, install_root):
     if (comfy_root / RECEIPT).is_file():
         return True
     try:
-        # The portable package and the launcher keep their ComfyUI inside the FreeVideo folder.
+        # The portable package and the launcher keep their ComfyUI inside the Eclipse folder.
         comfy_root.relative_to(Path(install_root).resolve())
         return True
     except ValueError:
@@ -83,7 +83,7 @@ def _managed(comfy_root, install_root):
 
 
 def host_fields(comfy_root=None, node_folders=None, root=None, now=None):
-    """own_comfyui: ComfyUI is not the copy FreeVideo installed, or it has third-party node packs."""
+    """own_comfyui: ComfyUI is not the copy Eclipse installed, or it has third-party node packs."""
     try:
         if comfy_root is None:
             import folder_paths

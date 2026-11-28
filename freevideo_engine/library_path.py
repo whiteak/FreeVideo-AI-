@@ -1,4 +1,4 @@
-"""Keep another CUDA/cuDNN install on the user's PATH from replacing FreeVideo's own libraries.
+"""Keep another CUDA/cuDNN install on the user's PATH from replacing Eclipse's own libraries.
 
 Windows searches PATH for the sublibraries cuDNN loads by name, so a cuDNN
 folder the user installed earlier can be picked over the one in the PyTorch

@@ -7,7 +7,7 @@ def to_cache(conditioning, prompt=None, task='t2va'):
     if task not in TASKS:
         raise ValueError('Unsupported H3 conditioning task')
     if len(conditioning) != 1:
-        raise ValueError('FreeVideo expects one H3 text conditioning sequence')
+        raise ValueError('Eclipse expects one H3 text conditioning sequence')
     embeds, extra = conditioning[0]
     tags = extra.get('minimax_token_tags')
     if embeds.ndim != 3 or embeds.shape[0] != 1 or embeds.shape[-1] != 5120 or not embeds.shape[1]:

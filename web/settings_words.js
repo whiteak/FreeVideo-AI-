@@ -11,13 +11,13 @@ export const bytesText = n => !(n > 0 && n < 1023.95 * 2 ** 20) ? gib(n)
     : n >= 1023.5 * 2 ** 10 ? (n / 2 ** 20).toFixed(1) + " MiB" : Math.max(1, Math.round(n / 2 ** 10)) + " KiB";
 const SPEED_TEST_FAILED = 'The speed test did not finish. Click "Test source speeds".';
 const BUSY_LOCK = /using this installation\/GPU lock/;
-const BUSY_TEXT = ['FreeVideo is busy with another task. Try again when it finishes. If nothing else is running, close duplicate FreeVideo instances, then try again.',
-    'FreeVideo 正在处理另一个任务。请在它完成后重试。若没有其他任务在进行，请关闭重复运行的 FreeVideo 后重试。'];
+const BUSY_TEXT = ['Eclipse is busy with another task. Try again when it finishes. If nothing else is running, close duplicate Eclipse instances, then try again.',
+    'Eclipse 正在处理另一个任务。请在它完成后重试。若没有其他任务在进行，请关闭重复运行的 Eclipse 后重试。'];
 // The speed-test row passes text that failureText already turned into the busy message.
 export const isBusy = value => BUSY_LOCK.test(value) || value.startsWith(BUSY_TEXT[0]) || value.startsWith(BUSY_TEXT[1]);
 // Setup refusals whose cause and next step are known. Repair goes where the server's sentence pointed: the launcher when it watches.
-const repairStep = text => text.includes('In the FreeVideo launcher, open Settings and click Repair.')
-    ? t('In the FreeVideo launcher, open Settings and click Repair.', '请在 FreeVideo 启动器的设置里点“修复”。')
+const repairStep = text => text.includes('In the Eclipse launcher, open Settings and click Repair.')
+    ? t('In the Eclipse launcher, open Settings and click Repair.', '请在 Eclipse 启动器的设置里点“修复”。')
     : t('Click Check installation, then Install.', '请先点“检查安装”，再点“安装”。');
 // The reserve's lower limit, said the same way whether the panel or the service stopped the value.
 export const atLeast = least => t('Enter at least {least} GiB, or turn on Automatic optimization.', '请输入不小于 {least} GiB 的数值，或打开“自动优化”。', { least });
@@ -29,10 +29,10 @@ export const reportText = (shown, original) => MEMORY_STOP.test(String(original 
 const SETUP_ERRORS = [
     // Another task holds the installation lock; any "Lock file open:" lines name the holders.
     [BUSY_LOCK, text => [t(...BUSY_TEXT), ...text.split(/\r?\n/).filter(line => line.startsWith('Lock file open:')).slice(0, 6)].join('\n')],
-    [/^Choose an engine installation folder$/, () => t('Choose a FreeVideo installation folder first.', '请先选择 FreeVideo 安装位置。')],
-    [/^Use a dedicated FreeVideo folder, not the ComfyUI root or its parent$/,
-        () => t('Choose a separate folder for FreeVideo, not the program folder or the folder that contains it.',
-            '请给 FreeVideo 单独选一个文件夹，不要用程序所在的文件夹或它的上一级。')],
+    [/^Choose an engine installation folder$/, () => t('Choose a Eclipse installation folder first.', '请先选择 Eclipse 安装位置。')],
+    [/^Use a dedicated Eclipse folder, not the ComfyUI root or its parent$/,
+        () => t('Choose a separate folder for Eclipse, not the program folder or the folder that contains it.',
+            '请给 Eclipse 单独选一个文件夹，不要用程序所在的文件夹或它的上一级。')],
     [/^Finish or cancel queued ComfyUI requests before installing$/,
         () => t('Generations are running or queued. Install after they finish, or cancel them first.', '仍有生成正在进行或排队。请等待完成或先取消，再安装。')],
     [/^Finish or cancel queued ComfyUI requests before calibrating$/,
@@ -46,7 +46,7 @@ const SETUP_ERRORS = [
             const task = names[text.match(/^Wait for (.+) to finish/)[1]] ?? ['the setup task', '安装任务'];
             return t('Wait for {task} to finish; its progress is under Models.', '请等待{task}完成，进度见“模型”。', { task: t(...task) });
         }],
-    // The placement test's text encoder was stopped by the memory guard: the computer, not FreeVideo's own use, ran short.
+    // The placement test's text encoder was stopped by the memory guard: the computer, not Eclipse's own use, ran short.
     // The paging-file step is said only when Windows reports its commit headroom as exhausted.
     [MEMORY_STOP, text => t('The performance measurement stopped because the computer ran out of available memory. Close memory-heavy programs, then start measuring again under Performance measurement in Advanced.',
             '性能测量因电脑可用内存不足而停止。请关闭占用内存较多的程序，再到“高级”中的“性能测量”重新开始测量。')
@@ -59,12 +59,12 @@ const SETUP_ERRORS = [
         text => atLeast(text.match(/at least ([\d.]+) GiB$/)[1])],
     [/^Could not save resource settings: /,
         () => t('The setting could not be saved. Check that the installation folder can be written to.', '设置未能保存，请检查安装位置是否可以写入。')],
-    [/^FreeVideo setup is missing\./, text => t('This folder has no finished FreeVideo installation. ', '该文件夹中没有已安装的 FreeVideo。') + repairStep(text)],
-    [/^FreeVideo setup is incomplete in /, text => t('The installation in this folder is not finished. ', '该文件夹中的安装尚未完成。') + repairStep(text)
+    [/^Eclipse setup is missing\./, text => t('This folder has no finished Eclipse installation. ', '该文件夹中没有已安装的 Eclipse。') + repairStep(text)],
+    [/^Eclipse setup is incomplete in /, text => t('The installation in this folder is not finished. ', '该文件夹中的安装尚未完成。') + repairStep(text)
         + t(' Existing files are reused.', '已有文件会继续使用。')],
-    [/^FreeVideo device configuration is missing\./, text => t('This installation has not checked the GPU yet. ', '该安装尚未检查显卡。') + repairStep(text)],
-    [/^The FreeVideo installation was moved\./, text => t('This installation was moved from another folder. ', '该安装是从其他文件夹移动过来的。') + repairStep(text)],
-    [/^The FreeVideo Python environment is missing\./, text => t('This installation is missing its runtime. ', '该安装缺少运行环境。') + repairStep(text)],
+    [/^Eclipse device configuration is missing\./, text => t('This installation has not checked the GPU yet. ', '该安装尚未检查显卡。') + repairStep(text)],
+    [/^The Eclipse installation was moved\./, text => t('This installation was moved from another folder. ', '该安装是从其他文件夹移动过来的。') + repairStep(text)],
+    [/^The Eclipse Python environment is missing\./, text => t('This installation is missing its runtime. ', '该安装缺少运行环境。') + repairStep(text)],
 ];
 export const setupError = text => SETUP_ERRORS.find(([pattern]) => pattern.test(text))?.[1](text);
 export const reportable = value => MEMORY_STOP.test(String(value || '')) && !isBusy(String(value || ''))

@@ -1,5 +1,5 @@
 # Copyright 2026 The MiniMax and HuggingFace Teams. All rights reserved.
-# Copyright 2026 FreeVideo contributors.
+# Copyright 2026 Eclipse contributors.
 # Licensed under the Apache License, Version 2.0.
 """Mac decoder scheduling: reuse one layer across original, unbatched tiles.
 

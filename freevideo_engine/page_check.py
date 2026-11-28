@@ -1,4 +1,4 @@
-"""What the browser page reported about loading FreeVideo (web/health.js).
+"""What the browser page reported about loading Eclipse (web/health.js).
 
 The launcher reads the report from its ComfyUI server off the UI thread and
 shows a failed or silent page in its failure card.
@@ -6,8 +6,8 @@ shows a failed or silent page in its failure card.
 import threading
 import time
 
-# A page that loaded FreeVideo always reports; none this long after opening
-# the browser means FreeVideo never ran there.
+# A page that loaded Eclipse always reports; none this long after opening
+# the browser means Eclipse never ran there.
 SILENT_AFTER = 90
 POLL_EVERY = 3
 
@@ -52,7 +52,7 @@ class PageCheck:
             return repair['text'][:2000]
         if report.get('state') == 'error':
             problems = [p for p in report.get('problems') or [] if isinstance(p, str) and p]
-            lines = [t('The browser page did not load FreeVideo completely.', '浏览器页面没有完整加载 FreeVideo。')]
+            lines = [t('The browser page did not load Eclipse completely.', '浏览器页面没有完整加载 Eclipse。')]
             lines += ['- ' + p for p in problems] or ['- ' + t('No details were sent.', '页面没有发送详情。')]
             if report.get('agent'):
                 lines.append(t('Browser: ', '浏览器：') + str(report['agent']))
@@ -61,8 +61,8 @@ class PageCheck:
             return '\n'.join(lines)
         now = time.monotonic() if now is None else now
         if not report.get('state') and opened_at is not None and now - opened_at >= SILENT_AFTER:
-            return t('The browser has not opened FreeVideo yet. If no browser window appeared, click “Open FreeVideo”. '
+            return t('The browser has not opened Eclipse yet. If no browser window appeared, click “Open Eclipse”. '
                      'If the page stays blank or keeps loading, open %s in a current Chrome or Edge.',
-                     '浏览器还没有打开 FreeVideo。如果没有弹出浏览器窗口，请点击“打开 FreeVideo”；'
+                     '浏览器还没有打开 Eclipse。如果没有弹出浏览器窗口，请点击“打开 Eclipse”；'
                      '如果页面空白或一直在加载，请用最新版 Chrome 或 Edge 打开 %s。') % address
         return ''

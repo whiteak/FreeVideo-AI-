@@ -24,7 +24,7 @@ DEFAULT_PROMPT = (
     'observatory, aurora, and mirrored desert form one continuous horizon beneath a '
     'clearing sky. The aurora folds into a simple luminous circle above the explorer, '
     'then the image resolves smoothly into a restrained dark title card. During the '
-    'final second, clean luminous lettering reads exactly “FreeVideo”, with no other '
+    'final second, clean luminous lettering reads exactly “Eclipse”, with no other '
     'words or logos. Hold the final frame long enough to read; '
     'no subtitles, no glitches, no extra text.\n\n'
     'overall_soundscape: Begin with a high open wind, fine salt skittering over glass, '

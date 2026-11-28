@@ -1,4 +1,4 @@
-// Settings: a room inside the FreeVideo shell, not a sheet over it. The top bar stays (with "Settings" lit and the five
+// Settings: a room inside the Eclipse shell, not a sheet over it. The top bar stays (with "Settings" lit and the five
 // view tabs still working); a glass dock on the left lists the pages, a dock on the right shows this computer, and the
 // page in between is centred on the window. Pages: Models (installation and repair, picture models, add-on models,
 // folders), Downloads, Generation, Appearance, Assistant, Storage, Page check, Advanced (compatibility, reserved memory,
@@ -82,7 +82,7 @@ export async function openSetup(options) {
     if (current?.open) { current.dispatchEvent(new CustomEvent('fv-setup-section', {detail: section || 'focus'})); return current; }
     const returnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const dialog = el('dialog', 'fv-set'); current = dialog;
-    dialog.setAttribute('aria-label', t('FreeVideo settings', 'FreeVideo 设置'));
+    dialog.setAttribute('aria-label', t('Eclipse settings', 'Eclipse 设置'));
     dialog.dataset.fvTipScope = '';
     const disposers = [];
     const later = fn => disposers.push(fn);
@@ -385,7 +385,7 @@ export async function openSetup(options) {
     const loraHead = groupHead(t('Files in the LoRA folder', 'LoRA 文件夹中的文件'), el('span', '', ''));
     const loraCard = card(); const loraStatus = slot('st-under');
     lora.append(loraHead, loraCard, loraStatus,
-        groupNote(t('Add LoRAs in the create panel. FreeVideo models are already accelerated, so no speed LoRA is needed.', '在创作面板里添加 LoRA。FreeVideo 的模型已经加速，不需要加速 LoRA。')));
+        groupNote(t('Add LoRAs in the create panel. Eclipse models are already accelerated, so no speed LoRA is needed.', '在创作面板里添加 LoRA。Eclipse 的模型已经加速，不需要加速 LoRA。')));
     const loraVerdicts = createVerdicts((path, options) => api.fetchApi(path, options));
     let loraLoaded = false, loraRun = 0;
     const loraRow = name => {
@@ -654,7 +654,7 @@ export async function openSetup(options) {
     tip(healthReload, t('Reload page', '刷新页面'), t('Load the page again; generations keep running', '重新载入页面，生成不受影响'));
     const healthList = el('div', 'st-sub st-hlist'); healthList.hidden = true;
     health.append(groupHead(t('This page', '本页面')), card(healthRow.element, healthList),
-        groupNote(t('If FreeVideo does not open completely, a card with the cause and the next step appears on its own.', '如果 FreeVideo 没有完整打开，会自动出现一张说明原因和下一步的卡片。')));
+        groupNote(t('If Eclipse does not open completely, a card with the cause and the next step appears on its own.', '如果 Eclipse 没有完整打开，会自动出现一张说明原因和下一步的卡片。')));
     healthReload.onclick = () => location.reload();
     healthRun.onclick = async () => {
         healthRun.disabled = true; healthRow.sub.className = ''; healthRow.sub.textContent = t('Checking…', '正在检查…');
@@ -685,8 +685,8 @@ export async function openSetup(options) {
     const reserveHead = groupHead(t('Reserved VRAM', '预留显存'));
     const reserveAuto = switchify(el('input')); reserveAuto.type = 'checkbox'; reserveAuto.checked = true;
     reserveAuto.setAttribute('aria-label', t('Automatic optimization', '自动优化'));
-    tip(reserveAuto, t('Automatic optimization', '自动优化'), t('FreeVideo picks the amount for each generation', '每次生成由 FreeVideo 选择数值'));
-    const autoRow = row({title: t('Automatic optimization', '自动优化'), sub: t('FreeVideo picks the amount for each generation', '每次生成由 FreeVideo 选择数值'), end: [reserveAuto]});
+    tip(reserveAuto, t('Automatic optimization', '自动优化'), t('Eclipse picks the amount for each generation', '每次生成由 Eclipse 选择数值'));
+    const autoRow = row({title: t('Automatic optimization', '自动优化'), sub: t('Eclipse picks the amount for each generation', '每次生成由 Eclipse 选择数值'), end: [reserveAuto]});
     const reserve = el('input'); reserve.type = 'number'; reserve.min = '0.2'; reserve.step = '0.1';
     reserve.value = '1.0'; reserve.disabled = true;
     const reserveStep = stepper(reserve, 'GiB', {label: t('Reserved VRAM', '预留显存')});
@@ -787,7 +787,7 @@ export async function openSetup(options) {
         if (!groups.length) guide.append(card(guideReplay));
     }
 
-    // ── Right dock content: this computer, what FreeVideo keeps on disk, quick actions ──
+    // ── Right dock content: this computer, what Eclipse keeps on disk, quick actions ──
     const machineHead = el('div', 'st-rh', t('This computer', '本机'));
     const gpuName = el('div', 'st-gpu'); gpuName.hidden = true;
     const meterRow = label => {
@@ -799,7 +799,7 @@ export async function openSetup(options) {
     tempLine.append(el('span', '', t('Temperature', '温度')), tempValue); tempBox.append(tempLine);
     const disk = el('div', 'st-meter'); const diskLine = el('div', 'l'); const diskValue = el('b', '', '—');
     diskLine.append(el('span', '', t('Disk free', '磁盘可用')), diskValue); disk.append(diskLine);
-    const usageHead = el('div', 'st-rh', t('FreeVideo keeps', 'FreeVideo 占用'));
+    const usageHead = el('div', 'st-rh', t('Eclipse keeps', 'Eclipse 占用'));
     const usageLine = el('div', 'st-meter'); const usageL = el('div', 'l'); const usageValue = el('b', '', '—');
     usageL.append(el('span', '', t('Temporary files', '临时文件')), usageValue); usageLine.append(usageL);
     const rightBody = el('div', 'st-rb'); rightBody.append(gpuName, vram.box, tempBox, disk);
@@ -978,7 +978,7 @@ export async function openSetup(options) {
         [sheetCancel, t('Not now', '暂不安装'), t('Close the plan without installing', '关闭计划，不安装')],
         [copy, t('Separate copies', '独立副本'), t('Copy reused models instead of linking them', '复用模型时复制一份，而不是链接')],
         [hfToken, t('Access token', '访问令牌'), t('Kept for this session only', '只在本次运行中有效')],
-        [root, t('Installation folder', '安装位置'), t('Where FreeVideo keeps its models', 'FreeVideo 存放模型的位置')],
+        [root, t('Installation folder', '安装位置'), t('Where Eclipse keeps its models', 'Eclipse 存放模型的位置')],
         [extra, t('Other model folders', '其他模型文件夹'), t('Folders with models to reuse', '可复用模型所在的文件夹')],
         [accept, t('Agree', '同意'), t('Required before installing', '安装前需要同意')],
     ]) tip(control, name, purpose);
@@ -1006,7 +1006,7 @@ export async function openSetup(options) {
     if (sectionOf(section) === 'models' && section === 'repair') spotlight();
     else panes.get(shown).querySelector('h1').focus({preventScroll: true});
     readMachine();
-    const pv = productVersion(); versionLine.textContent = pv ? `FreeVideo ${pv}` : 'FreeVideo';
+    const pv = productVersion(); versionLine.textContent = pv ? `Eclipse ${pv}` : 'FreeVideo';
 
     // ── Storage ──
     // One unit family across the room (GiB / MiB, like the plan and the machine panel).

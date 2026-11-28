@@ -68,7 +68,7 @@ async def receive(reader, input_directory, *, store_root=None):
                 os.utime(destination)
             else:
                 if os.path.lexists(destination) or (os.path.lexists(folder) and not folder.is_dir()):
-                    # Something FreeVideo would not reuse holds that name: this upload gets a folder of its own.
+                    # Something Eclipse would not reuse holds that name: this upload gets a folder of its own.
                     folder = base / 'freevideo' / uuid.uuid4().hex
                     destination = folder / ('media' + suffix)
                 folder.mkdir(exist_ok=True)

@@ -464,13 +464,13 @@ class SessionOwner:
         for row in new:
             outcome = row.get('outcome')
             if outcome == 'hit':
-                logging.info('[FreeVideo] Preloaded video model: hit, the video used it (loaded %.0f s before)',
+                logging.info('[Eclipse] Preloaded video model: hit, the video used it (loaded %.0f s before)',
                              float(row.get('waited_seconds') or 0))
             elif outcome == 'miss':
-                logging.info('[FreeVideo] Preloaded video model: miss, the video asked for other settings (%s)',
+                logging.info('[Eclipse] Preloaded video model: miss, the video asked for other settings (%s)',
                              ', '.join(str(name) for name in row.get('differs') or []) or 'unknown')
             else:
-                logging.info('[FreeVideo] Preloaded video model released before any video: %s',
+                logging.info('[Eclipse] Preloaded video model released before any video: %s',
                              str(row.get('reason') or '')[:200])
         return new
 
@@ -577,7 +577,7 @@ class SessionOwner:
                     try:
                         self.note_evictions(status({ENV: str(endpoint)}))
                     except Exception:
-                        logging.warning('[FreeVideo] Reading what the video worker gave back failed', exc_info=True)
+                        logging.warning('[Eclipse] Reading what the video worker gave back failed', exc_info=True)
             # Our own idle preload grows the card; only another program's growth counts,
             # so the reference is read again once placement has ended.
             unreadable = False

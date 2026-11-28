@@ -128,5 +128,5 @@ def ensure(root, env=None):
     restored = restore(root, gone, env)
     lost = missing(root) if restored else [name for name in gone if not io_path(Path(root) / name).exists()]
     if not restored or lost:
-        raise EncoderSourceError('FreeVideo text encoder files are missing: %s' % ', '.join(lost[:10]))
+        raise EncoderSourceError('Eclipse text encoder files are missing: %s' % ', '.join(lost[:10]))
     return gone

@@ -91,7 +91,7 @@ def cancel_running_generation(url):
             # back to the same process-tree stop. Shutdown never depends on it.
             return
 
-    worker = threading.Thread(target=cancel_and_wait, name='FreeVideo shutdown cancellation', daemon=True)
+    worker = threading.Thread(target=cancel_and_wait, name='Eclipse shutdown cancellation', daemon=True)
     worker.start()
     worker.join(max(0., deadline - time.monotonic()))
     stopped.set()
@@ -119,7 +119,7 @@ class OlderLauncher(ValueError):
     def __init__(self, launcher_label, installed_label):
         self.launcher_label = launcher_label
         self.installed_label = installed_label
-        super().__init__(f'This launcher ({launcher_label}) is older than the installed FreeVideo '
+        super().__init__(f'This launcher ({launcher_label}) is older than the installed Eclipse '
                          f'({installed_label}); nothing was changed.')
 
 
@@ -277,7 +277,7 @@ def node_packages_pending(engine, comfy, *, now=None):
 
 
 def node_packages_failed(engine):
-    """Remember that adding the node packages failed just now; the rest of FreeVideo carries on."""
+    """Remember that adding the node packages failed just now; the rest of Eclipse carries on."""
     from .comfy_host import NODE_PACKAGES
     try:
         save(io_path(engine) / 'launcher/node-packages.json', dict(nodes=list(NODE_PACKAGES), failed=time.time()))
@@ -587,8 +587,8 @@ def node_target(root):
     if len(found) > 1:
         managed = [path for path in found if (path / 'freevideo-launcher.json').is_file()]
         if len(managed) != 1:
-            raise ValueError('Multiple FreeVideo node installations found. Keep one enabled before installing.')
-        logging.getLogger(__name__).warning('Multiple FreeVideo node installations found; using %s with '
+            raise ValueError('Multiple Eclipse node installations found. Keep one enabled before installing.')
+        logging.getLogger(__name__).warning('Multiple Eclipse node installations found; using %s with '
             'freevideo-launcher.json and leaving the other folders unchanged.', plain(managed[0]))
         found = managed
     target = found[0] if found else parent / 'FreeVideo'
@@ -597,7 +597,7 @@ def node_target(root):
     return Path(plain(target))
 
 
-GIT_IGNORE = ('# FreeVideo engine: environments, models and caches, not part of any git checkout.\n'
+GIT_IGNORE = ('# Eclipse engine: environments, models and caches, not part of any git checkout.\n'
               '# Keeps an update of a surrounding ComfyUI from copying, moving or deleting them.\n*\n')
 
 
@@ -622,7 +622,7 @@ SCOPED_RECORD = 'launcher/scoped-nodes.json'
 
 
 def remembered_scope(engine, root):
-    """The user's plugins stopped FreeVideo from loading with this very set of plugins before."""
+    """The user's plugins stopped Eclipse from loading with this very set of plugins before."""
     try:
         value = json.loads((io_path(engine) / SCOPED_RECORD).read_text(encoding='utf-8'))
     except (OSError, ValueError):
@@ -673,13 +673,13 @@ def shield_engine(engine):
 
 
 def checkout_entry(data, folder):
-    """A FreeVideo checkout's own entry point, put back by git, a node updater or a copied repository."""
+    """A Eclipse checkout's own entry point, put back by git, a node updater or a copied repository."""
     text = data.decode('utf-8', 'replace')
     return ('async def comfy_entrypoint' in text and 'from .freevideo_engine.' in text
             and (io_path(folder) / 'freevideo_engine' / 'comfy_nodes.py').is_file())
 
 
-PRESTARTUP_MARK = '# Installed by FreeVideo launcher.\n'
+PRESTARTUP_MARK = '# Installed by Eclipse launcher.\n'
 
 
 def install_prestartup(target, engine):
@@ -725,7 +725,7 @@ def workflow_template(source):
     try:
         return (io_path(materialize_source()) / relative).read_bytes()
     except OSError:
-        raise FileNotFoundError(errno.ENOENT, 'The FreeVideo workflow template is missing from the engine source '
+        raise FileNotFoundError(errno.ENOENT, 'The Eclipse workflow template is missing from the engine source '
                                 'and from this launcher. Run Update or Install / repair in the launcher to restore it',
                                 TEMPLATE) from None
 
@@ -743,10 +743,10 @@ def deploy(root, source, engine):
     old = entry.read_bytes() if entry.is_file() else None
     if (old is not None and previous.get('entry_sha256') and hashlib.sha256(old).hexdigest() != previous['entry_sha256']
             and not checkout_entry(old, target)):
-        logging.getLogger(__name__).warning('The managed FreeVideo entry point (%s) was edited; '
+        logging.getLogger(__name__).warning('The managed Eclipse entry point (%s) was edited; '
             'backing it up in launcher/backups before restoring the loader.', plain(entry))
     # The small loader may be replaced; all original checkout files remain intact.
-    code = ("# Installed by FreeVideo launcher. Original entry points are retained in the engine launcher/backups folder.\n"
+    code = ("# Installed by Eclipse launcher. Original entry points are retained in the engine launcher/backups folder.\n"
             "import importlib.util as _util\nimport json as _json\nfrom pathlib import Path as _Path\nimport sys as _sys\n"
             "_record = _json.loads((_Path(__file__).parent / 'freevideo-launcher.json').read_text(encoding='utf-8'))\n"
             "_source = _Path(_record['source'])\n"
@@ -817,7 +817,7 @@ class Controller:
         # Set by the Qt session: lets the server it starts hand browser update
         # requests back to this launcher.
         self.update_bridge = None
-        # Earlier FreeVideo copies removed in the background once ComfyUI runs
+        # Earlier Eclipse copies removed in the background once ComfyUI runs
         # this version; kept out of `state`, which the task thread replaces.
         self.old_versions = dict(released_bytes=0, download_bytes=0)
         self._old_versions_thread = None
@@ -829,7 +829,7 @@ class Controller:
         self._scope_retry = False
 
     def retire_old_versions(self, selected):
-        """Once ComfyUI runs this version, earlier FreeVideo copies are no longer read."""
+        """Once ComfyUI runs this version, earlier Eclipse copies are no longer read."""
         if self._old_versions_thread is not None and self._old_versions_thread.is_alive():
             return
         def work():
@@ -1058,7 +1058,7 @@ class Controller:
                 return False
             entry = receipt_path.parent / '__init__.py'
             if hashlib.sha256(entry.read_bytes()).hexdigest() != receipt.get('entry_sha256'):
-                logging.getLogger(__name__).warning('The managed FreeVideo entry point (%s) differs from '
+                logging.getLogger(__name__).warning('The managed Eclipse entry point (%s) differs from '
                     'entry_sha256; continuing with the saved installation.', plain(entry))
             installation(source, {'FREEVIDEO_HOME': str(engine)})
             python = (record.get('python') or values.get('python') or
@@ -1290,7 +1290,7 @@ class Controller:
         if selected.get('new_comfy'):
             validate_target(selected['root'])
         if not selected['ready']:
-            self.stage('engine', label='Prepare FreeVideo')
+            self.stage('engine', label='Prepare Eclipse')
             self._stop_server_for_setup(selected['url'])
             current = self.setup.status()
             self.setup.install(dict(plan_id=current.get('plan_id'), accept_licenses=True))
@@ -1318,7 +1318,7 @@ class Controller:
         # A uv that security software removed is downloaded again, as the installer does.
         engine_binding.rebind(selected['engine'], machine, selected['source'],
                               restore=lambda root, system: uv_restore.restore(root, system, cancelled=stopped))
-        self.stage('nodes', label='Install FreeVideo workflow')
+        self.stage('nodes', label='Install Eclipse workflow')
         deployed = deploy(selected['root'], selected['source'], selected['engine'])
         selected['ready'] = True
         self.selection = selected
@@ -1511,7 +1511,7 @@ class Controller:
                 info = dict(status='offline')
             elif not self.owns_server():
                 self.state = dict(self.state, status='restart-required', url=url,
-                    error='ComfyUI is already running. Restart it once to load the installed FreeVideo nodes, then click Connect. Existing jobs are left running.')
+                    error='ComfyUI is already running. Restart it once to load the installed Eclipse nodes, then click Connect. Existing jobs are left running.')
                 return
             if queue_busy(loopback_url(self.server_address or self.selection['url'])):
                 self.state = dict(self.state, status='restart-required', url=url,
@@ -1575,8 +1575,8 @@ class Controller:
         env.pop(MANAGED_HOST_ENV, None)
         if managed:
             env[MANAGED_HOST_ENV] = '1'
-        # Only the ComfyUI this launcher downloaded loads FreeVideo alone. The user's own ComfyUI keeps
-        # every plugin, unless they stopped FreeVideo from loading (retry below, or remembered).
+        # Only the ComfyUI this launcher downloaded loads Eclipse alone. The user's own ComfyUI keeps
+        # every plugin, unless they stopped Eclipse from loading (retry below, or remembered).
         ours = launcher_downloaded(selected['root'])
         scoped = ours or retry or remembered_scope(selected['engine'], selected['root'])
         if scoped and not ours:
@@ -1601,7 +1601,7 @@ class Controller:
             # which leads back to the long path.
             command += ['--base-directory', selected['root']]
             from . import runtime_alias
-            # Its main imports a library that loads by a resolved path before any FreeVideo node.
+            # Its main imports a library that loads by a resolved path before any Eclipse node.
             started = (execution_paths.engine_first(command, selected['source'])
                        if runtime_alias.system_long_paths() else command)
         env = launch_view.environment_view(env, view)
@@ -1610,10 +1610,10 @@ class Controller:
             if self._closed or self.cancelled.is_set():
                 raise RuntimeError('ComfyUI startup cancelled')
             if scoped:
-                log.write(b'[FreeVideo] Separate environment: loading FreeVideo custom nodes only. '
+                log.write(b'[Eclipse] Separate environment: loading Eclipse custom nodes only. '
                           b'Use your original ComfyUI launcher for other plugins.\n' if ours else
-                          b'[FreeVideo] Your other plugins stopped FreeVideo from loading: '
-                          b'loading FreeVideo custom nodes only this time.\n')
+                          b'[Eclipse] Your other plugins stopped Eclipse from loading: '
+                          b'loading Eclipse custom nodes only this time.\n')
                 log.flush()
             # Keep durable embedded output, but own the whole tree: Windows
             # Job / Linux supervisor also reclaim independently grouped model
@@ -1633,13 +1633,13 @@ class Controller:
         plugin_name = node_target(selected['root']).name
 
         def fall_back():
-            # Once: the user's other plugins stopped FreeVideo; start again with FreeVideo's nodes only.
+            # Once: the user's other plugins stopped Eclipse; start again with Eclipse's nodes only.
             with self._server_lock:
                 if self.server is server:
                     self.stop_owned_server(grace=3)
             self._scope_retry = True
             result = self._connect_comfy()
-            # Only a start that worked with FreeVideo alone says the plugins were the cause.
+            # Only a start that worked with Eclipse alone says the plugins were the cause.
             if self.state.get('status') == 'open':
                 remember_scope(selected['engine'], selected['root'])
             return result
@@ -1698,4 +1698,4 @@ class Controller:
                         label='Starting ComfyUI', detail='Still loading. This may take a few more minutes.'), log=plain(directory)))
             self.cancelled.wait(.5)
         from .failure_details import startup_failure
-        raise RuntimeError(startup_failure('ComfyUI is still starting or could not load FreeVideo; retry Connect.', directory / 'comfy.log'))
+        raise RuntimeError(startup_failure('ComfyUI is still starting or could not load Eclipse; retry Connect.', directory / 'comfy.log'))

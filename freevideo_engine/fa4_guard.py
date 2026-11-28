@@ -86,4 +86,4 @@ def check_selected():
     module = importlib.import_module('flash_attn.cute.flash_fwd')
     digest = hashlib.sha256(Path(module.__file__).read_bytes()).hexdigest()
     if digest == ORIGINAL:
-        raise RuntimeError('The attention speed-up component on this computer needs an update. Run freevideo setup --fa4-guard in a terminal, then restart FreeVideo.')
+        raise RuntimeError('The attention speed-up component on this computer needs an update. Run freevideo setup --fa4-guard in a terminal, then restart Eclipse.')

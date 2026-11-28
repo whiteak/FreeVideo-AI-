@@ -225,8 +225,8 @@ def describe(value, zh):
     if zh:
         cause = ('，原因是电脑内存不足' if memory else '，可能是因为电脑内存不足' if maybe
                  else '，被系统或其他程序结束' if ended else '，程序自身崩溃' if crashed else '')
-        return ('FreeVideo 于 %s 意外停止%s。请点击“重新连接”重新启动；如再次停止，请导出报告，再点击“提交问题”并附上报告。' % (clock, cause))
+        return ('Eclipse 于 %s 意外停止%s。请点击“重新连接”重新启动；如再次停止，请导出报告，再点击“提交问题”并附上报告。' % (clock, cause))
     cause = (': the computer ran out of memory' if memory else ', possibly because the computer ran out of memory' if maybe
              else ': the system or another program ended it' if ended
              else ': it crashed' if crashed else '')
-    return 'FreeVideo stopped unexpectedly at %s%s. Click "Connect again" to restart it; if it stops again, export the report and use "Report a problem".' % (clock, cause)
+    return 'Eclipse stopped unexpectedly at %s%s. Click "Connect again" to restart it; if it stops again, export the report and use "Report a problem".' % (clock, cause)

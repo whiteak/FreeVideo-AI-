@@ -32,7 +32,7 @@ def application():
     try:
         info = plistlib.loads((app / 'Contents/Info.plist').read_bytes())
     except (OSError, ValueError) as error:
-        raise OSError('The FreeVideo application bundle is incomplete') from error
+        raise OSError('The Eclipse application bundle is incomplete') from error
     if (app.suffix != '.app' or info.get('CFBundleIdentifier') != 'org.flashml.FreeVideo'
             or (app / 'Contents/MacOS' / info.get('CFBundleExecutable', '')).resolve() != executable):
         raise OSError('The running executable does not belong to FreeVideo.app')
@@ -134,14 +134,14 @@ def retained_application(engine):
         problem = check_application(prepared, executable)
         if problem:
             _failure_record(engine, app, prepared, executable, problem)
-            raise OSError('The copied FreeVideo application failed verification')
+            raise OSError('The copied Eclipse application failed verification')
         if target.parent.exists():
             target = parent / (identity + '-' + uuid.uuid4().hex[:8]) / 'FreeVideo.app'
         stage.rename(target.parent)
         clear()
         return target
     except subprocess.SubprocessError as error:
-        raise OSError('Could not prepare the FreeVideo desktop shortcut') from error
+        raise OSError('Could not prepare the Eclipse desktop shortcut') from error
     finally:
         if stage.exists():
             shutil.rmtree(stage)
@@ -178,7 +178,7 @@ def create(engine):
     else:
         index = 2
         while os.path.lexists(path):
-            path = desktop / ('FreeVideo (%d).app' % index)
+            path = desktop / ('Eclipse (%d).app' % index)
             index += 1
     if owned:
         stage = desktop / ('FreeVideo-' + uuid.uuid4().hex + '.app')

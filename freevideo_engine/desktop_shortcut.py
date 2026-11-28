@@ -55,7 +55,7 @@ def desktop_directory():
 
 
 def start_menu_directory():
-    """Start menu Programs, where Windows search finds FreeVideo when the desktop has no shortcut."""
+    """Start menu Programs, where Windows search finds Eclipse when the desktop has no shortcut."""
     return _shell_folder(0x02, 'Start menu')  # CSIDL_PROGRAMS
 
 
@@ -232,13 +232,13 @@ def _same(first, second):
 
 @plain_errors
 def _ours(path, entry, target):
-    """A shortcut this or an earlier FreeVideo installation wrote, not one of the user's own.
+    """A shortcut this or an earlier Eclipse installation wrote, not one of the user's own.
 
     The recorded digest stops matching once Windows rewrites a link's tracking
     data in place, and a reinstall into another folder starts with no record.
     Either way the old link was kept as the user's own and a second shortcut
     added next to it, one of them starting a launcher that no longer exists.
-    A link that starts a FreeVideo launcher copy, or names a FreeVideo.exe that
+    A link that starts a Eclipse launcher copy, or names a FreeVideo.exe that
     is gone, is still ours; a user's own link to anything else is left alone.
     """
     if _same(entry.get('path'), path) and entry.get('sha256'):
@@ -294,7 +294,7 @@ def _link_path(folder, entry, target):
         path = _renamed(folder, entry, target) or path
         index = 2
         while path.name.startswith('FreeVideo') and path.exists() and not _ours(path, entry, target):
-            path = folder / ('FreeVideo (%d).lnk' % index); index += 1
+            path = folder / ('Eclipse (%d).lnk' % index); index += 1
     return path
 
 
@@ -326,17 +326,17 @@ def _failure(error, menu_ready):
     zh = ['桌面快捷方式没有创建成功：']
     if denied:
         # Controlled folder access (Windows Security) refuses unknown programs on the desktop.
-        en.append('Windows did not allow FreeVideo to write to the desktop. If Controlled folder access is on in '
-                  'Windows Security, allow FreeVideo there, then click Create desktop shortcut.')
-        zh.append('Windows 不允许 FreeVideo 写入桌面。如果在“Windows 安全中心”里开启了“受控文件夹访问”，'
-                  '请允许 FreeVideo，然后点击“创建桌面快捷方式”。')
+        en.append('Windows did not allow Eclipse to write to the desktop. If Controlled folder access is on in '
+                  'Windows Security, allow Eclipse there, then click Create desktop shortcut.')
+        zh.append('Windows 不允许 Eclipse 写入桌面。如果在“Windows 安全中心”里开启了“受控文件夹访问”，'
+                  '请允许 Eclipse，然后点击“创建桌面快捷方式”。')
     else:
         # The system's own words are the cause; the next step is the same button.
         cause = text.strip().rstrip('.。')
         en.append(cause + '. Click Create desktop shortcut to try again.')
         zh.append(cause + '。请点击“创建桌面快捷方式”重试。')
     if menu_ready:
-        en.append('FreeVideo is in the Start menu.'); zh.append('开始菜单里可以找到 FreeVideo。')
+        en.append('Eclipse is in the Start menu.'); zh.append('开始菜单里可以找到 Eclipse。')
     return ' '.join(en), ''.join(zh)
 
 
@@ -404,13 +404,13 @@ def appimage_target(engine, appimage):
 
 
 def desktop_entry(target, icon):
-    return ('[Desktop Entry]\nType=Application\nName=FreeVideo\nComment=Install and open FreeVideo in ComfyUI\n'
+    return ('[Desktop Entry]\nType=Application\nName=FreeVideo\nComment=Install and open Eclipse in ComfyUI\n'
             'Comment[zh_CN]=安装并在 ComfyUI 中打开 FreeVideo\nExec=%s\nIcon=%s\nTerminal=false\n'
             'Categories=AudioVideo;Video;Graphics;\nStartupWMClass=FreeVideo\n' % (desktop_quote(target), icon))
 
 
 def desktop_entry_target(path):
-    """Read the executable in a FreeVideo desktop entry, including quoted paths."""
+    """Read the executable in a Eclipse desktop entry, including quoted paths."""
     import re
     import shlex
     try:

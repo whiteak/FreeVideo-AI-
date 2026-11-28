@@ -1,10 +1,10 @@
-// One sentence a person can act on for any caught error. Text FreeVideo wrote for people (already in the user's
+// One sentence a person can act on for any caught error. Text Eclipse wrote for people (already in the user's
 // language) is kept; what only a browser or a program would say (“Failed to fetch”, “Unexpected token '<'”, an
 // error code, “HTTP 500”) is replaced by the cause in plain words and what to do next. The raw text stays in the
 // error itself for reports and technical details.
 import {browserExtensionAdvice, connectionLostText, detectBrowserExtension, isNetworkTypeError, wrappedFetchOnly} from './browser_extension.js';
 
-// Wording a browser, a JavaScript engine or a server produces, never FreeVideo's own sentences.
+// Wording a browser, a JavaScript engine or a server produces, never Eclipse's own sentences.
 const RAW = [
     /^(?:[A-Z][A-Za-z]*)?(?:Error|Exception)\b|\[(?:Errno|WinError) -?\d+\]/,  // TypeError…, OSError, [Errno 28]
     /Failed to fetch|fetch failed|NetworkError|network request failed|Load failed|ERR_[A-Z_]+/i,
@@ -33,12 +33,12 @@ export function userMessage(error, t, fallback = t('Did not finish. Try again.',
     if (network) return connectionLostText(t);
     const status = statusOf(error);
     if (error?.name === 'SyntaxError') {
-        return status ? t('FreeVideo sent a reply this page could not read (HTTP {status}). Try again, and report the problem if it happens again.',
-            'FreeVideo 的回复无法读取（HTTP {status}）。请重试，再次出现请提交问题。', { status })
-            : t('FreeVideo sent a reply this page could not read. Try again, and report the problem if it happens again.',
-                'FreeVideo 的回复无法读取。请重试，再次出现请提交问题。');
+        return status ? t('Eclipse sent a reply this page could not read (HTTP {status}). Try again, and report the problem if it happens again.',
+            'Eclipse 的回复无法读取（HTTP {status}）。请重试，再次出现请提交问题。', { status })
+            : t('Eclipse sent a reply this page could not read. Try again, and report the problem if it happens again.',
+                'Eclipse 的回复无法读取。请重试，再次出现请提交问题。');
     }
     const said = (typeof error === 'string' ? error : typeof error?.message === 'string' ? error.message : '').trim();
     if (said && !isRawErrorText(said)) return said;
-    return status ? t('FreeVideo returned an error (HTTP {status}). ', 'FreeVideo 返回了错误（HTTP {status}）。', { status }) + fallback : fallback;
+    return status ? t('Eclipse returned an error (HTTP {status}). ', 'Eclipse 返回了错误（HTTP {status}）。', { status }) + fallback : fallback;
 }

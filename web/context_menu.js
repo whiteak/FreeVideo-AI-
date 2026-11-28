@@ -1,4 +1,4 @@
-// The one right-click menu of every FreeVideo view, and the small pieces the command layer shares (language,
+// The one right-click menu of every Eclipse view, and the small pieces the command layer shares (language,
 // icons, how a shortcut is written). The library, the image view and the editor build their menus with it:
 //   attachContextMenu(element, event => items | null)   right click, Shift+F10, the menu key, a long press on touch
 //   openContextMenu({x, y} | {anchor}, items)           from a button or code
@@ -285,7 +285,7 @@ export function openContextMenu(at, rawItems, {label = '', returnFocus = null, o
         if (item.submenu) { openChild(index, true); return; }
         closeAll({focus: true});
         // The menu is gone and focus is back before the action runs, so a dialog it opens takes focus cleanly.
-        queueMicrotask(() => { try { item.run?.(item); } catch (error) { console.warn('FreeVideo menu:', error); } });
+        queueMicrotask(() => { try { item.run?.(item); } catch (error) { console.warn('Eclipse menu:', error); } });
     }
     function close({focus = true} = {}) {
         if (closed) return; closed = true;

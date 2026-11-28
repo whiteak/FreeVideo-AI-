@@ -157,7 +157,7 @@ class Context:
                 step()
                 released.append(name)
             except Exception as error:
-                log.info('[FreeVideo] LoRA Studio could not release %s before training: %s', name, error)
+                log.info('[Eclipse] LoRA Studio could not release %s before training: %s', name, error)
         return released
 
     # Actions ----------------------------------------------------------------------------------------------
@@ -371,7 +371,7 @@ class Context:
             from ..lora_triggers import set_trigger
             set_trigger(name, self.trigger_words(dataset), folders=self.folders)
         except Exception as error:
-            log.info('[FreeVideo] LoRA Studio could not save the trigger words: %s', error)
+            log.info('[Eclipse] LoRA Studio could not save the trigger words: %s', error)
 
     def install(self, dataset_id, source, step, version=1):
         dataset = self.store.get(dataset_id)
@@ -384,7 +384,7 @@ class Context:
             lead = dataset['trigger'] if dataset['kind'] == 'style' else ('%s %s' % (dataset['trigger'], dataset.get('class_word') or '')).strip()
             set_trigger(name, lead, folders=self.folders)
         except Exception as error:
-            log.info('[FreeVideo] LoRA Studio could not save the trigger words: %s', error)
+            log.info('[Eclipse] LoRA Studio could not save the trigger words: %s', error)
         lora = dict(name=name, file=path, step=step, installed_at=store_module.now(),
                     strength=(dataset.get('lora') or {}).get('strength', 1.0),
                     cast_id=(dataset.get('lora') or {}).get('cast_id'))
@@ -564,7 +564,7 @@ def register():
         try:
             return web.json_response(dict(await asyncio.to_thread(context.info), token=token), headers=no_store)
         except Exception:
-            log.exception('[FreeVideo] LoRA Studio info failed')
+            log.exception('[Eclipse] LoRA Studio info failed')
             return web.json_response(dict(error='unavailable'), status=500)
 
     @server.routes.get('/freevideo/lora-studio/api/links')
@@ -582,7 +582,7 @@ def register():
             return web.json_response(dict(error='reload'), status=403)
         code = str(error) if isinstance(error, ValueError) else 'failed'
         if not isinstance(error, ValueError):
-            log.exception('[FreeVideo] LoRA Studio action failed')
+            log.exception('[Eclipse] LoRA Studio action failed')
         return web.json_response(dict(error=code), status=400 if isinstance(error, ValueError) else 500)
 
     @server.routes.get('/freevideo/lora-studio/api/zip')

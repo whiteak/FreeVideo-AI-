@@ -189,7 +189,7 @@ _PLURAL_OTHER_ONLY = {'ja', 'ko', 'zh', 'vi', 'id', 'th', 'ms'}
 
 def plural_form(language, number):
     """The CLDR cardinal plural form of a number in a language, as Intl.PluralRules gives it in the page (one, few, many,
-    other), for the languages FreeVideo has files for; tests/i18n_plural_cases.json holds the browser's answers."""
+    other), for the languages Eclipse has files for; tests/i18n_plural_cases.json holds the browser's answers."""
     try:
         n = abs(float(number))
     except (TypeError, ValueError):

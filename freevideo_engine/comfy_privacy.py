@@ -35,11 +35,11 @@ def keep_no_workflow_drafts(user_root):
 
 
 def configure_managed_privacy():
-    """Applied only in the ComfyUI FreeVideo installed; a user's own ComfyUI keeps its settings."""
+    """Applied only in the ComfyUI Eclipse installed; a user's own ComfyUI keeps its settings."""
     if os.environ.get(MANAGED_HOST_ENV) != '1':
         return
     try:
         import folder_paths
         keep_no_workflow_drafts(folder_paths.get_user_directory())
     except Exception as error:  # The page still works; drafts keep their old setting.
-        logging.warning('[FreeVideo] Workflow draft setting not applied: %s', error)
+        logging.warning('[Eclipse] Workflow draft setting not applied: %s', error)

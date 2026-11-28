@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# Modified by FreeVideo: only load_wav is kept.
+# Modified by Eclipse: only load_wav is kept.
 
 import logging
 

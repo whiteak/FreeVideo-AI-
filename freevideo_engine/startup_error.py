@@ -1,4 +1,4 @@
-"""What a person sees when FreeVideo fails before its window opens.
+"""What a person sees when Eclipse fails before its window opens.
 
 Standard library only: the entry points call this when the launcher itself could not load, so nothing it
 uses may be the part that failed. The traceback goes to startup-error.txt, never into the message box.
@@ -45,7 +45,7 @@ def message(path):
         # Nothing to attach: only where to report.
         where = '错误详情未能保存。\nThe details could not be saved.'
         report = '请在下面的地址提交问题：\nPlease report the problem here:\n'
-    return 'FreeVideo 未能启动。\nFreeVideo could not start.\n\n' + where + '\n\n' + report + ISSUES
+    return 'Eclipse 未能启动。\nFreeVideo could not start.\n\n' + where + '\n\n' + report + ISSUES
 
 
 def report(folder, detail=None):

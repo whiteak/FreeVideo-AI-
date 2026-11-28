@@ -54,7 +54,7 @@ TOOLS = {
     'font-license': dict(url='https://raw.githubusercontent.com/notofonts/noto-cjk/Sans2.004/LICENSE',
                          sha256='6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2'),
 }
-FONT_FAMILY = 'FreeVideo Sans SC'
+FONT_FAMILY = 'Eclipse Sans SC'
 # Characters the launcher can show that desktop Latin fonts may lack: Chinese text
 # (pages, messages, release notes) and the arrows and check marks next to it
 # (✓ for a finished step, ↗ for a link); Noto Sans, for one, has neither.
@@ -67,14 +67,14 @@ SYSTEM_LIBRARIES = ('libxcb-cursor.so.0', 'libxcb-icccm.so.4', 'libxcb-image.so.
                     'libxcb-render-util.so.0', 'libxcb-util.so.1', 'libxkbcommon-x11.so.0', 'libxkbcommon.so.0')
 DESKTOP = '''[Desktop Entry]
 Type=Application
-Name=FreeVideo
-Comment=Install and open FreeVideo in ComfyUI
-Comment[zh_CN]=安装并在 ComfyUI 中打开 FreeVideo
-Exec=FreeVideo
+Name=Eclipse
+Comment=Install and open Eclipse in ComfyUI
+Comment[zh_CN]=安装并在 ComfyUI 中打开 Eclipse
+Exec=Eclipse
 Icon={app}
 Terminal=false
 Categories=AudioVideo;Video;Graphics;
-StartupWMClass=FreeVideo
+StartupWMClass=Eclipse
 '''.format(app=APP_ID)
 APP_RUN = '''#!/bin/sh
 # The AppImage runtime sets APPDIR; resolve it here for extracted runs too.
@@ -84,10 +84,10 @@ fv_stop() {
     printf '%s\\n%s\\n' "$1" "$2" >&2
     # xmessage draws no CJK and does not wrap, so it gets the English text wrapped.
     # Exit 127 means the tool itself could not load (its own libraries may be the missing ones): try the next.
-    if command -v zenity >/dev/null 2>&1; then zenity --error --title=FreeVideo --text="$1\\n$2" 2>/dev/null; [ $? -ne 127 ] && exit 1; fi
-    if command -v kdialog >/dev/null 2>&1; then kdialog --title FreeVideo --error "$1
+    if command -v zenity >/dev/null 2>&1; then zenity --error --title=Eclipse --text="$1\\n$2" 2>/dev/null; [ $? -ne 127 ] && exit 1; fi
+    if command -v kdialog >/dev/null 2>&1; then kdialog --title Eclipse --error "$1
 $2" 2>/dev/null; [ $? -ne 127 ] && exit 1; fi
-    if command -v notify-send >/dev/null 2>&1; then notify-send FreeVideo "$1 $2" 2>/dev/null; [ $? -ne 127 ] && exit 1; fi
+    if command -v notify-send >/dev/null 2>&1; then notify-send Eclipse "$1 $2" 2>/dev/null; [ $? -ne 127 ] && exit 1; fi
     if command -v xmessage >/dev/null 2>&1; then xmessage -center "$(printf '%s' "$2" | fold -s -w 72)" 2>/dev/null; [ $? -ne 127 ] && exit 1; fi
     exit 1
 }
@@ -100,8 +100,8 @@ case "$major$minor" in
     ''|*[!0-9]*) ;;
     *)
         if [ "$major" -lt 2 ] || { [ "$major" -eq 2 ] && [ "$minor" -lt 34 ]; }; then
-            fv_stop "此系统版本过旧，无法运行 FreeVideo 桌面版。请使用 2022 年及以后发布的 Linux 发行版，或按 Linux 安装说明在终端中运行 setup.sh 安装。" \\
-                "This system is too old to run the FreeVideo desktop app. Use a Linux distribution released in 2022 or later, or follow the Linux installation guide to install with setup.sh in a terminal."
+            fv_stop "此系统版本过旧，无法运行 Eclipse 桌面版。请使用 2022 年及以后发布的 Linux 发行版，或按 Linux 安装说明在终端中运行 setup.sh 安装。" \\
+                "This system is too old to run the Eclipse desktop app. Use a Linux distribution released in 2022 or later, or follow the Linux installation guide to install with setup.sh in a terminal."
         fi
         ;;
 esac
@@ -113,8 +113,8 @@ if command -v ldd >/dev/null 2>&1 && [ "${QT_QPA_PLATFORM:-}" != offscreen ] && 
     missing="$(LD_LIBRARY_PATH="$libs:$libs/PySide6/Qt/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" ldd "$libs/PySide6/Qt/plugins/platforms/libqxcb.so" 2>/dev/null \\
         | sed -n 's/^[[:space:]]*\\(lib[^ ]*\\) => not found.*/\\1/p' | sort -u | tr '\\n' ' ' | sed 's/ $//; s/ /, /g')"
     if [ -n "$missing" ]; then
-        fv_stop "缺少系统图形库：$missing。请联系系统管理员安装提供这些库的软件包，完成后重新打开 FreeVideo。" \\
-            "Missing system graphics libraries: $missing. Ask your administrator to install the packages that provide them, then open FreeVideo again."
+        fv_stop "缺少系统图形库：$missing。请联系系统管理员安装提供这些库的软件包，完成后重新打开 Eclipse。" \\
+            "Missing system graphics libraries: $missing. Ask your administrator to install the packages that provide them, then open Eclipse again."
     fi
 fi
 exec "$HERE/usr/lib/FreeVideo/FreeVideo" "$@"

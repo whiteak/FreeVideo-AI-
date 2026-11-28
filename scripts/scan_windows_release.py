@@ -152,7 +152,7 @@ public static class Amsi {
 }
 '@
 [IntPtr]$context = 0
-if ([Amsi]::AmsiInitialize('FreeVideo release validation', [ref]$context) -ne 0) { throw 'AmsiInitialize failed' }
+if ([Amsi]::AmsiInitialize('Eclipse release validation', [ref]$context) -ne 0) { throw 'AmsiInitialize failed' }
 $rows = [ordered]@{}
 foreach ($path in @(%s)) {
     $verdict = 0
@@ -198,7 +198,7 @@ def attachment_check(path):
             guid('73db1241-1e85-4581-8e4f-a81e1d0f8c57'), C.byref(obj)), 'Attachment Services')
         table = C.cast(obj, C.POINTER(C.POINTER(C.c_void_p))).contents
         release = C.WINFUNCTYPE(C.c_ulong, C.c_void_p)(table[2])
-        for index, value in ((3, 'FreeVideo release validation'), (5, str(path.resolve())),
+        for index, value in ((3, 'Eclipse release validation'), (5, str(path.resolve())),
                              (7, 'https://github.com/FlashML-org/FreeVideo/releases/download/windows-preview/' + path.name)):
             call = C.WINFUNCTYPE(C.c_long, C.c_void_p, C.c_wchar_p)(table[index])
             checked(call(obj, value), 'Attachment metadata')

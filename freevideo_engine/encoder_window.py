@@ -149,7 +149,7 @@ class LayerWindow:
         self.result.update(state='reading', layers=len(self.plan),
                            planned_bytes=sum(size for _, _, size in self.plan),
                            reason='The forward pass is read a few layers ahead of its page faults')
-        self.thread = threading.Thread(target=self._run, name='FreeVideo encoder window', daemon=True)
+        self.thread = threading.Thread(target=self._run, name='Eclipse encoder window', daemon=True)
         self.thread.start()
         return self
 

@@ -77,7 +77,7 @@ GIT_UNAVAILABLE = 'Git is unavailable. Check the network connection, or install 
 
 
 def git_unavailable(error):
-    """The standard message plus why FreeVideo's own Git could not be prepared.
+    """The standard message plus why Eclipse's own Git could not be prepared.
 
     The message keeps its opening sentence, which the failure card matches on;
     the cause follows on its own line, redacted and bounded, so a report shows which step failed.

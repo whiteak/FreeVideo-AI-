@@ -16,7 +16,7 @@ def _create():
     io.IOPMAssertionRelease.argtypes, io.IOPMAssertionRelease.restype = [ctypes.c_uint32], ctypes.c_int32
     strings = []
     try:
-        for value in (b'PreventUserIdleSystemSleep', b'FreeVideo generation'):
+        for value in (b'PreventUserIdleSystemSleep', b'Eclipse generation'):
             string = cf.CFStringCreateWithCString(None, value, 0x08000100)
             if not string:
                 return None

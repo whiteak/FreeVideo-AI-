@@ -1,6 +1,6 @@
 # Community results
 
-Thanks to the community members who sent diagnostic reports. FreeVideo already runs on everything from 8 GB laptops to professional workstations; the table below summarizes the measurements and optimizations from these reports:
+Thanks to the community members who sent diagnostic reports. Eclipse already runs on everything from 8 GB laptops to professional workstations; the table below summarizes the measurements and optimizations from these reports:
 
 | GPU | VRAM | RAM | Resolution | Length | Quality | Version | Time | Optimized&nbsp;in | After |
 |---|---:|---:|---:|---:|:---:|:---:|---:|:---:|---:|
@@ -160,10 +160,10 @@ Thanks to the community members who sent diagnostic reports. FreeVideo already r
 - ⁴ The report had no diagnostic file; the estimate replays the plan for this machine's configuration and measures the same request on our test machines.
 - ⁵ Second pass after a preview: the time covers the latent upscale, the three second-pass steps and decoding, not the first pass, which made the preview in an earlier request.
 - ⁶ Measured on the same machine with 0.3.22.
-- ⁷ GPU shared: the graphics card never became idle during the run (23% utilization and 74 W at its lowest), so it was also doing other work and FreeVideo's steps ran at a little over half their usual speed. With the card free, the same request takes about 1000 s.
+- ⁷ GPU shared: the graphics card never became idle during the run (23% utilization and 74 W at its lowest), so it was also doing other work and Eclipse's steps ran at a little over half their usual speed. With the card free, the same request takes about 1000 s.
 - ⁸ The drive holding the model files reads at about 60 MB/s; reading them took about 900 s of the 1504 s.
 - ⁹ The drive holding the model files reads at about 80 MB/s; reading them took about 570 s of the 1676 s.
-- ¹⁰ GPU shared: other programs were using about 29% of the graphics card during the run, so FreeVideo's steps ran at a little over 70% of their usual speed. With the card free, the same request takes about 7200 s.
+- ¹⁰ GPU shared: other programs were using about 29% of the graphics card during the run, so Eclipse's steps ran at a little over 70% of their usual speed. With the card free, the same request takes about 7200 s.
 - ¹¹ With 16 GB of RAM, the text encoder and part of the video model cannot stay in memory and are read from the drive; text encoding and the first pass, which wait on these reads, took about 460 s of the 887 s.
 - ¹² Task with a reference: every step also processes the reference video, images or audio, so each step takes longer than a plain request of the same size, up to about twice as long with a long reference.
 - ¹³ Preview (first pass only).

@@ -38,12 +38,12 @@ export function viewChanged(view, node) {
     noteView(view);
     // The cover gives way once the view has painted.
     if (view !== 'nodes') requestAnimationFrame(() => requestAnimationFrame(hideCover));
-    // Making way for the user's own workflow is not a choice of view: the FreeVideo workflow reopens as it was left.
+    // Making way for the user's own workflow is not a choice of view: the Eclipse workflow reopens as it was left.
     if (!collapsing) try { localStorage.setItem(preference, view); } catch { /* Private browsing still works. */ }
     refreshNavigation();
 }
 
-// Whether this FreeVideo has the Agent interface on: 'on', 'off' or 'unknown' (true and false read as on and off).
+// Whether this Eclipse has the Agent interface on: 'on', 'off' or 'unknown' (true and false read as on and off).
 // The surfaces that open first (the toolbar, the studio) ask and tell it here. The fourth tab hides only when the
 // interface is off; a check that failed leaves it in place and asks again, waiting longer each time.
 let agentState = null, agentRun = null;
@@ -72,18 +72,18 @@ export function agentTabReady(answer, recheck = null) {
 // The Autopilot page loads on demand, as the editing view does; a failure leaves the current view as it is.
 export async function openAutopilot(node, options) {
     try { return (await import('./autopilot.js')).openAutopilotView(node, options); }
-    catch (error) { console.warn('FreeVideo autopilot view:', error); return null; }
+    catch (error) { console.warn('Eclipse autopilot view:', error); return null; }
 }
 
 // The Image page loads on demand too; a failure leaves the current view as it is.
 export async function openImage(node, options) {
     try { return (await import('./image_view.js')).openImageView(node, options); }
-    catch (error) { console.warn('FreeVideo image view:', error); return null; }
+    catch (error) { console.warn('Eclipse image view:', error); return null; }
 }
 
 export function viewSwitch(view, onStudio, onNodes, onEditor, onAutopilot, onImage = () => {}) {
     const group = document.createElement('div'); group.className = 'fv-view-switch';
-    group.setAttribute('role', 'group'); group.setAttribute('aria-label', t('FreeVideo view', 'FreeVideo 视图'));
+    group.setAttribute('role', 'group'); group.setAttribute('aria-label', t('Eclipse view', 'Eclipse 视图'));
     for (const [id, label, action] of [['studio', t('Create', '创作面板'), onStudio], ['image', t('Images', '图像视图'), onImage], ['nodes', t('Nodes', '节点视图'), onNodes], ['editor', t('Edit', '剪辑视图'), onEditor],
         ['autopilot', t('Autopilot', 'AI 全自动'), onAutopilot]]) {
         const button = document.createElement('button'); button.type = 'button';
@@ -146,7 +146,7 @@ export function headerActions(tt = t) {
 
 const generateNodes = () => (app.graph?._nodes || []).filter(n => n.comfyClass === 'FreeVideoGenerate' || n.type === 'FreeVideoGenerate');
 
-// A workflow without a FreeVideo node is the user's own: nothing of ours stays over it.
+// A workflow without a Eclipse node is the user's own: nothing of ours stays over it.
 // Each workspace listens for this and closes itself.
 export function collapseWorkspaces() {
     globalThis.FreeVideoShell?.settleShell?.();
@@ -155,7 +155,7 @@ export function collapseWorkspaces() {
     for (const dialog of document.querySelectorAll('dialog.fv-studio[open]')) dialog.close();
 }
 
-// In FreeVideo's node view the canvas ground takes FreeVideo's colour (the grid stays) and ComfyUI's render statistics
+// In Eclipse's node view the canvas ground takes Eclipse's colour (the grid stays) and ComfyUI's render statistics
 // (T/I/N/V/FPS in the corner) are not drawn; ComfyUI's own settings come back as soon as the user's own workflow is in front.
 let canvasGround = null;
 function tintCanvas(on) {
@@ -175,7 +175,7 @@ function tintCanvas(on) {
 // them to 8–9 px), and no further than 125 %. Later visits keep the user's own pan and zoom.
 let nodeViewShown = false, lastView = null, nodeViewTouched = false;
 // Whether the user worked on the canvas (dragged, scrolled or pressed keys on it) during the visit. A visit nobody
-// touched (the node view is briefly in front, under the cover, while FreeVideo opens its first view) leaves no pan and
+// touched (the node view is briefly in front, under the cover, while Eclipse opens its first view) leaves no pan and
 // zoom worth keeping once the canvas is framed behind the views (placeWidgetsEarly).
 for (const type of ['pointerdown', 'wheel', 'keydown']) {
     globalThis.addEventListener?.(type, event => { if (nodeViewShown && event.target === app.canvas?.canvas) nodeViewTouched = true; }, {capture: true, passive: true});
@@ -225,7 +225,7 @@ function frameNodeView(focus = null, {bump = false} = {}) {
     canvas.setDirty?.(true, true);
 }
 
-// As soon as a FreeVideo workflow is in (usually behind a view), the canvas takes the node view's framing, so ComfyUI
+// As soon as a Eclipse workflow is in (usually behind a view), the canvas takes the node view's framing, so ComfyUI
 // places the nodes' HTML widgets then, not at the first visit of the node view, where moving them would show as a
 // layout shift.
 let placedFor = '';
@@ -314,7 +314,7 @@ export function installNavigation(openStudio, agent = false, {openWorkflow = nul
     if (!toolbar) agentTabReady(agent, recheck);
     if (toolbar) { refreshNavigation(); return; }
     toolbar = document.createElement('aside'); toolbar.className = 'fv-view-navigation';
-    toolbar.setAttribute('aria-label', t('FreeVideo workspace', 'FreeVideo 工作区'));
+    toolbar.setAttribute('aria-label', t('Eclipse workspace', 'Eclipse 工作区'));
     const row = document.createElement('div'); row.className = 'fv-view-row';
     const choose = (action, create = false) => {
         const focused = Object.values(app.canvas?.selected_nodes || {}).find(n => (app.graph?._nodes || []).includes(n)
@@ -322,18 +322,18 @@ export function installNavigation(openStudio, agent = false, {openWorkflow = nul
         refreshNavigation();
         let node = focused || selected;
         if (!node && create) {
-            // The user's own workflow stays as it is: FreeVideo gets a workflow of its own.
+            // The user's own workflow stays as it is: Eclipse gets a workflow of its own.
             return (async () => {
                 try {
                     // Clicks while the workflow is opening share that one workflow.
                     const first = !opening;
                     opening ||= Promise.resolve(openWorkflow?.()).finally(() => { opening = null; });
                     node = await opening;
-                    if (!node) throw new Error('FreeVideo workflow unavailable');
+                    if (!node) throw new Error('Eclipse workflow unavailable');
                     selected = node;
                     return await action(node, first);
                 } catch (error) {
-                    console.warn('FreeVideo edit project:', error);
+                    console.warn('Eclipse edit project:', error);
                     app.extensionManager?.toast?.add({severity: 'error', summary: 'FreeVideo',
                         detail: t('Could not complete. Try again.', '没有完成，请重试'), life: 9000});
                     return null;

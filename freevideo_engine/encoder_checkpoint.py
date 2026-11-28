@@ -27,7 +27,7 @@ def resolve_encoder(folder_paths, name):
         if models_dir is not None:
             models_dir = os.path.normcase(os.path.realpath(models_dir))
             freevideo, bundled = [], []
-            # FreeVideo paths stay preferred after a resident worker registers them.
+            # Eclipse paths stay preferred after a resident worker registers them.
             for folder in folders:
                 resolved = os.path.normcase(os.path.realpath(folder))
                 try:

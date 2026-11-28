@@ -1,5 +1,5 @@
 # Copyright 2026 The MiniMax and HuggingFace Teams. All rights reserved.
-# Copyright 2026 FreeVideo contributors.
+# Copyright 2026 Eclipse contributors.
 # Licensed under the Apache License, Version 2.0.
 # Block ordering follows the pinned Diffusers MiniMaxH3TransformerBlock.
 """Metal indexed AdaLN arithmetic with the eager rounding boundaries.

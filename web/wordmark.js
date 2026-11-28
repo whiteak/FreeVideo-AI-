@@ -24,7 +24,7 @@ export function wordmark() {
     const image = document.createElement('img');
     image.className = 'fv-wordmark';
     image.src = current(); image.dataset.fvThemed = 'true';
-    image.alt = 'FreeVideo'; image.width = 2016; image.height = 337;
+    image.alt = 'Eclipse Image and Video Creator'; image.width = 2016; image.height = 337;
     image.setAttribute('translate', 'no');
     image.draggable = false;
     watchTheme();
