@@ -126,5 +126,30 @@ class Look(unittest.TestCase):
         self.assertEqual(len(notes), 1)
 
 
+class Speech(unittest.TestCase):
+    def test_lines_heard_and_digits(self):
+        from freevideo_engine.report_card.speech import line_flags
+        words = [dict(text=w, start=i * .4, end=i * .4 + .3) for i, w in enumerate('Welcome to CiviSins Entertainment.'.split())]
+        flags = line_flags(['Welcome to 7 Sins Entertainment.'], words)
+        self.assertEqual([f['check'] for f in flags], ['digits', 'line'])
+        good = [dict(text=w, start=i * .4, end=i * .4 + .3) for i, w in enumerate('Welcome to Seven Sins Entertainment.'.split())]
+        self.assertEqual(line_flags(['Welcome to Seven Sins Entertainment.'], good), [])
+        self.assertEqual([f['check'] for f in line_flags(['Hello there.'], [])], ['line'])
+
+    def test_lip_lag(self):
+        from freevideo_engine.report_card.speech import lip_lag, sync_flags, voice_span
+        rng = np.random.default_rng(0)
+        mouth = np.convolve(rng.random(120), np.ones(3) / 3, 'same')
+        voice = np.roll(mouth, 3)                        # the voice three frames after the lips
+        self.assertEqual(lip_lag(list(mouth), voice)[0], 3)
+        flags, _ = sync_flags((3, .9), 24.)
+        self.assertEqual(flags[0]['ms'], 125)
+        self.assertIn('earlier', flags[0]['text'])
+        self.assertEqual(sync_flags((1, .9), 24.)[0], [])
+        self.assertIsNone(lip_lag([None] * 60, voice))
+        self.assertEqual(voice_span([dict(start=1., end=4.)], 24., 200), [16, 103])
+        self.assertIsNone(voice_span([], 24., 200))
+
+
 if __name__ == '__main__':
     unittest.main()
