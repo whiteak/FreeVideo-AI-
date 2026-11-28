@@ -15,9 +15,10 @@ const css = `
 .fv-report-card button{padding:6px 14px;border-radius:8px;border:1px solid var(--border-color,#555);background:transparent;color:inherit;cursor:pointer}`;
 let styled = false;
 
-async function fetchCard(id, fresh) {
-    const response = fresh
-        ? await api.fetchApi('/freevideo/report-card', {method: 'POST', headers: {'Content-Type': 'application/json', 'X-FreeVideo-Library': '1'}, body: JSON.stringify({id})})
+async function fetchCard(id, fresh, look = false) {
+    const post = {method: 'POST', headers: {'Content-Type': 'application/json', 'X-FreeVideo-Library': '1'}, body: JSON.stringify({id})};
+    const response = look ? await api.fetchApi('/freevideo/report-card/look', post)
+        : fresh ? await api.fetchApi('/freevideo/report-card', post)
         : await api.fetchApi('/freevideo/report-card?' + new URLSearchParams({id}));
     const body = await response.json().catch(() => null);
     if (!response.ok) throw new Error(body?.error || 'The check could not run.');
@@ -29,11 +30,13 @@ export function openReportCard(id, t = (en) => en) {
     const dialog = el('dialog', null, 'fv-report-card');
     const body = el('div');
     const again = el('button', t('Check again', '重新检查'));
+    // Wardrobe, set, hands and people: the picture reader uses the graphics card, so it runs only when asked.
+    const lookButton = el('button', t('Ask the picture reader', '让看图模型检查'));
     const close = el('button', t('Close', '关闭'));
     close.onclick = () => dialog.close();
     dialog.addEventListener('close', () => dialog.remove());
     dialog.append(el('h2', t('Report card', '成绩单')), body, el('div', null, 'fv-rc-actions'));
-    dialog.lastElementChild.append(again, close);
+    dialog.lastElementChild.append(lookButton, again, close);
     document.body.append(dialog);
     dialog.showModal();
 
@@ -43,20 +46,23 @@ export function openReportCard(id, t = (en) => en) {
         body.append(el('p', card.passed ? t('Passed every check.', '全部通过。') : t('Needs another look.', '有问题需要处理。'),
             'fv-rc-verdict ' + (card.passed ? 'fv-rc-pass' : 'fv-rc-fail')));
         const list = el('ul');
-        for (const row of [...card.faces, ...card.flags]) list.append(el('li', row.text));
+        for (const row of [...card.faces, ...card.flags, ...(card.look?.flags || [])]) list.append(el('li', row.text));
         if (list.children.length) body.append(list);
-        for (const note of card.notes || []) body.append(el('p', note, 'fv-rc-note'));
+        for (const note of [...(card.notes || []), ...(card.look?.notes || [])]) body.append(el('p', note, 'fv-rc-note'));
+        if (!card.look) body.append(el('p', t('Wardrobe, set, hands and people not checked yet: use "Ask the picture reader".', '服装、场景、手和人数尚未检查。'), 'fv-rc-note'));
     };
-    const run = async (fresh) => {
-        again.disabled = true;
-        body.replaceChildren(el('p', fresh ? t('Checking faces, pops, cuts and motion…', '正在检查…') : t('Loading…', '加载中…')));
+    const run = async (fresh, look = false) => {
+        again.disabled = lookButton.disabled = true;
+        body.replaceChildren(el('p', look ? t('Asking the picture reader about four frames…', '正在让看图模型检查…')
+            : fresh ? t('Checking faces, pops, cuts and motion…', '正在检查…') : t('Loading…', '加载中…')));
         try {
-            const card = await fetchCard(id, fresh);
+            const card = await fetchCard(id, fresh, look);
             if (!card && !fresh) return run(true);   // never checked: check it now
             show(card);
         } catch (error) { body.replaceChildren(el('p', error.message, 'fv-rc-fail')); }
-        finally { again.disabled = false; }
+        finally { again.disabled = lookButton.disabled = false; }
     };
     again.onclick = () => run(true);
+    lookButton.onclick = () => run(false, true);
     run(false);
 }

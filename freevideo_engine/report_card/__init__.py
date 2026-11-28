@@ -278,7 +278,7 @@ def build(output_root, input_root, identity, cards=()):
     except (Unavailable, OSError, ValueError, subprocess.TimeoutExpired) as error:
         notes.append('Faces not checked: %s' % error)
     passed = all(f['passed'] is not False for f in faces) and not flags and not (cards and not faces)
-    report = dict(version=1, id=identity, passed=passed, frames=len(frames), fps=fps, faces=faces, flags=flags, notes=notes)
+    report = dict(version=1, id=identity, passed=passed, checks_passed=passed, frames=len(frames), fps=fps, faces=faces, flags=flags, notes=notes)
     (folder / FILE).write_text(json.dumps(report, indent=1), encoding='utf-8')
     return report
 
@@ -345,4 +345,33 @@ def register():
             raise web.HTTPBadRequest(text=str(error)) from error
         except Unavailable as error:
             return web.json_response(dict(error=str(error)), status=409)
+        return web.json_response(report, headers={'Cache-Control': 'no-store'})
+
+    @server.routes.post('/freevideo/report-card/look')
+    async def look(request):
+        """The picture reader's questions (wardrobe, set, hands, people) on one take, added to its Report Card."""
+        from .look import look as ask_pictures
+        if request.headers.get('X-FreeVideo-Library') != '1':
+            raise web.HTTPForbidden(text='Missing header')
+        service = getattr(server, '_freevideo_prompt_vlm', None)
+        running, pending = server.prompt_queue.get_current_queue()
+        if service is None:
+            return web.json_response(dict(error='The picture reader is not available in this installation.'), status=409)
+        if running or pending:
+            return web.json_response(dict(error='The picture reader uses the graphics card: ask again when no video is rendering.'), status=409)
+        try:
+            body = await request.json()
+            identity = body.get('id')
+            output, inputs = folder_paths.get_output_directory(), folder_paths.get_input_directory()
+            async with busy:
+                report = await asyncio.to_thread(saved, output, identity) or await asyncio.to_thread(build, output, inputs, identity)
+                report = await asyncio.to_thread(ask_pictures, service, output, inputs, identity, report)
+        except (TypeError, AttributeError) as error:
+            raise web.HTTPBadRequest(text=str(error)) from error
+        except ValueError as error:
+            words = {'busy': 'The picture reader is busy with another job; try again in a moment.',
+                     'model_missing': 'The picture reader is not installed yet (Settings, prompt helper).'}
+            return web.json_response(dict(error=words.get(str(error), str(error))), status=409)
+        except (Unavailable, RuntimeError, OSError) as error:
+            return web.json_response(dict(error='Picture questions failed: %s' % error), status=409)
         return web.json_response(report, headers={'Cache-Control': 'no-store'})
