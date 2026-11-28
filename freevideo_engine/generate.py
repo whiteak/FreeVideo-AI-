@@ -1246,6 +1246,13 @@ def _run(args):
                        'sampling_plan': sampling_plan, 'upscaler_checkpoint': upscaler_checkpoint,
                        'automatic_pass_cache': not bool(args.profile),
                        'metrics': str(destination.with_suffix('.engine.json'))}
+            if media.get('lora_start_step') and active_loras:
+                # Only the online LoRA branches can switch on part-way; fused weights and the fast tier's own
+                # adapter are always on, so the start step is reported as not applied there.
+                online = profile['engine'].get('head_chunk') and profile['engine'].get('inference_kernels')
+                if online and fast_spec is None:
+                    request['lora_start_step'] = media['lora_start_step']
+                report['lora_start_step'] = dict(asked=media['lora_start_step'], applied=bool(online and fast_spec is None))
             if redo_sound is not None:
                 request['redo_audio'] = {'video': str(Path(redo_sound).resolve())}
             if continuation is not None:

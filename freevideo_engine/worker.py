@@ -406,6 +406,14 @@ def generate(request, resident=None):
                     decode_read_ahead.result['load_read_bytes_per_second'] = round(decode_read_ahead.load_read_rate)
             from .sampling_memory import SamplingMemory
             memory_diagnostics = SamplingMemory(torch, Path(request['output']).with_suffix('.sampling-memory.json')).start()
+            # LoRA start step (fork addition): LoRA branches stay off for the first steps of the first pass, so the
+            # opening frame and the layout form before a character LoRA pulls the picture toward its training set.
+            from . import lora_online
+            lora_online.gate(request.get('lora_start_step', 0))
+
+            def step_done(value):
+                lora_online.step_done()
+                memory_diagnostics.complete(value)
             from . import frame_preview
             if not request.get('capacity_trial', False):
                 frame_preview.configure(Path(request['output']).parent, decoder_bytes=request.get('preview_decoder_bytes', 0))
@@ -522,7 +530,7 @@ def generate(request, resident=None):
                                 pass_cache_budget_bytes=pass_budget, gpu_reserve_bytes=request.get('gpu_reserve_bytes', 0),
                                 compute_options=first_options,
                                 pass_resident_blocks=first_options.get('resident_blocks') if first_options else None,
-                                step_callback=memory_diagnostics.complete,
+                                step_callback=step_done,
                                 progress_total=sampling_plan['base_steps'] if preview else sampling_plan['total_steps'],
                                 budget_refresh=refresh_budget if live_budget is not None else None)
                         metrics['sampling_passes'] = [first]
@@ -711,6 +719,7 @@ def generate(request, resident=None):
                                     except (OSError, RuntimeError, ValueError) as error:
                                         metrics['refine_progress_error'] = str(error)
                                 refine_options['refine_checkpoint'] = refine_checkpoint
+                        lora_online.gate(0)   # the second pass only adds detail: LoRAs on throughout
                         latents, audio, second = engine.sample(request['conditioning'], restart_seed,
                             **({'continuation': final_context} if final_context is not None else {}),
                             **refine_options,
@@ -718,7 +727,7 @@ def generate(request, resident=None):
                             refine_schedule=sampling_plan.get('refine_schedule'),
                             compute_options=second_compute,
                             final_step_callback=None if decoder_cached else read_decoder_ahead,
-                            step_callback=memory_diagnostics.complete, sampling_complete_callback=refined_complete,
+                            step_callback=step_done, sampling_complete_callback=refined_complete,
                             progress_offset=sampling_plan['total_steps'] - sampling_plan['refine_steps'], progress_total=sampling_plan['total_steps'],
                             gpu_reserve_bytes=request.get('gpu_reserve_bytes', 0),
                             budget_refresh=refresh_budget if live_budget is not None else None)
@@ -733,7 +742,7 @@ def generate(request, resident=None):
                         **({'continuation': single_context} if single_context is not None else {}),
                         frames=canvas.get('frames', 243), width=canvas.get('width', 1344), height=canvas.get('height', 768),
                         final_step_callback=None if decoder_cached else read_decoder_ahead,
-                        step_callback=memory_diagnostics.complete, sampling_complete_callback=sampling_complete,
+                        step_callback=step_done, sampling_complete_callback=sampling_complete,
                         gpu_reserve_bytes=request.get('gpu_reserve_bytes', 0),
                         budget_refresh=refresh_budget if live_budget is not None else None,
                         **({'video_mask': redo_mask} if redo_mask is not None else {}))

@@ -109,7 +109,9 @@ def extend(text, media, loras, *, folders=None, check=None):
             continue
         if check is not None:
             check(path)
-        result.append({'path': path, 'strength': float(strength)})
+        start = link.get('start_step', 0)
+        result.append({'path': path, 'strength': float(strength),
+                       **({'start_step': start} if type(start) is int and 0 < start <= 32 else {})})
         have.add(path)
         try:
             from ..lora_triggers import get_trigger_words
