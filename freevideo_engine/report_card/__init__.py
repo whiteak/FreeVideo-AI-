@@ -364,6 +364,25 @@ def register():
             return web.json_response(dict(error=str(error)), status=409)
         return web.json_response(report, headers={'Cache-Control': 'no-store'})
 
+    @server.routes.post('/freevideo/report-card/rank')
+    async def ranked(request):
+        """Best take first among several saved takes (plan step 1.2: best-take picker)."""
+        if request.headers.get('X-FreeVideo-Library') != '1':
+            raise web.HTTPForbidden(text='Missing header')
+        try:
+            body = await request.json()
+            ids = body.get('ids')
+            if not isinstance(ids, list) or not 2 <= len(ids) <= 16 or not all(isinstance(i, str) for i in ids):
+                raise ValueError('ids must list 2 to 16 saved takes')
+            async with busy:
+                reports = await asyncio.to_thread(rank, folder_paths.get_output_directory(),
+                                                  folder_paths.get_input_directory(), list(dict.fromkeys(ids)))
+        except (ValueError, TypeError, AttributeError) as error:
+            raise web.HTTPBadRequest(text=str(error)) from error
+        except Unavailable as error:
+            return web.json_response(dict(error=str(error)), status=409)
+        return web.json_response(reports, headers={'Cache-Control': 'no-store'})
+
     @server.routes.post('/freevideo/report-card/look')
     async def look(request):
         """The picture reader's questions (wardrobe, set, hands, people) on one take, added to its Report Card."""
@@ -392,3 +411,41 @@ def register():
         except (Unavailable, RuntimeError, OSError) as error:
             return web.json_response(dict(error='Picture questions failed: %s' % error), status=409)
         return web.json_response(report, headers={'Cache-Control': 'no-store'})
+
+
+# Flags that make a take unusable for the director's judge; the rest are worth a look (a pop is trimmed, a lip-sync
+# offset is shifted).
+PROBLEMS = ('back_to_start', 'walk_back', 'line', 'people', 'changes', 'differences', 'problems')
+
+
+def take_qa_part(report):
+    """(problems, notes) in take_qa's words, so the director drops takes whose faces or motion fail (plan step 1.2)."""
+    problems, notes = [], []
+    for face in report.get('faces') or ():
+        if face.get('passed') is False:
+            problems.append("%s's face %.2f, under %.2f" % (face['name'], face['median'], face['bar']))
+        elif face.get('passed'):
+            notes.append("%s's face %.2f" % (face['name'], face['median']))
+    for flag in (report.get('flags') or []) + ((report.get('look') or {}).get('flags') or []):
+        (problems if flag.get('check') in PROBLEMS else notes).append(flag['text'].rstrip('.'))
+    return problems, notes
+
+
+def for_take(output_root, input_root, identity):
+    """The take's Report Card (made now unless the background check already saved one), as take_qa problems/notes."""
+    report = saved(output_root, identity) or build(output_root, input_root, identity)
+    return take_qa_part(report)
+
+
+def score(report):
+    """Sort key for picking the best of several takes: passing first, then the weakest face, then fewest flags."""
+    medians = [f['median'] for f in report.get('faces') or () if f.get('median') is not None]
+    flags = len(report.get('flags') or ()) + len((report.get('look') or {}).get('flags') or ())
+    problems = len(take_qa_part(report)[0])
+    return (bool(report.get('passed')), -problems, min(medians) if medians else 0., -flags)
+
+
+def rank(output_root, input_root, identities):
+    """The takes best first, each with its Report Card (made now where missing)."""
+    reports = [saved(output_root, i) or build(output_root, input_root, i) for i in identities]
+    return sorted(reports, key=score, reverse=True)

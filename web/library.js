@@ -22,7 +22,7 @@ import { zoomable } from './picture_zoom.js';
 import { createUpscaleOffer, upscaleChoices, UPSCALE_USE, UPSCALE_QUEUED, UPSCALE_FAILED } from './upscale_offer.js';
 import { capabilityPoints } from './chain_support.js';
 import { LANGUAGE } from './i18n.js';
-import { openReportCard } from './report_card.js';
+import { openReportCard, openRanking } from './report_card.js';
 
 const style = document.createElement('link');
 style.rel = 'stylesheet'; style.href = new URL('./library.css', import.meta.url).href; document.head.append(style);
@@ -1530,6 +1530,8 @@ export function openLibrary(t, options = {}) {
                 try { const answer = await (await pictures()).historyOpen(); if (answer && answer.opened === false && answer.folder) say(t('The images are in {folder}', '图片在 {folder}', { folder: answer.folder })); }
                 catch { say(t('Could not open the folder.', '没能打开文件夹。'), true); }
             }});
+        if (keys.length > 1 && keys.length <= 16 && keys.every(isVideo)) items.push({id: 'rank', icon: 'check', label: ['Pick the best take', '挑出最佳版本'],
+            use: ['Rank these takes by their Report Cards', '按成绩单给这些版本排名'], run: () => openRanking(keys.map(key => works.get(key).id), t)});
         if (!selecting) items.push({id: 'select', icon: 'check', label: ['Select', '选择'], use: ['Start selecting with this one', '从这一个开始多选'],
             run: () => { setSelecting(true); picked.add(keys[0]); anchor = keys[0]; syncSelection(); }});
         items.push('-');

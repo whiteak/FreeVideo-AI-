@@ -12,6 +12,7 @@ const css = `
 .fv-report-card ul{margin:0 0 12px;padding-left:20px}.fv-report-card li{margin:4px 0}
 .fv-report-card .fv-rc-note{opacity:.7;font-size:13px}
 .fv-report-card .fv-rc-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
+.fv-report-card .fv-rc-take{display:flex;gap:12px;align-items:center;margin:8px 0}.fv-report-card .fv-rc-take img{width:54px;height:96px;object-fit:cover;border-radius:6px}
 .fv-report-card button{padding:6px 14px;border-radius:8px;border:1px solid var(--border-color,#555);background:transparent;color:inherit;cursor:pointer}`;
 let styled = false;
 
@@ -65,4 +66,41 @@ export function openReportCard(id, t = (en) => en) {
     again.onclick = () => run(true);
     lookButton.onclick = () => run(false, true);
     run(false);
+}
+
+// Best take first among several (plan step 1.2): each take's Report Card is made where missing, then ranked.
+export function openRanking(ids, t = (en) => en) {
+    if (!styled) { const s = el('style', css); document.head.append(s); styled = true; }
+    const dialog = el('dialog', null, 'fv-report-card');
+    const body = el('div');
+    const close = el('button', t('Close', '关闭'));
+    close.onclick = () => dialog.close();
+    dialog.addEventListener('close', () => dialog.remove());
+    dialog.append(el('h2', t('Best take', '最佳版本')), body, el('div', null, 'fv-rc-actions'));
+    dialog.lastElementChild.append(close);
+    document.body.append(dialog);
+    dialog.showModal();
+    body.append(el('p', t('Checking {count} takes…', '正在检查 {count} 个版本…', { count: ids.length })));
+    (async () => {
+        try {
+            const response = await api.fetchApi('/freevideo/report-card/rank', {method: 'POST',
+                headers: {'Content-Type': 'application/json', 'X-FreeVideo-Library': '1'}, body: JSON.stringify({ids})});
+            const cards = await response.json().catch(() => null);
+            if (!response.ok) throw new Error(cards?.error || 'The check could not run.');
+            body.replaceChildren();
+            cards.forEach((card, place) => {
+                const row = el('div', null, 'fv-rc-take');
+                const image = el('img'); image.src = api.apiURL('/freevideo/library/thumbnail?' + new URLSearchParams({id: card.id})); image.alt = '';
+                const words = el('div');
+                words.append(el('div', (place === 0 ? t('Best', '最佳') + ' · ' : '#' + (place + 1) + ' · ') + (card.passed ? t('Passed', '通过') : t('Needs another look', '有问题')),
+                    card.passed ? 'fv-rc-pass' : 'fv-rc-fail'));
+                for (const face of card.faces) words.append(el('div', face.text, 'fv-rc-note'));
+                const problems = [...card.flags, ...(card.look?.flags || [])].length;
+                if (problems) words.append(el('div', t('{count} flags', '{count} 个问题', { count: problems }), 'fv-rc-note'));
+                const open = el('button', t('Report card', '成绩单')); open.onclick = () => openReportCard(card.id, t);
+                row.append(image, words, open);
+                body.append(row);
+            });
+        } catch (error) { body.replaceChildren(el('p', error.message, 'fv-rc-fail')); }
+    })();
 }
