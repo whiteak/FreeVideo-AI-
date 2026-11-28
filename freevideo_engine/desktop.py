@@ -56,7 +56,7 @@ class Desktop:
         self.resource = tk.StringVar(value=self.t('Detect your hardware to see the installation plan.', '先检测配置，查看安装计划。'))
         self.buttons = []
         self.translated = []
-        window.title('FreeVideo')
+        window.title('Eclipse Image and Video Creator')
         from .windows_ux import window_size
         width, height = window_size(window)
         window.geometry('%dx%d' % (width, height))
