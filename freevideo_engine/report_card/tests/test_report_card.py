@@ -275,6 +275,13 @@ class LoRAStartStep(unittest.TestCase):
         with self.assertRaises(ValueError):
             resolve_loras(json.dumps([dict(name='a.safetensors', start_step=40)]), ['a.safetensors'], lambda n: n)
 
+    def test_media_request_keeps_start_step(self):
+        from freevideo_engine.media_request import read as read_media
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder, 'media.json')
+            path.write_text(json.dumps(dict(version=1, lora_start_step=3)))
+            self.assertEqual(read_media(path).get('lora_start_step'), 3)
+
 
 if __name__ == '__main__':
     unittest.main()

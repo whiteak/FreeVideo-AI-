@@ -28,7 +28,7 @@ def read(path):
         raise ValueError('Expected a version 1 Eclipse media request')
     if 'early_steps' in value:
         raise ValueError('early_steps is only allowed on video references')
-    if set(value) - {'version', 'first', 'last', 'middle', 'references', 'loras', 'conditioning_info'}:
+    if set(value) - {'version', 'first', 'last', 'middle', 'references', 'loras', 'conditioning_info', 'lora_start_step'}:
         raise ValueError('Unknown media request fields')
     result = {'version': 1}
     def file_info(name):
