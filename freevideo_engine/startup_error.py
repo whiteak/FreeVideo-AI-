@@ -11,7 +11,7 @@ import traceback
 
 FILE = 'startup-error.txt'
 ISSUES = 'https://github.com/FlashML-org/FreeVideo/issues/new'
-TITLE = 'FreeVideo'
+TITLE = 'Eclipse Image and Video Creator'
 
 
 def launcher_folder():
