@@ -712,7 +712,7 @@ function logo(t) {
     const button = el('button', 'fv-tb-logo fv-brand'); button.type = 'button';
     const image = wordmark(); image.classList.add('fv-topbar-logo'); button.append(image);
     const [name, use] = words(t).logo;
-    tip(button, name, use); button.setAttribute('aria-label', 'FreeVideo');
+    tip(button, name, use); button.setAttribute('aria-label', 'Eclipse Image and Video Creator');
     // Back to the top of this view: the view's own scrollers go back to their start.
     button.onclick = () => {
         const host = button.closest('dialog') || document;

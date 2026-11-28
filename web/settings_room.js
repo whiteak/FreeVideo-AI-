@@ -157,7 +157,7 @@ export async function openSetup(options) {
         next.focus(); show(next.dataset.section);
     });
     const searchEmpty = el('p', 'st-nav-empty', t('No setting matches', '没有找到相关设置')); searchEmpty.hidden = true; nav.append(searchEmpty);
-    const dockFoot = el('div', 'st-df'); const versionLine = el('span', 'st-ver', 'FreeVideo');
+    const dockFoot = el('div', 'st-df'); const versionLine = el('span', 'st-ver', 'Eclipse');
     const escKey = el('kbd', 'st-kbd', 'Esc'); dockFoot.append(versionLine, escKey);
     left.append(dockHead, railSearch, searchBox, nav, dockFoot);
 
@@ -1006,7 +1006,7 @@ export async function openSetup(options) {
     if (sectionOf(section) === 'models' && section === 'repair') spotlight();
     else panes.get(shown).querySelector('h1').focus({preventScroll: true});
     readMachine();
-    const pv = productVersion(); versionLine.textContent = pv ? `Eclipse ${pv}` : 'FreeVideo';
+    const pv = productVersion(); versionLine.textContent = pv ? `Eclipse ${pv}` : 'Eclipse';
 
     // ── Storage ──
     // One unit family across the room (GiB / MiB, like the plan and the machine panel).

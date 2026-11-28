@@ -919,7 +919,7 @@ ApplicationWindow {
                             Layout.fillWidth: true; columns: win.narrow ? 1 : 2; columnSpacing: 16; rowSpacing: win.narrow ? 2 : 8
                             FText { text: "ComfyUI"; color: theme.muted; font.pixelSize: theme.micro + 1 }
                             FText { text: s.review.comfy; font.pixelSize: theme.micro + 1; Layout.fillWidth: true; elide: Text.ElideMiddle; maximumLineCount: 1; wrapMode: Text.NoWrap }
-                            FText { text: "FreeVideo"; color: theme.muted; font.pixelSize: theme.micro + 1 }
+                            FText { text: "Eclipse"; color: theme.muted; font.pixelSize: theme.micro + 1 }
                             FText { text: s.review.engine; font.pixelSize: theme.micro + 1; Layout.fillWidth: true; elide: Text.ElideMiddle; maximumLineCount: 1; wrapMode: Text.NoWrap }
                         }
                         Rectangle { Layout.fillWidth: true; height: 1; color: theme.border }
@@ -1104,7 +1104,7 @@ ApplicationWindow {
                             // A row appears only when it has a value.
                             FText { visible: !!s.form.comfy; text: "ComfyUI"; color: theme.muted; font.pixelSize: theme.micro + 1 }
                             FText { visible: !!s.form.comfy; text: s.form.comfy; font.pixelSize: theme.micro + 1; Layout.fillWidth: true; elide: Text.ElideMiddle; maximumLineCount: 1 }
-                            FText { visible: !!s.form.engine; text: "FreeVideo"; color: theme.muted; font.pixelSize: theme.micro + 1 }
+                            FText { visible: !!s.form.engine; text: "Eclipse"; color: theme.muted; font.pixelSize: theme.micro + 1 }
                             FText { visible: !!s.form.engine; text: s.form.engine; font.pixelSize: theme.micro + 1; Layout.fillWidth: true; elide: Text.ElideMiddle; maximumLineCount: 1 }
                         }
                         RowLayout {

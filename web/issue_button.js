@@ -14,7 +14,7 @@ const ISSUE_FORM = 'https://github.com/FlashML-org/FreeVideo/issues/new';
  * states and fixed code identifiers (never user text or paths) that travels in the summary.
  */
 export function issueDraft({where, message, kind = null, facts = null}, t = translatorFor(null, false)) {
-    const place = Array.isArray(where) ? where : [String(where || 'FreeVideo'), String(where || 'FreeVideo')];
+    const place = Array.isArray(where) ? where : [String(where || 'Eclipse'), String(where || 'Eclipse')];
     const clean = createErrorReport({exception_message: String(message || '')}).message;
     const lines = clean.split(/\r?\n/).filter(line => line.trim());
     // A traceback ends with the line that names the error; any other message starts with it.

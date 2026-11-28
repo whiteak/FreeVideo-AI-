@@ -975,7 +975,7 @@ app.registerExtension({
         // ComfyUI calls onChange(value, undefined) while registering; only a switch from off to on is a user request.
         onChange: (value, oldValue) => { if (oldValue === false && value === true) askDesktopPermission(window, {explicit: true}); }}],
     // The one entry that stays in ComfyUI's own menu, whatever workflow is in front.
-    commands: [{id: 'FreeVideo.Open', label: 'FreeVideo', function: openFromMenu}],
+    commands: [{id: 'FreeVideo.Open', label: 'Eclipse Image and Video Creator', function: openFromMenu}],
     menuCommands: [{path: ['Extensions'], commands: ['FreeVideo.Open']}],
     beforeConfigureGraph() { configuringGraph = true; configuration++; },
     async setup() {

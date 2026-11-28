@@ -449,7 +449,7 @@ function raiseOverlays() { if (toasts?.childElementCount) raise(toasts); }
 
 // ── The browser tab says Eclipse, with Eclipse's icon, whatever ComfyUI writes there. ──
 const ICON = new URL('./assets/icon.svg', import.meta.url).href;
-const TITLE = 'FreeVideo';
+const TITLE = 'Eclipse Image and Video Creator';
 // ComfyUI writes "[42%][Node] *Workflow - ComfyUI"; Eclipse's own notices ("生成好了", a prefix) are kept.
 export const shellTitle = title => /ComfyUI/i.test(String(title || '')) || !String(title || '').trim() ? TITLE : String(title);
 let guarding = false;

@@ -334,7 +334,7 @@ export function installNavigation(openStudio, agent = false, {openWorkflow = nul
                     return await action(node, first);
                 } catch (error) {
                     console.warn('Eclipse edit project:', error);
-                    app.extensionManager?.toast?.add({severity: 'error', summary: 'FreeVideo',
+                    app.extensionManager?.toast?.add({severity: 'error', summary: 'Eclipse',
                         detail: t('Could not complete. Try again.', '没有完成，请重试'), life: 9000});
                     return null;
                 }

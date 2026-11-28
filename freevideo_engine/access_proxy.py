@@ -40,10 +40,10 @@ DAYS = 30
 LOGIN_PATH = '/m/login'
 # All password-page text lives here; the lockout line matches web/phone_model.js.
 PASSWORD_COPY = dict(
-    en=dict(title='FreeVideo', password='Password', remember='Keep me signed in',
+    en=dict(title='Eclipse Image and Video Creator', password='Password', remember='Keep me signed in',
             submit='Sign in', incorrect='Incorrect password', retry='Too many attempts. Try again in {minutes} min.',
             phone='Eclipse mobile'),
-    zh=dict(title='FreeVideo', password='密码', remember='保持登录',
+    zh=dict(title='Eclipse Image and Video Creator', password='密码', remember='保持登录',
             submit='登录', incorrect='密码不正确', retry='尝试次数过多，请 {minutes} 分钟后再试。',
             phone='Eclipse 手机版'))
 
