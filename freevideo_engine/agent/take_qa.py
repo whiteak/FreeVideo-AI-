@@ -149,11 +149,16 @@ def _db(value):
     return float(20 * np.log10(max(float(value), 1e-9)))
 
 
-def check(path, *, seconds=None, size=None, lines=None, transcribe=None, planned=None, first=None, last=None):
+def check(path, *, seconds=None, size=None, lines=None, transcribe=None, planned=None, first=None, last=None,
+          cast_faces=None, embed=None, find_faces=None):
     """Inspect one take. `seconds` is the planned length, `size` the expected (width, height),
     `lines` the spoken lines the shot should contain and `transcribe(path)` returns the heard text.
     `planned` lists the seconds of the cuts the prompt asks for (empty: a single shot; None: not known),
-    `first` and `last` are the given first and last frame images, if any."""
+    `first` and `last` are the given first and last frame images, if any.
+    `cast_faces` maps each cast member's name to the face vectors of their card and `embed(rgb)` gives the face
+    vectors in a frame (the face match is skipped without both); `find_faces(rgb)` gives face boxes and landmarks
+    for the lip-sync check, which runs only on a take with lines."""
+    from . import take_inspect
     problems, notes = [], []
     info = media.inspect(path)
     if size and (info['width'], info['height']) != tuple(size):
@@ -198,6 +203,32 @@ def check(path, *, seconds=None, size=None, lines=None, transcribe=None, planned
                 result[name + '_frame_diff'] = round(held, 1)
                 if held > HOLD_DIFF:
                     notes.append('the %s frame is not the given one' % name)
+        opening = take_inspect.opening(_still(first, small[0].shape) if first else None, small, times, planned)
+        if opening is not None:
+            result['opening'] = opening
+            if opening['held'] is False and opening['left_at']:
+                problems.append('the given first frame is dropped at %.2f s' % opening['left_at'])
+                # the jump is the take leaving the given frame, not an odd frame to trim
+                notes[:] = [n for n in notes if not n.startswith('single odd frame at the')]
+                result['flicker'] = [w for w in result['flicker'] if w != 'start']
+                if result['flicker']:
+                    notes.append('single odd frame at the end (trim the last frame)')
+        moves = take_inspect.reversals(take_inspect.camera(small, times, result.get('cuts', ())), result.get('cuts', ()))
+        back = take_inspect.returns(small, times, planned)
+        result.update(camera_reversals=moves, action_returns=back)
+        for move in moves:
+            problems.append('camera moves %s and back (%.1f-%.1f s, then %.1f-%.1f s)' % (move['axis'], *move['out'], *move['back']))
+        for row in back:
+            problems.append('action goes back at %.1f s to how it was at %.1f s' % (row['at'], row['back_to']))
+    if cast_faces and embed is not None:
+        try:
+            found = take_inspect.faces(path, cast_faces, embed)
+            result['faces'] = {name: {k: v for k, v in row.items() if k != 'scores'} for name, row in found.items()}
+            more_problems, more_notes = take_inspect.face_verdicts(found)
+            problems += more_problems
+            notes += more_notes
+        except Exception as error:  # noqa: BLE001 - a face model failing only skips the face check
+            notes.append('faces not checked (%s)' % type(error).__name__)
 
     if not info['has_audio']:
         problems.append('no audio track')
@@ -214,6 +245,16 @@ def check(path, *, seconds=None, size=None, lines=None, transcribe=None, planned
             count = samples.size // step
             levels = [_db(np.sqrt(np.mean(samples[i * step:(i + 1) * step] ** 2))) for i in range(count)]
             moments = [i * WINDOW for i in range(count)]
+            if lines and find_faces is not None and any(level > SPEECH_DB for level in levels):
+                try:
+                    lip = take_inspect.lip_offset(*take_inspect.mouth_motion(path, find_faces), samples, SAMPLE_RATE)
+                except Exception:  # noqa: BLE001 - no face detector only skips the lip check
+                    lip = None
+                if lip is not None:
+                    result['lip_sync'] = lip
+                    if lip['trust'] >= take_inspect.LIP_TRUST and abs(lip['offset']) >= take_inspect.LIP_OFFSET:
+                        notes.append('lips and sound %.2f s apart (shift the sound %s to fix)'
+                                     % (abs(lip['offset']), 'later' if lip['offset'] > 0 else 'earlier'))
             if any(level > SPEECH_DB for level in levels):
                 gaps = [(a, b) for a, b in _runs([level < GAP_DB for level in levels], moments, GAP_SECONDS)
                         if a > GAP_EDGE and b < moments[-1] - GAP_EDGE]
