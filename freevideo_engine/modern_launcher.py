@@ -624,7 +624,7 @@ def create_ui(session, *, show=True, instance=None):
             from PySide6.QtGui import QAction
             from PySide6.QtWidgets import QMenu, QSystemTrayIcon
             tray = QSystemTrayIcon(icon, self)
-            tray.setToolTip('FreeVideo')
+            tray.setToolTip('Eclipse Image and Video Creator')
             menu = QMenu()
             open_action = QAction(session.t('Open Eclipse', '打开 Eclipse'), menu)
             exit_action = QAction(session.t('Exit', '退出'), menu)

@@ -241,7 +241,7 @@ class Server:
             return dict(protocolVersion=version if version in PROTOCOLS else PROTOCOLS[0],
                         capabilities=dict(tools=dict(listChanged=False), prompts=dict(listChanged=False),
                                           resources=dict(listChanged=False)),
-                        serverInfo=dict(name='freevideo', title='FreeVideo', version=__version__),
+                        serverInfo=dict(name='freevideo', title='Eclipse Image and Video Creator', version=__version__),
                         instructions=INSTRUCTIONS + '\nThis installation\'s interface language is ' + language +
                         '; reply to the user in ' + language + ', and follow their language if they switch.')
         if method == 'ping':
