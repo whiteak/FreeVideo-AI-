@@ -72,9 +72,9 @@ export function refreshLoopStalls(api) { return loadStalls(api); }
 /** The newest records this page has read, for a feedback message; empty when there are none. */
 export function knownLoopStalls() { return stalls; }
 
-/** Why FreeVideo stopped, from the launcher's record of it: 'memory' (a Windows out-of-memory status, or SIGKILL while the
+/** Why Eclipse stopped, from the launcher's record of it: 'memory' (a Windows out-of-memory status, or SIGKILL while the
  * Linux kernel's out-of-memory count rose), 'ended' (the system or another program ended it), 'crashed', or 'unknown'
- * (an exit that cannot be told apart: the card says only that FreeVideo stopped unexpectedly). Null without a record. */
+ * (an exit that cannot be told apart: the card says only that Eclipse stopped unexpectedly). Null without a record. */
 export function exitCause(record) {
     if (!record || typeof record !== 'object') return null;
     const kind = record.exit_class;

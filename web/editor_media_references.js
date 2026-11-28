@@ -51,7 +51,7 @@ export function mediaReferences(node) {
             return api.apiURL('/view?' + new URLSearchParams({
                 filename: file.slice(split + 1), subfolder: split < 0 ? '' : file.slice(0, split), type: 'input'}));
         },
-        // Into ComfyUI's input folder through FreeVideo's streaming upload; a run waits for it, as in the creative panel.
+        // Into ComfyUI's input folder through Eclipse's streaming upload; a run waits for it, as in the creative panel.
         async upload(file) {
             const owner = media();
             // One upload at a time across the panel and this view, so neither writes over the other's list.

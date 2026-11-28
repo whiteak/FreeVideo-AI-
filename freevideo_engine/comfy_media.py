@@ -73,7 +73,7 @@ def continued(exported, notes=None):
             or (exported or {}).get('conditioning'):
         lines.append('A continued part uses picture references only. Video, audio and pre-encoded inputs are skipped.')
     for line in filter(None, lines):
-        logging.info('[FreeVideo] %s', line)
+        logging.info('[Eclipse] %s', line)
         if notes is not None:
             notes.append(line)
     return {'media': kept} if len(kept) > 1 else {}

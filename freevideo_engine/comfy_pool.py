@@ -127,7 +127,7 @@ class PoolSupervisor:
     def __init__(self, devices, *, root, source, start_worker=None):
         """start_worker(command, **Popen_options) -> process; defaults to processes.popen.
 
-        root is the engine installation, source the FreeVideo source checkout.
+        root is the engine installation, source the Eclipse source checkout.
         The caller is the running control Comfy, whose folder_paths supplies the
         frontend, shared model/input/output paths and current Python interpreter.
         """

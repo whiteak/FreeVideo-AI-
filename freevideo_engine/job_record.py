@@ -1,7 +1,7 @@
 """Where a generation ends, write its line in the finished-job record (jobs_journal.py).
 
 Three things run generations outside the Agent's job store, and each ends here once: a video the creation panel
-queued in ComfyUI (the FreeVideo node, or the multi-GPU front when the node runs in a worker), a long video's chain,
+queued in ComfyUI (the Eclipse node, or the multi-GPU front when the node runs in a worker), a long video's chain,
 and a picture. The Agent's own jobs keep their own durable records and are not written twice; a long video the Agent
 asked for is still recorded once, as its chain.
 
@@ -75,7 +75,7 @@ def _summary_video(output):
 
 
 def video_node(execute):
-    """Wrap the FreeVideo node's execute: one record per creation-panel video, written by the server process.
+    """Wrap the Eclipse node's execute: one record per creation-panel video, written by the server process.
 
     Not written: a part of a long video (its chain is recorded once), and a run in a multi-GPU worker (the front in
     the control process records it)."""

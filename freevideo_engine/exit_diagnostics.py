@@ -65,7 +65,7 @@ def own_memory(pid=None):
     """Physical RAM held by this process tree and by the largest process above it (Windows).
 
     A refusal says how much memory the system had left; this says how much of
-    what was taken is FreeVideo's. The numbers are private working sets, which
+    what was taken is Eclipse's. The numbers are private working sets, which
     exclude mapped files, so they can be compared with free physical RAM. The
     tree is the generation process and its children; the resident worker is
     started by the host and is added by the caller from its own status. The

@@ -6,7 +6,7 @@ import sys
 
 
 def with_private_compiler(root, env):
-    """Without a system compiler, tools that build at run time (Triton) use the one FreeVideo installed."""
+    """Without a system compiler, tools that build at run time (Triton) use the one Eclipse installed."""
     private = Path(root) / 'tools' / 'gcc-bin' / 'gcc'
     if os.name != 'nt' and 'CC' not in env and private.exists() and not shutil.which('gcc', path=env.get('PATH')):
         env['CC'] = str(private)

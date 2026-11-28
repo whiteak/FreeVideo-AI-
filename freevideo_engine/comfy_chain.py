@@ -396,7 +396,7 @@ def discard_chains(runs):
     try:
         return RUNNER.discard_for(runs) if RUNNER is not None else []
     except Exception:
-        logging.warning('[FreeVideo] Could not remove the chain record of a deleted creation.', exc_info=True)
+        logging.warning('[Eclipse] Could not remove the chain record of a deleted creation.', exc_info=True)
         return []
 
 
@@ -413,7 +413,7 @@ def register(host_factory=None):
     root = installation_root() if fake else installation()[0]
     host = host_factory(server) if fake else ComfyHost(server)
     if fake:
-        logging.warning('[FreeVideo] Test background chain host is enabled')
+        logging.warning('[Eclipse] Test background chain host is enabled')
     # Only the test host may lift the limits on parts, never the package.
     runner = ChainRunner(Path(root) / 'chains', host, estimate=None,
                          max_parts=getattr(host, 'max_parts', None) if fake else None,
@@ -459,7 +459,7 @@ def register(host_factory=None):
             return response(route_body('unknown_chain', 'Unknown chain or part: %s' % failure), 404)
         if isinstance(failure, OSError):
             code = storage_code(failure)
-            logging.warning('[FreeVideo] Long video storage failed (%s): %s', code, failure)
+            logging.warning('[Eclipse] Long video storage failed (%s): %s', code, failure)
             return response(route_body(code, '%s: %s' % (type(failure).__name__, failure)), 507 if code == 'disk_full' else 500)
         if isinstance(failure, ChainBusy):
             return response(route_body('busy', str(failure)), 409)

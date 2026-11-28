@@ -320,7 +320,7 @@ def remove_leads(directory, identity):
         for path in Path(directory).glob(identity + '.*.lead.npz'):
             path.unlink(missing_ok=True)
     except OSError:
-        logging.warning('[FreeVideo] Chain seam sound could not be removed')
+        logging.warning('[Eclipse] Chain seam sound could not be removed')
 
 
 def discard(directory, identity):
@@ -329,7 +329,7 @@ def discard(directory, identity):
     try:
         (Path(directory) / (identity + '.json')).unlink(missing_ok=True)
     except OSError:
-        logging.warning('[FreeVideo] A chain record could not be removed')
+        logging.warning('[Eclipse] A chain record could not be removed')
 
 
 def load_all(directory, limit=200, *, identity=None, visitor=None):
@@ -341,7 +341,7 @@ def load_all(directory, limit=200, *, identity=None, visitor=None):
         try:
             paths.append((path.stat().st_mtime_ns, path))
         except OSError:
-            logging.warning('[FreeVideo] Skipping inaccessible chain file: %s', path.name)
+            logging.warning('[Eclipse] Skipping inaccessible chain file: %s', path.name)
     paths.sort(key=lambda row: (row[0], row[1].name), reverse=True)
     for position, (_, path) in enumerate(paths):
         if limit is not None and position >= limit and visitor is None:
@@ -466,5 +466,5 @@ def load_all(directory, limit=200, *, identity=None, visitor=None):
                 records.append(record)
         except (OSError, ValueError, TypeError, KeyError, OverflowError):
             # Keep the file for inspection; never log its workflow or sentences.
-            logging.warning('[FreeVideo] Skipping invalid chain file: %s', path.name)
+            logging.warning('[Eclipse] Skipping invalid chain file: %s', path.name)
     return records

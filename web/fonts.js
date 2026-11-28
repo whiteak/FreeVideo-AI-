@@ -1,17 +1,17 @@
-// Fonts for text that FreeVideo draws into pictures and videos (the image editor's text
-// layers, the share card): open-source faces that ship with FreeVideo in web/fonts, built
+// Fonts for text that Eclipse draws into pictures and videos (the image editor's text
+// layers, the share card): open-source faces that ship with Eclipse in web/fonts, built
 // by scripts/build_web_fonts.py. A font installed on the computer is never used for them:
-// each stack ends with FreeVideo Box, whose one glyph, a box, stands for every character,
+// each stack ends with Eclipse Box, whose one glyph, a box, stands for every character,
 // so a character none of the bundled fonts has shows a box instead of a system font.
 const FAMILIES = {
-    sans: {family: 'FreeVideo Sans SC', files: {400: 'FreeVideoSansSC-Regular.woff2', 700: 'FreeVideoSansSC-Bold.woff2'}},
-    serif: {family: 'FreeVideo Serif SC', files: {400: 'FreeVideoSerifSC-Regular.woff2', 700: 'FreeVideoSerifSC-Bold.woff2'}},
+    sans: {family: 'Eclipse Sans SC', files: {400: 'FreeVideoSansSC-Regular.woff2', 700: 'FreeVideoSansSC-Bold.woff2'}},
+    serif: {family: 'Eclipse Serif SC', files: {400: 'FreeVideoSerifSC-Regular.woff2', 700: 'FreeVideoSerifSC-Bold.woff2'}},
     // LXGW WenKai has no bold: its Medium is the heavier face, served as weight 700.
-    kai: {family: 'FreeVideo Kai SC', files: {400: 'FreeVideoKaiSC-Regular.woff2', 700: 'FreeVideoKaiSC-Medium.woff2'}},
-    mono: {family: 'FreeVideo Mono SC', files: {400: 'FreeVideoMonoSC-Regular.woff2', 700: 'FreeVideoMonoSC-Bold.woff2'}},
+    kai: {family: 'Eclipse Kai SC', files: {400: 'FreeVideoKaiSC-Regular.woff2', 700: 'FreeVideoKaiSC-Medium.woff2'}},
+    mono: {family: 'Eclipse Mono SC', files: {400: 'FreeVideoMonoSC-Regular.woff2', 700: 'FreeVideoMonoSC-Bold.woff2'}},
 };
 // One face for every weight, so a bold line never gets a synthesized bold box.
-const BOX = {family: 'FreeVideo Box', file: 'FreeVideoBox.woff2', weights: '100 900'};
+const BOX = {family: 'Eclipse Box', file: 'FreeVideoBox.woff2', weights: '100 900'};
 export const FONT_KEYS = Object.keys(FAMILIES);
 export const FONT_WEIGHTS = [400, 700];
 

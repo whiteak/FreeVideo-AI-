@@ -49,4 +49,4 @@ def tolerate_unreadable_store_certificates():
 try:
     tolerate_unreadable_store_certificates()
 except Exception as error:
-    print('[FreeVideo] Windows certificate store check skipped: %s' % error)
+    print('[Eclipse] Windows certificate store check skipped: %s' % error)

@@ -41,7 +41,7 @@ export function mediaQueue() {
     if (queue) return queue;
     queue = createMediaQueue({enabled: aheadEnabled()});
     if (queue.enabled) {
-        try { queue.followJobs(jobs, ACTIVE); } catch (error) { console.warn('FreeVideo media queue:', error); }
+        try { queue.followJobs(jobs, ACTIVE); } catch (error) { console.warn('Eclipse media queue:', error); }
         // A deleted work is not loaded ahead any more.
         window.addEventListener('freevideo-library-deleted', event => { const video = event.detail?.video; if (video) queue.forget(mediaURL(video, 'output')); });
         // Uploads (media_upload.js, the image page and the editor announce theirs) go before anything loaded ahead.

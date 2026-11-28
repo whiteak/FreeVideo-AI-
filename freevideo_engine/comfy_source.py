@@ -54,7 +54,7 @@ def download(target, *, plan, env, run):
         try:
             return network.clone(target, spec['url'], spec['commit'], network=plan, env=env, run=run)
         except ValueError:
-            # A folder FreeVideo downloaded (it holds the receipt) that lost files or only
+            # A folder Eclipse downloaded (it holds the receipt) that lost files or only
             # differs in permissions or line endings is repaired; the user's edits never are.
             if not restore_untouched(target, spec['commit'], plan=plan, env=env, run=run):
                 raise
@@ -79,7 +79,7 @@ WAYS_OUT = ('To download a fresh copy, rename or move this folder, then click "R
 
 
 def different_message(first):
-    return first + ' FreeVideo left the folder unchanged. ' + WAYS_OUT
+    return first + ' Eclipse left the folder unchanged. ' + WAYS_OUT
 
 
 def restore_untouched(target, commit, *, plan, env, run):
@@ -107,10 +107,10 @@ def restore_untouched(target, commit, *, plan, env, run):
     except (subprocess.CalledProcessError, subprocess.TimeoutExpired, OSError, IndexError):
         return False
     if head != commit:
-        raise ValueError(different_message('The ComfyUI folder %s holds a different version from the one FreeVideo needs.' % plain(target)))
+        raise ValueError(different_message('The ComfyUI folder %s holds a different version from the one Eclipse needs.' % plain(target)))
     if changed:
         shown = ', '.join(changed[:8]) + (', and %d more' % (len(changed) - 8) if len(changed) > 8 else '')
-        raise ValueError(different_message('Some files in the ComfyUI folder %s differ from the version FreeVideo needs. '
+        raise ValueError(different_message('Some files in the ComfyUI folder %s differ from the version Eclipse needs. '
                                            'Changed files (%d): %s.' % (plain(target), len(changed), shown)))
     names = [row[3:] for row in listed if len(row) > 3]
     if not names:

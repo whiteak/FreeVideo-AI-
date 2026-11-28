@@ -1134,7 +1134,7 @@ def _import_users(root, identity):
 
 
 def delete_import(root, identity, confirm=False):
-    """Remove the copy FreeVideo made of an imported file, never the file it was copied from.
+    """Remove the copy Eclipse made of an imported file, never the file it was copied from.
     An import that is still being prepared, or that an edit uses (unless confirmed), stays."""
     with _STATE:
         path = _import_path(root, identity)

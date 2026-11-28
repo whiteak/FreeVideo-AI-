@@ -20,7 +20,7 @@ import zipfile
 import freevideo_ed25519
 import freevideo_update_keys
 
-DOMAIN = b'FreeVideo source manifest v1\x00'
+DOMAIN = b'Eclipse source manifest v1\x00'
 MAX_MANIFEST = 2 * 2**20
 MAX_FILES = 4096
 MAX_FILE = 32 * 2**20

@@ -183,7 +183,7 @@ class Setup:
         from .launcher_settings import extra_model_directories
         return dict(root=str(root), ready=ready, detail=detail,
                     libraries=discover_libraries(self.folder_paths), extra_libraries=extra_model_directories(), token=self.token,
-                    environment='Managed FreeVideo environment; ComfyUI packages are kept',
+                    environment='Managed Eclipse environment; ComfyUI packages are kept',
                     restart_required=False, downloads=self.downloads(download_root or root),
                     resources=self.resource_settings(), resources_damaged=self.resources_damaged(),
                     sampling_cache_bytes=total_bytes())
@@ -286,21 +286,21 @@ class Setup:
         root = resolved(Path(value).expanduser())
         host = resolved(self.folder_paths.base_path)
         if root == Path(root.anchor) or root == host or (root in host.parents and not owned_comfy(root, host)):
-            raise ValueError('Use a dedicated FreeVideo folder, not the ComfyUI root or its parent')
+            raise ValueError('Use a dedicated Eclipse folder, not the ComfyUI root or its parent')
         prefix = resolved(sys.prefix)
         # Refuse to pip into the interpreter that is running, and nothing more.
         # The earlier test asked whether the live interpreter lived anywhere
         # under `root/envs`, which is true of every working installation the
         # product builds: comfy_host puts ComfyUI in `root/envs/comfyui-<key>`
-        # beside the engine's own env. So updating an installed FreeVideo from
+        # beside the engine's own env. So updating an installed Eclipse from
         # inside its own ComfyUI was refused as "the active environment", with
         # nothing wrong and nothing to change. Only the engine's own
         # environment names are its install target; a ComfyUI sibling is not.
         engine_envs = {(root / 'envs' / name).resolve() for name in ENVIRONMENTS}
         if root == prefix or prefix in root.parents or prefix in engine_envs:
-            raise ValueError('FreeVideo cannot install packages into the environment it is '
+            raise ValueError('Eclipse cannot install packages into the environment it is '
                              'running in. Launch ComfyUI from its own environment, or run '
-                             'setup from the FreeVideo launcher instead of this panel.')
+                             'setup from the Eclipse launcher instead of this panel.')
         selected = os.environ.get('FREEVIDEO_HOME')
         if selected and resolved(installation_root(self.source)) != root:
             raise ValueError('FREEVIDEO_HOME selects another installation. Change it before starting ComfyUI.')
@@ -310,7 +310,7 @@ class Setup:
     def inspect(self, value):
         self.status()
         if self.runner.busy:
-            raise ValueError('FreeVideo setup is already running')
+            raise ValueError('Eclipse setup is already running')
         root = self.validate_root(value.get('root'))
         extra = value.get('extra_libraries', [])
         if not isinstance(extra, list) or not isinstance(value.get('copy', False), bool):
@@ -392,7 +392,7 @@ class Setup:
         # never started sends it looking for the wrong thing.
         root = installation_root(self.source)
         if not root or not Path(root).is_dir():
-            raise ValueError('Install FreeVideo first. The placement test measures an '
+            raise ValueError('Install Eclipse first. The placement test measures an '
                              'installed engine; it cannot run before setup finishes.')
         if self.runner.busy:
             # Name what is running. The panel shows its progress, and a user

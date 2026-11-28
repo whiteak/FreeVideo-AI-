@@ -154,7 +154,7 @@ def middleware_for(copies=None, bodies=None):
     def warn(error):
         if not failed:
             failed.append(error)
-            logging.warning('[FreeVideo] Page files sent without compression: %s', error)
+            logging.warning('[Eclipse] Page files sent without compression: %s', error)
 
     def headers_from(response, *names):
         return {name: response.headers[name] for name in names if name in response.headers}
@@ -247,7 +247,7 @@ def register(server=None):
     if server is None or app is None or getattr(server, '_freevideo_page_cache', False):
         return False
     if app.frozen:
-        logging.warning('[FreeVideo] Page file caching not added: the page server is not open for additions')
+        logging.warning('[Eclipse] Page file caching not added: the page server is not open for additions')
         return False
     app.middlewares.append(middleware_for())
     server._freevideo_page_cache = True

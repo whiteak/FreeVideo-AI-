@@ -1,4 +1,4 @@
-"""Start a FreeVideo module from this installation, whichever folder the command is run in.
+"""Start a Eclipse module from this installation, whichever folder the command is run in.
 
 The command scripts run this file with the module's name and arguments. The module then sees the same ``sys.argv``,
 ``__main__`` and exit code as under ``python -m``. It has no version requirement: the first step of a setup can run on

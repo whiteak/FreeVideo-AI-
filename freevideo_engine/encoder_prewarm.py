@@ -174,7 +174,7 @@ class IdlePrewarmer:
                             notify(result)
                     except (OSError, RuntimeError):
                         pass  # Optional idle preparation cannot fail a saved video.
-            self.thread = threading.Thread(target=work, name='FreeVideo %s prefetch' % purpose, daemon=True)
+            self.thread = threading.Thread(target=work, name='Eclipse %s prefetch' % purpose, daemon=True)
             self.thread.start()
             return True
 

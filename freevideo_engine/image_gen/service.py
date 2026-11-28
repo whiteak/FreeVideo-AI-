@@ -71,7 +71,7 @@ HISTORY_NAME = re.compile(r'image-\d{8}-\d{6}-\d{2}\.(?:png|jpg)')
 # Which model made each history picture; a picture from before this record has no entry.
 MODELS_FILE = 'image-models.json'
 LEGACY_NAME = re.compile(r'[0-9a-f]{32}\.png')
-# The pictures a page sends with one request: a random name in FreeVideo's own folder, which ComfyUI's Load Image list
+# The pictures a page sends with one request: a random name in Eclipse's own folder, which ComfyUI's Load Image list
 # does not show (it lists only the input folder itself). Earlier pages put them in the input folder under the
 # second form. The service removes them when the job ends; nothing else in the input folder is ever removed.
 PAGE_FOLDER = 'freevideo-image-ref'
@@ -891,7 +891,7 @@ class Service:
             finally:
                 temporary.unlink(missing_ok=True)
         except Exception:
-            logging.warning('[FreeVideo] Could not copy a picture into the output folder.', exc_info=True)
+            logging.warning('[Eclipse] Could not copy a picture into the output folder.', exc_info=True)
 
     def forget_copies(self, names):
         """Remove the copies in the output folder of pictures deleted for good; only the plain file of that name."""
@@ -905,9 +905,9 @@ class Service:
                     if target.parent == directory and not target.is_symlink() and target.is_file():
                         target.unlink()
                 except OSError:
-                    logging.warning('[FreeVideo] Could not remove a picture copy in the output folder.', exc_info=True)
+                    logging.warning('[Eclipse] Could not remove a picture copy in the output folder.', exc_info=True)
         except Exception:
-            logging.warning('[FreeVideo] Could not remove the picture copies of deleted pictures.', exc_info=True)
+            logging.warning('[Eclipse] Could not remove the picture copies of deleted pictures.', exc_info=True)
 
     def copy_directory_any(self):
         """The copy folder whether or not copying is on now: a picture copied earlier is removed all the same."""
@@ -1117,7 +1117,7 @@ class Service:
         try:
             return {name: list(cards) for name, cards in hook(list(names)).items() if cards}
         except Exception:
-            logging.warning('[FreeVideo] Could not tell which cards keep a picture.', exc_info=True)
+            logging.warning('[Eclipse] Could not tell which cards keep a picture.', exc_info=True)
             return {}
 
     def history_delete(self, name):
@@ -1172,7 +1172,7 @@ class Service:
                 work_thumbnails.release('image:' + name.rpartition('/')[2], input_root)
                 private_refs.release_owner('image:' + name.rpartition('/')[2], input_root=input_root)
         except (OSError, ValueError):
-            logging.warning('[FreeVideo] Could not release what a deleted picture held.', exc_info=True)
+            logging.warning('[Eclipse] Could not release what a deleted picture held.', exc_info=True)
         # The failure reports kept in memory for the page drop the ones about these pictures.
         leaves = [name.rpartition('/')[2] for name in names]
         with self.mutex:
@@ -1184,7 +1184,7 @@ class Service:
             try:
                 hook(names)
             except Exception:
-                logging.warning('[FreeVideo] Could not remove what a deleted picture left elsewhere.', exc_info=True)
+                logging.warning('[Eclipse] Could not remove what a deleted picture left elsewhere.', exc_info=True)
 
     # Deleting from the page: the pictures move to freevideo-image/.deleted at once and go for good UNDO_SECONDS
     # later, also when the page is closed meanwhile; a restart finishes what an earlier run left.
@@ -1521,7 +1521,7 @@ class Service:
         try:
             return detect(path)
         except WeightsError:
-            logging.warning('[FreeVideo] The face detector weights are missing or changed; faces are not looked for.')
+            logging.warning('[Eclipse] The face detector weights are missing or changed; faces are not looked for.')
             raise ValueError('model_unreadable') from None
 
     def request(self, value):
@@ -2378,7 +2378,7 @@ class Service:
             vram = sum(rows[pid] for pid in pids if pid in rows)
             fits = fits_beside(machine, vram, _rss(pids), **video)
         except Exception:  # an unreadable card or plan keeps the earlier behaviour: the picture worker goes
-            logging.warning('[FreeVideo] Could not plan the video beside the picture model', exc_info=True)
+            logging.warning('[Eclipse] Could not plan the video beside the picture model', exc_info=True)
             return False
         server_mode.note_keep('image', fits, reason='video_start', card_bytes=vram)
         return fits
@@ -2528,10 +2528,10 @@ class Service:
             try:
                 released = release_native(comfy_server())
             except Exception:  # only frees memory early; the picture's own budget still decides
-                logging.warning('[FreeVideo] Could not unload ComfyUI models before the picture', exc_info=True)
+                logging.warning('[Eclipse] Could not unload ComfyUI models before the picture', exc_info=True)
                 released = None
             if released is not None:
-                logging.info('[FreeVideo] Unloaded ComfyUI models before the picture: %s', released)
+                logging.info('[Eclipse] Unloaded ComfyUI models before the picture: %s', released)
                 with self.mutex:
                     if self.context is not None:
                         self.context.native_release = released
@@ -2640,7 +2640,7 @@ class Service:
                                             placed = dict(placed, state='stopped', reason='A picture was asked for')
                                 except Exception as error:  # noqa: BLE001
                                     from ..failure_details import raised_at
-                                    logging.warning('[FreeVideo] Encoder placement for the warm-up failed: %s at %s',
+                                    logging.warning('[Eclipse] Encoder placement for the warm-up failed: %s at %s',
                                                     type(error).__name__, raised_at(error))
                                     placed = dict(state='failed', reason='Encoder placement failed')
                                 with self.mutex:
@@ -2742,7 +2742,7 @@ class Service:
                     self.drop_uploads(self.key)
                 elif failure_error is not None:
                     # Without a job (a warm-up for the page) nothing shows on the page; the run log keeps why.
-                    logging.warning('[FreeVideo] Picture worker stopped without a job (%s): %s', failure, failure_error)
+                    logging.warning('[Eclipse] Picture worker stopped without a job (%s): %s', failure, failure_error)
                 self.queue_wake.set()
 
     def shrink(self, value, row, context):
@@ -3035,7 +3035,7 @@ def register():
             try:
                 jobs.forget_works(list(names))
             except Exception:
-                logging.warning('[FreeVideo] Could not update the Agent jobs of a deleted picture.', exc_info=True)
+                logging.warning('[Eclipse] Could not update the Agent jobs of a deleted picture.', exc_info=True)
         cast = getattr(jobs, 'cast', None)
         if cast is None:
             return
@@ -3047,7 +3047,7 @@ def register():
             try:
                 cast.delete(card, by='user')
             except Exception:
-                logging.warning('[FreeVideo] Could not remove the library card of a deleted picture.', exc_info=True)
+                logging.warning('[Eclipse] Could not remove the library card of a deleted picture.', exc_info=True)
     service.on_works_deleted = works_deleted
 
     def works_in_use(names):
@@ -3076,31 +3076,31 @@ def register():
         try:
             service.finish_trash(everything=True)
         except Exception:
-            logging.warning('[FreeVideo] Could not finish deleting pictures.', exc_info=True)
+            logging.warning('[Eclipse] Could not finish deleting pictures.', exc_info=True)
         while not service.closed:
             try:
                 removed = service.clean_page_uploads()
                 if removed:
-                    logging.info('[FreeVideo] Removed %d pictures left by image requests that had ended.', removed)
+                    logging.info('[Eclipse] Removed %d pictures left by image requests that had ended.', removed)
             except Exception:
-                logging.warning('[FreeVideo] Could not remove pictures left by ended image requests.', exc_info=True)
+                logging.warning('[Eclipse] Could not remove pictures left by ended image requests.', exc_info=True)
             try:
                 # Small copies of pictures that went while the engine was stopped do not stay (a listing also does this).
                 from ..work_thumbnails import prune_pictures
                 prune_pictures(service.input_directory())
             except Exception:
-                logging.warning('[FreeVideo] Could not remove the small copies of removed pictures.', exc_info=True)
+                logging.warning('[Eclipse] Could not remove the small copies of removed pictures.', exc_info=True)
             time.sleep(6 * 3600)
     threading.Thread(target=clean_page_uploads, name='freevideo-image-page-uploads', daemon=True).start()
     from .. import video_warm
     videos = video_warm.warmer(installation, busy=lambda: video_busy() or service.busy())
     token = secrets.token_urlsafe(24)
     if server_mode.enabled() or server_mode.keeps_idle():
-        # Models load as FreeVideo starts, once ComfyUI has finished starting (its queue answers): all of them on a
+        # Models load as Eclipse starts, once ComfyUI has finished starting (its queue answers): all of them on a
         # server, the kinds used lately on a desktop.
         def load_at_start():
             time.sleep(START_DELAY_SECONDS)
-            logging.info('[FreeVideo] Loading the models at start: %s', server_mode.warm_at_start())
+            logging.info('[Eclipse] Loading the models at start: %s', server_mode.warm_at_start())
         threading.Thread(target=load_at_start, name='freevideo-server-start', daemon=True).start()
 
     @server.routes.get('/freevideo/image-gen')

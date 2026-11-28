@@ -1,6 +1,6 @@
 # Editing projects
 
-Projects are the timelines shared with the FreeVideo editor page.
+Projects are the timelines shared with the Eclipse editor page.
 
 1. `freevideo_projects` lists them; `freevideo_project_create` starts an empty one.
 2. Footage from the user's disk: `freevideo_import_media`, then poll `freevideo_imports` until `ready` (`failed` is final). Insert the returned `import:<id>` source.

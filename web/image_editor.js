@@ -1,6 +1,6 @@
 // Image editor for media cards: layers, selections, retouching, text, shapes,
 // colour, crop and canvas size, in the spirit of a desktop photo editor and in
-// FreeVideo's own look. The original file is never changed: saving renders a
+// Eclipse's own look. The original file is never changed: saving renders a
 // new image and keeps the document, so the next visit starts from the original
 // with every layer and step in place. Closing frees every canvas it made.
 import { cutTip } from './cut_tip.js';
@@ -196,8 +196,8 @@ async function openImageEditorNow({source = null, name = source || '', target = 
         // A keyframe becomes the first or last frame of the video: start from its shape.
         doc = commands.setRatio(doc, 'video', target);
     }
-    // Text draws with the fonts that ship with FreeVideo; the text tool starts in bold sans.
-    await Promise.all([renderer.preload(doc), loadFont('sans', 700).catch(error => console.warn('FreeVideo image editor font unavailable; using fallback fonts.', error))]);
+    // Text draws with the fonts that ship with Eclipse; the text tool starts in bold sans.
+    await Promise.all([renderer.preload(doc), loadFont('sans', 700).catch(error => console.warn('Eclipse image editor font unavailable; using fallback fonts.', error))]);
     // A text box measured with other fonts (or by another renderer) fits its text again,
     // keeping its place and scale. It is part of opening, not a change to undo or save.
     doc = {...doc, layers: doc.layers.map(l => {
@@ -306,7 +306,7 @@ async function openImageEditorNow({source = null, name = source || '', target = 
             }, true);
             bar.append(tabs);
             dialog.prepend(bar);
-        } catch (error) { console.warn('FreeVideo image editor bar:', error); }
+        } catch (error) { console.warn('Eclipse image editor bar:', error); }
     }
     document.body.append(dialog);
     // The pose tool (mannequins) and three.js load only when the tool is chosen or the sketch already has mannequins.
@@ -958,7 +958,7 @@ async function openImageEditorNow({source = null, name = source || '', target = 
             v => setTextFont(layer.id, {font: v}), t('Font', '字体'));
         font.group.id = 'fv-ie-font'; font.group.classList.add('fv-ie-fonts');
         for (const b of font.group.children) b.style.fontFamily = fontStack(b.dataset.value);
-        loadFonts(FONT_KEYS.map(k => [k, 400])).catch(error => console.warn('FreeVideo image editor fonts unavailable; using fallback fonts.', error));
+        loadFonts(FONT_KEYS.map(k => [k, 400])).catch(error => console.warn('Eclipse image editor fonts unavailable; using fallback fonts.', error));
         const size = el('input'); size.type = 'number'; size.min = '6'; size.max = '2000'; size.value = String(Math.round(layer.text.size)); size.id = 'fv-ie-font-size';
         size.onchange = () => commit(updateText(layer.id, {size: clamp(Number(size.value) || 12, 6, 2000)}));
         const color = el('input'); color.type = 'color'; color.value = layer.text.color; color.id = 'fv-ie-text-color';
@@ -988,7 +988,7 @@ async function openImageEditorNow({source = null, name = source || '', target = 
         if (!fontLoaded(next.font, next.weight)) {
             const done = working('Preparing the font', '正在准备字体');
             try { await loadFont(next.font, next.weight); }
-            catch (error) { console.warn('FreeVideo image editor font unavailable; using fallback fonts.', error); }
+            catch (error) { console.warn('Eclipse image editor font unavailable; using fallback fonts.', error); }
             done();
         }
         if (dialog.open && doc.layers.some(l => l.id === id)) commit(updateText(id, patch));
@@ -2022,7 +2022,7 @@ async function openImageEditorNow({source = null, name = source || '', target = 
     dialog.showModal();
     if (opening) requestAnimationFrame(() => requestAnimationFrame(() => opening.drop()));
     computeLayout();
-    if (doc.layers.some(l => l.kind === 'pose')) await loadPose().catch(error => console.warn('FreeVideo sketch mannequin unavailable:', error));
+    if (doc.layers.some(l => l.kind === 'pose')) await loadPose().catch(error => console.warn('Eclipse sketch mannequin unavailable:', error));
     renderPanels();
     // The result is placed on the canvas the request was made for, not on the one a reload rebuilt.
     const resumedCanvas = generation.resumedCanvas;
@@ -2037,6 +2037,6 @@ async function openImageEditorNow({source = null, name = source || '', target = 
     (save.disabled ? stage : save).focus();
     if (tool === 'generate') generation.focusPrompt();
     // The other fonts load in the background, so switching to one is immediate.
-    loadFonts(FONT_KEYS.flatMap(k => [[k, 400], [k, 700]])).catch(error => console.warn('FreeVideo image editor fonts unavailable; using fallback fonts.', error));
+    loadFonts(FONT_KEYS.flatMap(k => [[k, 400], [k, 700]])).catch(error => console.warn('Eclipse image editor fonts unavailable; using fallback fonts.', error));
     return result;
 }

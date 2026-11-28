@@ -10,7 +10,7 @@ from pathlib import Path
 def page_report(value):
     """The browser page's own check, bounded; None for anything else.
 
-    'loading' arrives as soon as FreeVideo's page script starts, before its
+    'loading' arrives as soon as Eclipse's page script starts, before its
     check ends with 'ready' or 'error'.
     """
     if not isinstance(value, dict) or value.get('state') not in ('loading', 'ready', 'error'):
@@ -25,28 +25,28 @@ def page_report(value):
 
 
 PAGE_SCRIPTS_MISSING = (
-    'FreeVideo’s page scripts have not run in this browser, so the creative workspace is missing. '
-    'Press Ctrl+F5 to reload the page. If it stays missing, open the FreeVideo launcher, '
-    'click Settings › Repair, and open FreeVideo again. '
-    '浏览器没有运行 FreeVideo 的页面脚本，所以看不到创作面板。请按 Ctrl+F5 强制刷新页面；'
-    '仍然没有时，请在 FreeVideo 启动器的“设置”里点击“修复”，然后重新打开 FreeVideo。')
+    'Eclipse’s page scripts have not run in this browser, so the creative workspace is missing. '
+    'Press Ctrl+F5 to reload the page. If it stays missing, open the Eclipse launcher, '
+    'click Settings › Repair, and open Eclipse again. '
+    '浏览器没有运行 Eclipse 的页面脚本，所以看不到创作面板。请按 Ctrl+F5 强制刷新页面；'
+    '仍然没有时，请在 Eclipse 启动器的“设置”里点击“修复”，然后重新打开 Eclipse。')
 # Without the launcher, the page's own Settings cannot open either.
 PAGE_SCRIPTS_MISSING_NODE = (
-    'FreeVideo’s page scripts have not run in this browser, so the creative workspace is missing. '
-    'Press Ctrl+F5 to reload the page. If it stays missing, update the FreeVideo node and restart ComfyUI. '
-    '浏览器没有运行 FreeVideo 的页面脚本，所以看不到创作面板。请按 Ctrl+F5 强制刷新页面；'
-    '仍然没有时，请更新 FreeVideo 节点并重启 ComfyUI。')
+    'Eclipse’s page scripts have not run in this browser, so the creative workspace is missing. '
+    'Press Ctrl+F5 to reload the page. If it stays missing, update the Eclipse node and restart ComfyUI. '
+    '浏览器没有运行 Eclipse 的页面脚本，所以看不到创作面板。请按 Ctrl+F5 强制刷新页面；'
+    '仍然没有时，请更新 Eclipse 节点并重启 ComfyUI。')
 
 # Where a node message sends the user to repair. The launcher has its own
 # Repair; a ComfyUI started without it has the page's Settings › Install / repair.
-LAUNCHER_REPAIR = 'In the FreeVideo launcher, open Settings and click Repair.'
-PAGE_REPAIR = 'Open FreeVideo Settings in ComfyUI and click "Install / repair".'
+LAUNCHER_REPAIR = 'In the Eclipse launcher, open Settings and click Repair.'
+PAGE_REPAIR = 'Open Eclipse Settings in ComfyUI and click "Install / repair".'
 # The launcher reads /freevideo/launcher/ui every 3 s while this ComfyUI is open.
 LAUNCHER_SEEN = 30
 
 
 def launcher_watching(server, now=None):
-    """True while a FreeVideo launcher is reading this server's page check."""
+    """True while a Eclipse launcher is reading this server's page check."""
     seen = getattr(server, '_freevideo_launcher_seen', None)
     now = time.monotonic() if now is None else now
     return isinstance(seen, float) and 0 <= now - seen < LAUNCHER_SEEN
@@ -102,10 +102,10 @@ def request_add_video(server, now=None):
 
 
 def page_notice(server):
-    """Text for the generating node when no FreeVideo page has reported to this ComfyUI.
+    """Text for the generating node when no Eclipse page has reported to this ComfyUI.
 
     The page check names its problems on the page, but it is itself one of
-    FreeVideo's page scripts. When none of them runs, the nodes still generate
+    Eclipse's page scripts. When none of them runs, the nodes still generate
     and nothing on the page says the workspace is missing; ComfyUI's own node
     text is then the only place left to say so.
     """
@@ -201,9 +201,9 @@ def register():
         try:
             save_page_report(info['engine_root'], report)
         except OSError as error:
-            logging.warning('[FreeVideo] Could not save the page check: %s', error)
+            logging.warning('[Eclipse] Could not save the page check: %s', error)
         if report['state'] == 'error':
-            logging.warning('[FreeVideo] The browser page did not load FreeVideo completely: %s (%s)',
+            logging.warning('[Eclipse] The browser page did not load Eclipse completely: %s (%s)',
                             ' | '.join(report['problems']) or 'no details', report['agent'])
         return web.json_response(dict(ok=True))
 

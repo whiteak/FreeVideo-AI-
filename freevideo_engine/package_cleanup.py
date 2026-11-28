@@ -1,4 +1,4 @@
-"""Remove FreeVideo's own copies of model files the installation already holds, verified.
+"""Remove Eclipse's own copies of model files the installation already holds, verified.
 
 Two kinds of leftovers duplicate an installed model file:
 

@@ -58,12 +58,12 @@ function saveOutbox(session, entry) {
     try {
         if (entry) {
             if (new TextEncoder().encode(JSON.stringify(entry.project)).length > 2 * 1024 * 1024) {
-                console.info('[FreeVideo editor] Record exceeds 2 MB; outbox skipped.'); return false;
+                console.info('[Eclipse editor] Record exceeds 2 MB; outbox skipped.'); return false;
             }
             localStorage.setItem(lockName(session), JSON.stringify(entry));
         } else localStorage.removeItem(lockName(session));
         return true;
-    } catch { console.info('[FreeVideo editor] Local outbox unavailable.'); return false; }
+    } catch { console.info('[Eclipse editor] Local outbox unavailable.'); return false; }
 }
 export function createSaveQueue({write, read, onSaved = () => {}, onConflict = () => {}, onCopied = () => {},
     onMemory = () => {}, onError = () => {}, onStatus = () => {}, clock = clockDefault, delay = 600,
@@ -456,7 +456,7 @@ export function createEditorStore(api, {t = en => en, notify = () => {}, onGener
             return value;
         },
         async imports() { return counted(await json('/freevideo/editor/imports', undefined, {items: []})); },
-        // Removes FreeVideo's copy of an imported file. The server asks first when an edit uses it (reason import_referenced, with its count in response.users).
+        // Removes Eclipse's copy of an imported file. The server asks first when an edit uses it (reason import_referenced, with its count in response.users).
         async removeImport(id, {confirm = false} = {}) {
             const response = await request('/freevideo/editor/import/delete', post({id, confirm}));
             if (!response.ok) throw await saveFailure(response);
@@ -542,7 +542,7 @@ export function createEditorStore(api, {t = en => en, notify = () => {}, onGener
             const response = await request(chainRoute(), post(payload));
             if (response.status === 404) {
                 generationAbsent();
-                notice('generate', 'Restart FreeVideo to generate.', '请重新启动 FreeVideo 后再生成。');
+                notice('generate', 'Restart Eclipse to generate.', '请重新启动 Eclipse 后再生成。');
                 return null;
             }
             if (!response.ok) {
@@ -566,7 +566,7 @@ export function createEditorStore(api, {t = en => en, notify = () => {}, onGener
             const value = await response.json().catch(() => null);
             if (!response.ok && (response.status !== 404 || value?.reason || value?.code))
                 throw Object.assign(errorFor(response), {reason: value?.reason, code: value?.code, items: value?.items});
-            if (response.status === 404 || !value) { notice('export', 'To export, update FreeVideo and restart it.', '请更新 FreeVideo 并重新启动后再导出。'); return null; }
+            if (response.status === 404 || !value) { notice('export', 'To export, update Eclipse and restart it.', '请更新 Eclipse 并重新启动后再导出。'); return null; }
             return value?.export || null;
         },
         watchExport(id, fn, lost) { return watch(async () => (await json('/freevideo/editor/export?' + new URLSearchParams({id})))?.export || null, fn, lost); },
@@ -576,7 +576,7 @@ export function createEditorStore(api, {t = en => en, notify = () => {}, onGener
             const response = await request('/freevideo/editor/frame', post({id, revision, frame}));
             const value = await response.json().catch(() => null);
             if (!response.ok && (response.status !== 404 || value?.reason)) throw Object.assign(errorFor(response), {reason: value?.reason});
-            if (response.status === 404 || !value) { notice('frame', 'To save a frame, update FreeVideo and restart it.', '请更新 FreeVideo 并重新启动后再保存画面。'); return null; }
+            if (response.status === 404 || !value) { notice('frame', 'To save a frame, update Eclipse and restart it.', '请更新 Eclipse 并重新启动后再保存画面。'); return null; }
             return value.picture || null;
         },
         // Subtitles from speech. What this computer can recognise; null where it cannot or the server is older.

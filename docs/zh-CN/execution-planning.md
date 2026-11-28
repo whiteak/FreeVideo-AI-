@@ -1,6 +1,6 @@
-# FreeVideo Adaptive Execution Planner
+# Eclipse Adaptive Execution Planner
 
-FreeVideo Adaptive Execution Planner（自适应执行规划器）根据设备与主机的实时测量结果，为每个请求计算执行计划。执行计划在实测的显存与内存预算内确定：50 个 Transformer 块在显存、锁页内存与磁盘之间的驻留位置，传输调度，int8 或 FP8 GEMM 路径，注意力后端与头分组，激活暂存，以及 VAE 解码器的放置。
+Eclipse Adaptive Execution Planner（自适应执行规划器）根据设备与主机的实时测量结果，为每个请求计算执行计划。执行计划在实测的显存与内存预算内确定：50 个 Transformer 块在显存、锁页内存与磁盘之间的驻留位置，传输调度，int8 或 FP8 GEMM 路径，注意力后端与头分组，激活暂存，以及 VAE 解码器的放置。
 
 ## 输入
 

@@ -103,9 +103,9 @@ def _yield_gpu(server):
         try:
             released = release_native(server)
             if released:
-                logging.info('[FreeVideo] Unloaded ComfyUI models before the music: %s', released)
+                logging.info('[Eclipse] Unloaded ComfyUI models before the music: %s', released)
         except Exception:  # only frees memory early; the worker places what still fits
-            logging.warning('[FreeVideo] Could not unload ComfyUI models before the music', exc_info=True)
+            logging.warning('[Eclipse] Could not unload ComfyUI models before the music', exc_info=True)
 
 
 def _result(stream):
@@ -202,7 +202,7 @@ def _run(out, caption, frames, seconds, seed, quiet, fps, server, cancelled, roo
             if not value.get('ok'):
                 errors.seek(0, 2)
                 errors.seek(max(0, errors.tell() - 4000))
-                logging.warning('[FreeVideo] Music worker failed (exit %s, %s): %s', process.returncode,
+                logging.warning('[Eclipse] Music worker failed (exit %s, %s): %s', process.returncode,
                                 value.get('error') or 'no result', errors.read().decode('utf-8', 'replace'))
                 code = value.get('error')
                 raise MusicError('out_of_memory' if code == 'out_of_memory' else 'music_failed',

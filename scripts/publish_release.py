@@ -163,7 +163,7 @@ def stable_body(builds, tag):
 def nightly_body(builds, sha):
     built = time.strftime('%Y-%m-%d %H:%M', time.gmtime(max(b['identity']['built_at'] for b in builds.values())))
     size = {c: '%.1f MB' % (builds[c]['path'].stat().st_size / 1e6) for c in platforms(builds)}
-    rows = ['## FreeVideo nightly (rolling)', '',
+    rows = ['## Eclipse nightly (rolling)', '',
             'Automated build of `main`, refreshed after every merge. For everyday use, download the '
             '[latest release](%s/releases/latest).' % PAGE,
             '',
@@ -267,7 +267,7 @@ def publish_stable(releases, builds, sha, folder):
                          'freevideo_engine/release_notes.json, merge, then publish again.' % tag)
     sums = write(folder, 'SHA256SUMS.txt', ''.join('%s  %s\n' % (builds[c]['sha256'], builds[c]['path'].name) for c in platforms(builds)))
     body = write(folder, 'release-body.md', stable_body(builds, tag))
-    title = 'FreeVideo ' + tag
+    title = 'Eclipse ' + tag
     releases.point_tag(tag, sha)
     gh('Create draft %s' % tag, 'release', 'create', tag, '--verify-tag', '--draft', '--title', title, '--notes-file', body)
     gh('Upload launchers to %s' % tag, 'release', 'upload', tag, *(str(builds[c]['path']) for c in platforms(builds)), sums, '--clobber')
@@ -279,13 +279,13 @@ def publish_stable(releases, builds, sha, folder):
         build = builds[channel]
         name = NAMES[channel]
         legacy = write(folder, 'legacy-%s.md' % channel,
-                       'The latest FreeVideo is on the [latest release](%s/releases/latest) page.\n\n'
+                       'The latest Eclipse is on the [latest release](%s/releases/latest) page.\n\n'
                        '最新版本请前往[最新正式版](%s/releases/latest)下载。\n' % (PAGE, PAGE))
         legacy_sums = write(folder, 'SHA256SUMS-%s.txt' % channel, '%s  %s\n' % (build['sha256'], build['path'].name))
         releases.point_tag(channel, sha)
         if releases.find(channel) is None:
             gh('Create %s' % channel, 'release', 'create', channel, '--verify-tag', '--prerelease', '--latest=false',
-               '--title', 'FreeVideo %s for %s' % (tag, name), '--notes-file', legacy)
+               '--title', 'Eclipse %s for %s' % (tag, name), '--notes-file', legacy)
         staged = Path(folder) / channel
         staged.mkdir(exist_ok=True)
         (staged / 'SHA256SUMS.txt').write_bytes(Path(legacy_sums).read_bytes())
@@ -293,7 +293,7 @@ def publish_stable(releases, builds, sha, folder):
            str(staged / 'SHA256SUMS.txt'), '--clobber')
         bind_metadata(releases, channel, builds, (channel,), staged, {channel: 'update.json'})
         gh('Describe %s' % channel, 'release', 'edit', channel, '--draft=false', '--prerelease', '--latest=false',
-           '--title', 'FreeVideo %s for %s' % (tag, name), '--notes-file', legacy)
+           '--title', 'Eclipse %s for %s' % (tag, name), '--notes-file', legacy)
     print('Published %s/releases/tag/%s' % (PAGE, tag))
 
 

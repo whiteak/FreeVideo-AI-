@@ -12,14 +12,14 @@ export function describeVerdict(verdict, t) {
     let reason;
     if (verdict.reason === 'unreadable') reason = t('the file could not be read. It may be incomplete; download it again.', '文件无法读取，可能未下载完整，请重新下载');
     else if (verdict.reason === 'int8-unmergeable') reason = t('This LoRA cannot be used', '此 LoRA 无法使用');
-    else if (verdict.reason === 'format') reason = t('not a LoRA file FreeVideo can read', '不是 FreeVideo 能读取的 LoRA 文件');
+    else if (verdict.reason === 'format') reason = t('not a LoRA file Eclipse can read', '不是 Eclipse 能读取的 LoRA 文件');
     else if (verdict.reason === 'shape') reason = t('does not match the current model', '和当前模型的结构不匹配');
-    else if (verdict.reason === 'acceleration') reason = t('an acceleration LoRA made for the original model. The FreeVideo model is already accelerated and does not need one',
-        '这是为原版模型制作的加速 LoRA。FreeVideo 的模型已经加速，无需此类 LoRA');
+    else if (verdict.reason === 'acceleration') reason = t('an acceleration LoRA made for the original model. The Eclipse model is already accelerated and does not need one',
+        '这是为原版模型制作的加速 LoRA。Eclipse 的模型已经加速，无需此类 LoRA');
     else if (verdict.reason === 'alpha') reason = t('the file stores one alpha value but its layers have different ranks, so the scale of each layer cannot be determined',
         '文件只记录了一个 alpha 值，而各层的 rank 不同，无法确定每层的缩放比例');
     // The model family it was made for stays out of the interface (it is in the report draft below).
-    else reason = family ? t('made for another model', '这是为其他模型制作的 LoRA') : t('not made for the FreeVideo model', '不适用于 FreeVideo 的模型');
+    else reason = family ? t('made for another model', '这是为其他模型制作的 LoRA') : t('not made for the Eclipse model', '不适用于 Eclipse 的模型');
     const summary = verdict.summary || {};
     const lines = [];
     if (verdict.reason === 'shape') {
@@ -38,7 +38,7 @@ export function describeVerdict(verdict, t) {
 /** The text and header summary for a prefilled issue; never the file or its path. */
 export function feedbackDraft(name, verdict, described, t = translatorFor(null, false)) {
     const base = String(name).split('/').pop();
-    const text = ['FreeVideo marked this LoRA as unusable. The verdict is reported as a misjudgment.', `File: ${base}`,
+    const text = ['Eclipse marked this LoRA as unusable. The verdict is reported as a misjudgment.', `File: ${base}`,
         `Check result: ${verdict.reason || 'unknown'}${verdict.family ? ` (${verdict.family})` : ''}${described ? `, ${described.reason}` : ''}`].join('\n');
     const summary = verdict.summary || {};
     const diagnostics = JSON.stringify({check: {reason: verdict.reason, family: verdict.family, layer: verdict.layer, block: verdict.block,

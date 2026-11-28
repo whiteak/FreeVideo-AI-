@@ -86,7 +86,7 @@ RELEASE_ASSETS = {CHANNEL: ('FreeVideo.exe', 'update-windows.json'),
                   LINUX_CHANNEL: ('FreeVideo-Linux-x86_64.AppImage', 'update-linux.json'),
                   WINDOWS_ARM64_CHANNEL: ('FreeVideo-Windows-arm64.exe', 'update-windows-arm64.json')}
 CHANNELS = tuple(RELEASE_ASSETS)
-MANIFEST_DOMAIN = b'FreeVideo update manifest v1\x00'
+MANIFEST_DOMAIN = b'Eclipse update manifest v1\x00'
 # Every platform's mirror manifest carries the release signature, which binds the
 # package digest. The Windows launcher also checks a mirror-only download's
 # Authenticode publisher. The Mac codesign check before use is an integrity check
@@ -147,16 +147,16 @@ def failure_kind(error):
     if isinstance(error, OSError):
         return 'connection'
     # Bad JSON, a manifest that does not validate or a checksum mismatch say the files are wrong; anything
-    # else is a fault in FreeVideo itself, not in what was downloaded.
+    # else is a fault in Eclipse itself, not in what was downloaded.
     return 'invalid' if isinstance(error, ValueError) else 'unexpected'
 
 
 # The reasons mac_app_update's swap script records, as a cause and the next step.
 MAC_INSTALL_FAILURES = {
-    'old app did not exit': ('The previous FreeVideo did not close within 10 minutes. Quit FreeVideo completely, then update again.',
-                             '旧版 FreeVideo 在 10 分钟内未退出。请完全退出 FreeVideo 后再更新。'),
-    'could not set the old app aside': ('macOS did not allow the app in its folder to be replaced. Move FreeVideo to the Applications folder, or download the new version from the release page.',
-                                        'macOS 不允许替换所在文件夹里的应用。请把 FreeVideo 移到“应用程序”文件夹，或去发布页下载新版本。'),
+    'old app did not exit': ('The previous Eclipse did not close within 10 minutes. Quit Eclipse completely, then update again.',
+                             '旧版 Eclipse 在 10 分钟内未退出。请完全退出 Eclipse 后再更新。'),
+    'could not set the old app aside': ('macOS did not allow the app in its folder to be replaced. Move Eclipse to the Applications folder, or download the new version from the release page.',
+                                        'macOS 不允许替换所在文件夹里的应用。请把 Eclipse 移到“应用程序”文件夹，或去发布页下载新版本。'),
     'the new app did not open': ('The new version did not start on this Mac, so the previous version was put back. Download the new version from the release page; if it does not start either, use "Report a problem".',
                                  '新版本在这台 Mac 上未能启动，已换回原来的版本。请去发布页下载新版本；如果仍然无法启动，请点击“提交问题”。'),
 }
@@ -178,8 +178,8 @@ def error_text(row, zh=False):
         'connection': ('Could not connect to the download server.', '无法连接下载服务器。'),
         'invalid': ('The downloaded update files are incomplete or damaged.', '下载的更新文件不完整或已损坏。'),
         'disk': ('There is not enough disk space to download the update.', '磁盘空间不足，无法下载更新。'),
-        'unexpected': ('The update stopped because of an error in FreeVideo. If it happens again, use "Report a problem".',
-                       '更新因 FreeVideo 自身的错误而中断。如果再次出现，请点击“提交问题”。'),
+        'unexpected': ('The update stopped because of an error in Eclipse. If it happens again, use "Report a problem".',
+                       '更新因 Eclipse 自身的错误而中断。如果再次出现，请点击“提交问题”。'),
     }
     message = messages.get(row.get('error_code'))
     if message is None:
@@ -187,7 +187,7 @@ def error_text(row, zh=False):
     text = message[bool(zh)]
     if row.get('retry_at'):
         return text + ('稍后会自动重试，当前版本可以照常使用。' if zh else
-                       ' FreeVideo will try again later. You can keep using the current version.')
+                       ' Eclipse will try again later. You can keep using the current version.')
     # The buttons beside the reason already offer retrying and the release page; only a full disk needs a step first.
     if row.get('error_code') == 'disk':
         return text + ('请清理磁盘空间后重试。' if zh else ' Free up disk space, then try again.')
@@ -890,7 +890,7 @@ def forward_approved(current, root):
 
 def handoff(candidate, root, source, *, pages=False):
     """Record which explicit action restarted into a newer launcher, and
-    whether FreeVideo pages may be waiting to reconnect."""
+    whether Eclipse pages may be waiting to reconnect."""
     save(Path(root) / 'updates' / 'handoff.json',
          dict(revision=manifest(candidate)['revision'], source=source, pages=bool(pages), at=time.time()))
 

@@ -1,6 +1,6 @@
-"""What an agent needs to write good FreeVideo prompts, served by GET /freevideo/agent/v1/guide.
+"""What an agent needs to write good Eclipse prompts, served by GET /freevideo/agent/v1/guide.
 
-Summarised from MiniMax's h3-prompt-writing skill (linked below) and FreeVideo's
+Summarised from MiniMax's h3-prompt-writing skill (linked below) and Eclipse's
 own prompt rules; the enhancement job applies the same contract.
 """
 from ..default_prompt import DEFAULT_PROMPT
@@ -110,7 +110,7 @@ GUIDE = {
         'Multi-block output is cut to the planned duration. POST /plan shows the chain plan. '
         'For a video in several parts, part_prompts gives each part its own description in order (as many as '
         'chain_plan.blocks from POST /plan), so each part continues the story instead of replaying it; '
-        'without it FreeVideo splits prompt itself. '
+        'without it Eclipse splits prompt itself. '
         'A continue_from job saves a new video that holds only the added part; to hand the user one video, '
         'insert both into a project and export it.',
         'first_frame_reference (default false) reduces drift in a continued video: each continuing part also '
@@ -157,7 +157,7 @@ GUIDE = {
     'project_routes': [dict(operation=name, method=method, path=path, description=summary)
                        for name, (method, path, summary) in PROJECT_OPERATIONS.items()],
     'bring_your_own_footage': [
-        'Render complete clips with ffmpeg/Canvas on your computer; bake overlays into their pixels. FreeVideo receives media, not your code. Use the project dimensions (even pixels), 24 fps and integer frame positions; seconds = frames / 24.',
+        'Render complete clips with ffmpeg/Canvas on your computer; bake overlays into their pixels. Eclipse receives media, not your code. Use the project dimensions (even pixels), 24 fps and integer frame positions; seconds = frames / 24.',
         'Download generated shots using result.video.url, library video.url, or sources[key].video/audio from GET /projects/{id}, with the same Authorization: Bearer token (Range supported). These URLs are relative to the server origin. Render your changes locally.',
         'POST /imports accepts multipart file then optional ref, or JSON {name, data_base64, ref?}; HTTP never reads a local path. MCP freevideo_import_media and CLI imports add read a local path and upload content, like media upload. Limits: 2 GiB content, 96 MiB JSON body, and the same media decode limits.',
         'The answer is {import: {id, source: "import:<id>", state, fraction, ...}}. As on the page, poll GET /imports (MCP freevideo_imports, CLI imports list) about every two seconds. Match id in items; preparing is not insertable, ready is usable, failed is terminal with reason. Same ref or Idempotency-Key and filename/content reuses one import for that X-FreeVideo-Client, including after restart; changed content conflicts.',
@@ -172,9 +172,9 @@ GUIDE = {
         'On 409 image_changed, recompute from error.image and its current_revision. POST /images/{id}/render makes a PNG input file from the revision you read; use the job result file as a picture source.',
     ],
     'whitebox': [
-        'A white model is a rough 3D stand-in for the shot (boxes, camera, motion) rendered in the user\'s FreeVideo page. Used as a reference video that guides only the first steps, the final video keeps its layout and motion.',
+        'A white model is a rough 3D stand-in for the shot (boxes, camera, motion) rendered in the user\'s Eclipse page. Used as a reference video that guides only the first steps, the final video keeps its layout and motion.',
         'Use it only when the user asked for it: the user message carries whitebox=true, or the user says so. Never choose it yourself, and never suggest it as a default.',
-        'Write the scene with the prompt in whitebox_scene_prompt (replace {SHOT} with the user\'s one-sentence shot). POST /whitebox with the code and a one-sentence summary; it needs the page open and answers page_required otherwise: tell the user to open FreeVideo.',
+        'Write the scene with the prompt in whitebox_scene_prompt (replace {SHOT} with the user\'s one-sentence shot). POST /whitebox with the code and a one-sentence summary; it needs the page open and answers page_required otherwise: tell the user to open Eclipse.',
         'Read GET /whitebox/{id} every few seconds. On failed, fix the code from error and send it again, at most 3 retries; if they all fail, tell the user and stop, with no silent fallback.',
         'On ready, ask the user to approve it first: write a confirm event with whitebox={work, seconds, summary}. After approval, generate with media.references=[{"library": work, "early_steps": K}] where K is about 3/8 of the first-pass steps rounded (8 steps -> 3, 20 steps -> 8; early_ratio in the ready answer), so the white model keeps the same share of the schedule on every quality level. The prompt describes the real look of the final video, not white boxes. Use no other kind of reference with it unless the user gave one.',
         'When the user wants a change, write a new scene from the edited description and repeat; the earlier white model stays in the library.',
@@ -247,16 +247,16 @@ RULES = [
     'describe it a different way instead of repeating the request. When what stays wrong is the camera path, where '
     'things are or the order of actions, the guide (camera_draft) has a slower way: offer it to the user. '
     'The queue is busy: wait with wait=25 on the '
-    'job, never in a tight loop. The connection dropped or FreeVideo restarted: connect again, read the job list, '
+    'job, never in a tight loop. The connection dropped or Eclipse restarted: connect again, read the job list, '
     'and continue; resend an unanswered request with the same ref, and never generate again what is already done.',
     'Do not stop to report progress. A long task is not a reason to stop or to ask whether to go on.',
-    'When a video is done, tell the user it is in "Creations" in FreeVideo, in plain words. Do not read out job, library '
+    'When a video is done, tell the user it is in "Creations" in Eclipse, in plain words. Do not read out job, library '
     'or project ids; give a file path only when the user asks for one. If the length differs from what was asked, '
     'say the real length in seconds and do not explain frame counts.',
     'Ask the user only when you would have to change the content or style they asked for, when the work will '
     'take clearly longer than you told them at the start, or when you would have to delete or overwrite their '
     'own works or edits.',
-    'Stay inside FreeVideo. Do not touch other files on this computer. Never change back something the user '
+    'Stay inside Eclipse. Do not touch other files on this computer. Never change back something the user '
     'edited. When the user tells you to stop, stop: cancel what you started and start nothing new. '
     'When cancelled_by is "user", the user stopped this job on the page and the page already shows it as stopped: '
     'send no message about it, and do not retry or resume it unless they ask.',
@@ -299,14 +299,14 @@ RULES_ZH = [
     '显存不足时，从列出的方案中选择较低分辨率或较短时长重试。一条拍得不好就再拍；再拍两条仍不满意，'
     '换一种描述，不要反复提交同一个要求。一直不对的是镜头路线、位置或动作先后时，指南的 camera_draft 一节有一种更慢的做法，'
     '可以向用户提议。队列繁忙时，用 wait=25 等待该任务，不要不停查询。'
-    '连接中断或 FreeVideo 重启后，重新连接，读取任务列表并继续；未收到响应的请求用相同的 ref 重发，'
+    '连接中断或 Eclipse 重启后，重新连接，读取任务列表并继续；未收到响应的请求用相同的 ref 重发，'
     '已经完成的内容不要重新生成。',
     '不要为了汇报进度而停下。任务耗时较长，不是停止工作或询问是否继续的理由。',
-    '视频做好后，用通俗的话告诉用户它已经放进 FreeVideo 的“作品”里。不要念任务、作品或剪辑的编号；'
+    '视频做好后，用通俗的话告诉用户它已经放进 Eclipse 的“作品”里。不要念任务、作品或剪辑的编号；'
     '文件路径在用户问起时再给。实际长度和要求的不一样时，只说实际约几秒，不解释帧数。',
     '只有需要改变用户要求的内容或风格、预计耗时明显超过开始时告诉用户的时间，'
     '或者需要删除或覆盖用户自己的作品或修改时，才询问用户。',
-    '只在 FreeVideo 内工作，不要改动本机的其他文件，不要撤销用户做的修改。'
+    '只在 Eclipse 内工作，不要改动本机的其他文件，不要撤销用户做的修改。'
     '用户要求停止时，取消你启动的任务，不再启动新任务。'
     'cancelled_by 为 "user" 时，表示用户在页面上停止了该任务，页面已显示已停止：不要为此发消息；除非用户要求，否则不要重试或恢复。',
     '带 revises=N 的用户消息取代 seq N 那条及其之后你写的内容，按新消息重新理解；为旧消息开的任务已被停掉，不要续旧的。'
@@ -356,7 +356,7 @@ CAPABILITIES_ZH = {
     ('GET', '/library/{day}/{run}/file'): '下载已保存的视频',
     ('GET', '/library/{day}/{run}/thumbnail'): '查看已保存的视频缩略图',
     ('GET', '/queue'): '查看队列顺序及任务属于 Agent 还是用户',
-    ('POST', '/whitebox'): '发送你写好的白模场景代码，由用户打开的 FreeVideo 页面渲染成短视频并存入作品库；页面没打开返回 page_required',
+    ('POST', '/whitebox'): '发送你写好的白模场景代码，由用户打开的 Eclipse 页面渲染成短视频并存入作品库；页面没打开返回 page_required',
     ('GET', '/whitebox/{id}'): '查看白模场景进度：waiting、rendering、ready（work 是作品库编号，放进 media.references 并加 early_steps）或 failed（error）',
     ('GET', '/editor/sources/content'): '下载剪辑项目的源素材或缩略图；使用 GET /projects/{id} 返回的素材标识',
     ('GET', '/inbox'): '等待当前工作会话中用户的消息或答复，最多 50 秒；again=true 表示暂时没有，再调一次',
@@ -458,8 +458,8 @@ def connection_discovery(root, base, lang=None):
     lang = lang or page_language() or installation_language(root)
     connect = base + PREFIX + '/connect?lang=' + lang
     return dict(enabled=True, api_versions=[API_VERSION], base=PREFIX, auth='bearer',
-        token='FreeVideo 安装目录中的 agent/token' if lang == 'zh' else
-              'agent/token in the FreeVideo installation folder',
+        token='Eclipse 安装目录中的 agent/token' if lang == 'zh' else
+              'agent/token in the Eclipse installation folder',
         connect=connect, instructions='通过 GET ' + connect + ' 阅读纯文本接入说明，并按说明操作。'
         if lang == 'zh' else 'GET ' + connect + ' for plain-text connection instructions and follow them.')
 
@@ -510,7 +510,7 @@ def connection_guide(root, base, lang=None, offers=None, resumed=False):
         '# while job["status"] not in ("succeeded", "failed", "cancelled", "interrupted"):',
         '#     job = call("GET", "/jobs/" + job["id"] + "?wait=25")["job"]',
         '# Download base origin + job["result"]["video"]["url"] with the same Authorization header.',
-        '# The conversation inside FreeVideo (see below): each wait is its own command; when it returns, run the next one.',
+        '# The conversation inside Eclipse (see below): each wait is its own command; when it returns, run the next one.',
         '# box = call("GET", "/inbox?wait=50")   # {"session": ..., "inbox": [what the user said], "again": true if nothing yet}',
         '# call("POST", "/sessions/" + box["session"] + "/events", {"type": "message", "text": "YOUR WORDS"})',
         '# Post what you say first, then wait: never one command that waits and then posts, your words would be up to 50 s late.',
@@ -547,7 +547,7 @@ def connection_guide(root, base, lang=None, offers=None, resumed=False):
                         'numbers or endpoint names. Do not start any task yourself; wait for the user to ask. If the first wait says '
                         'the conversation is already under way, do not introduce yourself again; carry on from it.')),
         introduce=introduction(zh, offers or {}),
-        conversation='用户会在 FreeVideo 的“AI 全自动”页里直接和你说话，你的话也显示在那里。'
+        conversation='用户会在 Eclipse 的“AI 全自动”页里直接和你说话，你的话也显示在那里。'
                      '连接后先调一次等待接口 GET ' + base + PREFIX + '/inbox?wait=50（MCP 用不带 id 的 freevideo_wait），'
                      '回应里的 session 就是用户现在所在的对话（用户新开或换到另一段对话时它会变，话总是发到最近一次等待给的那个 session）；往 POST ' + base + PREFIX + '/sessions/{session}/events 发 '
                      '{"type":"message","text":"…"}（MCP 用 freevideo_session_post）。在这里先只说一句话，不超过 20 个字，'
@@ -555,7 +555,7 @@ def connection_guide(root, base, lang=None, offers=None, resumed=False):
                      '你自己窗口里的那段介绍照常说，但它不是这一轮的结尾：说完紧接着去调等待接口。'
                      '然后守在这段对话里：再调等待接口，它最多约 50 秒返回；"again": true 表示用户还没说话，'
                      '马上再调下一次，一次接一次，不限次数。没有消息不是结束的理由：不要结束这一轮回复，'
-                     '不要停下来问用户——你一停，用户在 FreeVideo 里说的话就没人听了。'
+                     '不要停下来问用户——你一停，用户在 Eclipse 里说的话就没人听了。'
                      '用命令行调接口时，每次等待单独发一条命令（一条命令里不写循环，超时设到 60 秒以上），'
                      '返回后接着发下一条。'
                      '收到要求（inbox 里每条的 text）先回一句再动手，例如“好的，开始生成。”：只一句，不复述尺寸、'
@@ -564,7 +564,7 @@ def connection_guide(root, base, lang=None, offers=None, resumed=False):
                      '做完一条视频也不是结尾：这句话就是汇报，不要再在自己窗口里写总结（一写总结这一轮就结束了，'
                      '用户的下一句话没人听），紧接着再调等待接口，空等多少轮都接着等。'
                      '这段对话里不要新建会话。只有用户明确让你停，才停。' if zh else
-                     'The user talks to you inside FreeVideo, in the Autopilot view, and your words are shown there. '
+                     'The user talks to you inside Eclipse, in the Autopilot view, and your words are shown there. '
                      'After connecting, call the wait once: GET ' + base + PREFIX + '/inbox?wait=50 (MCP: freevideo_wait '
                      'without id). Its "session" is the conversation the user is in (it changes when the user opens or returns to another one; always post to the session the latest wait named); POST ' + base + PREFIX + '/sessions/{session}/events '
                      'with {"type":"message","text":"..."} (MCP: freevideo_session_post). Say only one short sentence '
@@ -573,7 +573,7 @@ def connection_guide(root, base, lang=None, offers=None, resumed=False):
                      'does not end your turn: right after it, call the wait. Then stay in this conversation: call the wait again; it answers within about 50 seconds, and '
                      '"again": true means the user has not spoken yet, so call it again at once, time after time, with no '
                      'limit. Nothing new is not a reason to finish: do not end your reply and do not stop to ask the '
-                     'user, because once you stop nobody hears what the user says in FreeVideo. From a command line, '
+                     'user, because once you stop nobody hears what the user says in Eclipse. From a command line, '
                      'each wait is its own command (no loop inside one command, timeout above 60 seconds); when it '
                      'returns, run the next one. '
                      'When a request arrives (text of each inbox row; a question about progress is answered, not started), answer with one sentence before you start, for example '
@@ -586,10 +586,10 @@ def connection_guide(root, base, lang=None, offers=None, resumed=False):
                      'Stop only when the user clearly tells you to.',
         rules=RULES_ZH if zh else RULES,
         fallback='如果你无法执行命令、读取本地文件或连接到这台电脑，请如实告诉用户：'
-                 '“连接不到您电脑上的 FreeVideo，请改用安装在这台电脑上的 AI 助手。”'
+                 '“连接不到您电脑上的 Eclipse，请改用安装在这台电脑上的 AI 助手。”'
                  '用中文说明；如果用户改用其他语言，就跟随用户。不要另装程序来绕过这个限制。' if zh else
                  'If you cannot run commands, read local files, or reach this computer, tell the user honestly '
-                 'in their language: I cannot connect to FreeVideo on your computer; please use an AI assistant '
+                 'in their language: I cannot connect to Eclipse on your computer; please use an AI assistant '
                  'installed on this computer. Do not install a workaround.',
         http_example=example, docs=dict(guide=base + PREFIX + '/guide', openapi=base + PREFIX + '/openapi.json'))
 
@@ -598,7 +598,7 @@ def connection_text(value):
     import json
     zh = value.get('language') == 'zh'
     return '\n'.join([
-        '连接这台电脑上的 FreeVideo' if zh else 'Connect to FreeVideo on this computer',
+        '连接这台电脑上的 Eclipse' if zh else 'Connect to Eclipse on this computer',
         value['api'], '', value['authentication'],
         ('令牌文件：' if zh else 'Token file: ') + value['token_file'], '', 'Claude Code:', value['claude_code'], '',
         'Codex:', value['codex'], '', '其他 MCP 客户端：' if zh else 'Other MCP clients:',
@@ -608,7 +608,7 @@ def connection_text(value):
         *['- ' + row['description'] for row in value['capabilities']], '',
         '先介绍这几样：' if zh else 'Introduce these:', *['- ' + row for row in value['introduce']], '',
         value['first_reply'], value['fallback'], '',
-        '在 FreeVideo 里对话：' if zh else 'The conversation inside FreeVideo:', value['conversation'], '',
+        '在 Eclipse 里对话：' if zh else 'The conversation inside Eclipse:', value['conversation'], '',
         '用户提出要求后的做事规则：' if zh else 'How to work once the user has asked for something:',
         *['%d. %s' % (number, rule) for number, rule in enumerate(value['rules'], 1)], '',
         ('详细使用指南：' if zh else 'More detail: ') + value['docs']['guide'],

@@ -186,7 +186,7 @@ def forget_pictures(input_directory, files):
         except FileNotFoundError:
             pass
         except OSError:
-            logging.warning('[FreeVideo] Could not remove the small copy of a deleted picture.', exc_info=True)
+            logging.warning('[Eclipse] Could not remove the small copy of a deleted picture.', exc_info=True)
     return removed
 
 

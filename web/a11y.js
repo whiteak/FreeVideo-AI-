@@ -1,4 +1,4 @@
-// Keyboard and focus for every FreeVideo surface, in one place:
+// Keyboard and focus for every Eclipse surface, in one place:
 // - One visible focus ring (a11y.css). A ring that an ancestor's overflow would cut off is drawn inside the control.
 // - Tab stays inside the layer in front (a modal dialog, an open popover or menu that holds focus) and wraps around.
 // - A Tab stop that cannot be seen (faded to nothing, zero size, covered by its own panel being folded) is skipped.
@@ -136,7 +136,7 @@ function onTab(event) {
     // inside it is in front.
     const owner = active?.closest?.('[data-fv-own-tab]');
     if (owner && layer.contains(owner)) return;
-    // Only FreeVideo's own layers; ComfyUI's dialogs keep their behaviour.
+    // Only Eclipse's own layers; ComfyUI's dialogs keep their behaviour.
     if (!(layer.className && /(^|\s)(fv-|sgf)/.test(String(layer.className))) && !layer.closest('[class*="fv-"]:not(html)')) return;
     const stops = tabbables(layer);
     if (!stops.length) return;

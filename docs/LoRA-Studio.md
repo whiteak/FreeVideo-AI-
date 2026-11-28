@@ -1,7 +1,7 @@
 # LoRA Studio (fork addition)
 
 Make a LoRA of a **character**, an **object** or a **style**, train it on this PC as a MiniMax H3 video LoRA, and
-load it by writing `@Name` in a prompt. Open it from the **LoRA** entry in FreeVideo's top bar, or go to
+load it by writing `@Name` in a prompt. Open it from the **LoRA** entry in Eclipse's top bar, or go to
 `http://127.0.0.1:8188/freevideo/lora-studio/`.
 
 ## The steps
@@ -37,7 +37,7 @@ load it by writing `@Name` in a prompt. Open it from the **LoRA** entry in FreeV
    [Comfy-Org/MiniMax-H3](https://huggingface.co/Comfy-Org/MiniMax-H3) (accept the licence there first).
    Progress, loss and the trainer log show on the page; each saved checkpoint can be used instead of the final one.
    The finished LoRA is copied to `models/loras/lora-studio/` and its trigger words are saved, so the creation panel
-   adds them for you. FreeVideo can't make videos while training runs.
+   adds them for you. Eclipse can't make videos while training runs.
    **Export instead** writes kohya, ai-toolkit or Musubi Tuner layouts (pictures + `.txt` captions, plus a config
    for ai-toolkit and a `dataset.toml` / `train.cmd` for Musubi) to `output/lora-studio/`, or as a zip.
 5. **Use & test.** Link the LoRA to a cast card (or make a new card from the set). When that card is mentioned with
@@ -77,9 +77,9 @@ Tests: `python -m unittest freevideo_engine.lora_studio.tests.test_lora_studio` 
 
 ## Limits
 
-- H3 Image and MOSS-Image in FreeVideo don't take LoRAs, so the finished LoRA is a **video** LoRA; test it with the
+- H3 Image and MOSS-Image in Eclipse don't take LoRAs, so the finished LoRA is a **video** LoRA; test it with the
   test grid or the creation panel.
-- Pictures made for a set also appear in the Images view's **Creations**, like every picture FreeVideo makes; the set
+- Pictures made for a set also appear in the Images view's **Creations**, like every picture Eclipse makes; the set
   keeps its own copies under `input/lora-studio/`, so you can delete them from Creations without losing anything.
 - The likeness check is the prompt model's judgement, not a face-recognition score: use it to find outliers.
 - Musubi's H3 recipe is new; check `train.cmd` against `docs/minimax_h3.md` in your Musubi version.

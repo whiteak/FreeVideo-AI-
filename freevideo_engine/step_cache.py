@@ -2,7 +2,7 @@
 
 Both approximate an earlier step of the same pass (one forward per step, no CFG).
 Only explicit step_cache configuration or FREEVIDEO_STEP_CACHE=<kind>[:<threshold>]
-enables them. Numerical operations follow the FreeVideo H200 experiment snapshot
+enables them. Numerical operations follow the Eclipse H200 experiment snapshot
 fb7786481cd10f0908c646667ff0e41e23b81dcfbaae656cb9b0622e73d579fd.
 
 fbcache: MiniMax H3 FirstBlockCache by duckyshell (MIT), Fast preset, upstream

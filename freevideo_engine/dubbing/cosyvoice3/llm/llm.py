@@ -12,7 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# Modified by FreeVideo: reduced to the CosyVoice3 inference path (no training, streaming
+# Modified by Eclipse: reduced to the CosyVoice3 inference path (no training, streaming
 # or vLLM code); the Qwen2 backbone is built from its config and filled from llm.pt.
 from typing import Callable, Generator, List
 

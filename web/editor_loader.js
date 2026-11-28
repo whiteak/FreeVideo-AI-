@@ -9,7 +9,7 @@ export async function openEditorView(node, options) {
         return entry.openEditorView(node, options);
     } catch (error) {
         if (options?.isCurrent?.() === false) return null;
-        console.warn('FreeVideo edit view:', error);
+        console.warn('Eclipse edit view:', error);
         // The page's language as the top bar has it (loaded on demand, so a failure here still reads it).
         const t = await Promise.all([import('./topbar_state.js'), import('./i18n.js')]).then(([state, i18n]) => i18n.translator(state.CN),
             () => (en, zh) => String(navigator.language || '').toLowerCase().startsWith('zh') ? zh : en);
@@ -18,7 +18,7 @@ export async function openEditorView(node, options) {
         // workspace's existing failure status so the message stays visible.
         const status = options?.studio?.querySelector('.fv-status');
         if (status) { status.dataset.error = 'true'; status.textContent = detail; }
-        app.extensionManager?.toast?.add({severity: 'error', summary: 'FreeVideo', detail, life: 9000});
+        app.extensionManager?.toast?.add({severity: 'error', summary: 'Eclipse', detail, life: 9000});
         options?.onFailure?.(error);
         // Do not retain a rejected promise. Each click tries import again;
         // browsers may still retain the failed module URL until a page reload.

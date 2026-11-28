@@ -18,22 +18,22 @@ from .long_paths import io_path, plain
 REVIEW = (
     '{file} ({size}) differs from the tested version: it will be renamed to {keep_as} and kept, '
     'and the tested version ({expected_size}) will be downloaded.',
-    '{file}（{size}）与 FreeVideo 测试过的版本不同：将改名为 {keep_as} 保留，'
+    '{file}（{size}）与 Eclipse 测试过的版本不同：将改名为 {keep_as} 保留，'
     '再下载测试过的版本（{expected_size}）。',
 )
 REVIEW_OFFLINE = (
-    '{file} ({size}) differs from the version FreeVideo tests: it will be renamed to {keep_as} and kept, '
+    '{file} ({size}) differs from the version Eclipse tests: it will be renamed to {keep_as} and kept, '
     'then replaced with the version in the offline package ({expected_size}).',
-    '{file}（{size}）与 FreeVideo 测试过的版本不同：将改名为 {keep_as} 保留，'
+    '{file}（{size}）与 Eclipse 测试过的版本不同：将改名为 {keep_as} 保留，'
     '再换成离线包里的版本（{expected_size}）。',
 )
 PROGRESS = ('Keeping the original file: ', '正在保留原文件：')
-FAILURE_TITLE = ('An existing model differs from the tested version', '已有模型与 FreeVideo 测试过的版本不同')
+FAILURE_TITLE = ('An existing model differs from the tested version', '已有模型与 Eclipse 测试过的版本不同')
 FAILURE = (
     '{file} differs from the tested version and was left unchanged. Click {entry} again: '
     'the confirmation page will list this file, and after you confirm, it will be renamed and kept, '
     'and the tested version will be downloaded.',
-    '{file} 与 FreeVideo 测试过的版本不同，这次没有改动它。请再次点击“{entry}”：'
+    '{file} 与 Eclipse 测试过的版本不同，这次没有改动它。请再次点击“{entry}”：'
     '确认页会列出这个文件，确认后将它改名保留，再下载测试过的版本。',
 )
 CLI_FAILURE = FAILURE[0].replace('Click {entry} again', 'Run setup again (./setup.sh, or setup.cmd on Windows)')
@@ -42,10 +42,10 @@ MISMATCH_PATH = 'MODEL_MISMATCH_PATH'
 # Where the launcher offers no Repair: the first sentence of FAILURE, then one way out
 # for each reason (failure_details.WITHOUT_REPAIR).
 UNCHANGED = ('{file} differs from the tested version and was left unchanged.',
-             '{file} 与 FreeVideo 测试过的版本不同，这次没有改动它。')
+             '{file} 与 Eclipse 测试过的版本不同，这次没有改动它。')
 BUSY = ('When the current task ends, a Repair button appears here; after you click it and confirm, '
-        'FreeVideo renames and keeps this file, then downloads the tested version.',
-        '当前任务结束后，这里会出现“修复”按钮；点击并确认后，FreeVideo 会把这个文件改名保留，再下载测试过的版本。')
+        'Eclipse renames and keeps this file, then downloads the tested version.',
+        '当前任务结束后，这里会出现“修复”按钮；点击并确认后，Eclipse 会把这个文件改名保留，再下载测试过的版本。')
 OFFLINE = ('Import the “{package}” package again on the Installation page: the confirmation page will list this file, '
            'and after you confirm, it is renamed and kept, then replaced with the version in the package.',
            '请在“安装”页重新导入“{package}”包：确认页会列出这个文件，确认后会将它改名保留，再换成包里的版本。')
@@ -53,7 +53,7 @@ FIRST_INSTALL = (
     '{file} differs from the tested version and was left unchanged. Click Retry installation below: '
     'the confirmation page will list this file, and after you confirm, it is renamed and kept, '
     'and the tested version is downloaded.',
-    '{file} 与 FreeVideo 测试过的版本不同，这次没有改动它。请点击下方的“重试安装”：'
+    '{file} 与 Eclipse 测试过的版本不同，这次没有改动它。请点击下方的“重试安装”：'
     '确认页会列出这个文件，确认后会将它改名保留，再下载测试过的版本。',
 )
 CHANGED = 'The installation plan changed. Detect configuration again and review the new plan before installing.'

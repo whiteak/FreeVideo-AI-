@@ -31,7 +31,7 @@ MAX_IMAGES = 6
 MAX_CANDIDATES = 6
 MAX_LORAS = 8
 MAX_RECEIPTS = 64
-# The FreeVideo input files that cards the user deleted named, by private_store token, with the time noted.
+# The Eclipse input files that cards the user deleted named, by private_store token, with the time noted.
 RELEASED = 'released.json'
 RELEASED_LIMIT = 10000
 VOICE_SECONDS = (2, 15)
@@ -287,7 +287,7 @@ class Cast:
 
     def _released(self, files, *, immediate=False):
         """Note the input files a card the user deleted named, for the cleanup to remove without waiting once nothing
-        else uses them. Only FreeVideo's own names are noted; never anything else in the input folder."""
+        else uses them. Only Eclipse's own names are noted; never anything else in the input folder."""
         from ..private_store import classify
         tokens = sorted({'%s:%s' % found for found in map(classify, files) if found})
         if not tokens:

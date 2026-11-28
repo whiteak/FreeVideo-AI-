@@ -91,7 +91,7 @@ export function longGeneration(value) {
 }
 
 // Why a request from the phone failed, in one sentence: the computer could not be reached (no reply at all), or
-// FreeVideo on it returned an error (its own sentence when it wrote one, otherwise the HTTP status).
+// Eclipse on it returned an error (its own sentence when it wrote one, otherwise the HTTP status).
 // `what` is the action as [English, Chinese], e.g. ['send', '发送'].
 const RAW_REPLY = /^(?:HTTP\s*)?\d{3}\b|^[a-z][a-z0-9]*(?:[_.:-][a-z0-9]+)+$|Error\b|Traceback|Unexpected token|JSON/;
 export function phoneFailure(error, t, what) {
@@ -99,12 +99,12 @@ export function phoneFailure(error, t, what) {
     const status = Number(error?.status);
     if (!(Number.isInteger(status) && status >= 100 && status < 600)) {
         if (error?.name === 'TypeError' || error?.unreachable)
-            return t('Could not {action}: the phone cannot reach FreeVideo on the computer. Check that the computer is on and connected to the same Wi-Fi.',
-                '没能{action}：手机连不上电脑上的 FreeVideo。请确认电脑已开机，并与手机连接同一个 Wi-Fi。', { action });
+            return t('Could not {action}: the phone cannot reach Eclipse on the computer. Check that the computer is on and connected to the same Wi-Fi.',
+                '没能{action}：手机连不上电脑上的 Eclipse。请确认电脑已开机，并与手机连接同一个 Wi-Fi。', { action });
         return t('Could not {action}. Try again.', '没能{action}，请重试。', { action });
     }
     const said = error?.data?.error?.message ?? error?.data?.message ?? (typeof error?.data?.error === 'string' ? error.data.error : '');
     if (typeof said === 'string' && said.trim() && !RAW_REPLY.test(said.trim())) return said.trim();
-    return t('Could not {action}: FreeVideo on the computer returned an error (HTTP {status}). Try again.',
-        '没能{action}：电脑上的 FreeVideo 返回了错误（HTTP {status}）。请重试。', { action, status });
+    return t('Could not {action}: Eclipse on the computer returned an error (HTTP {status}). Try again.',
+        '没能{action}：电脑上的 Eclipse 返回了错误（HTTP {status}）。请重试。', { action, status });
 }

@@ -1,4 +1,4 @@
-// One hover tip for every FreeVideo control: a name, one line on what it does and what you get, and its shortcut.
+// One hover tip for every Eclipse control: a name, one line on what it does and what you get, and its shortcut.
 // - About 500 ms on a control, then at once on its neighbours while one has just shown; gone ~100 ms after leaving.
 // - Keyboard focus shows it too; a long press shows it on touch (and that press does not also tap the control).
 // - It never covers the control, the menu the control sits in, another open layer, or the picture when there is room
@@ -43,7 +43,7 @@ const disabledOf = element => element.matches(':disabled') || element.getAttribu
 const clean = text => String(text || '').replace(/\s+/g, ' ').trim();
 const safeMatches = (element, selector) => { try { return element.matches(selector); } catch { return false; } };
 
-// A FreeVideo surface: the control or a holder has an fv- / sgf- class, or carries data-fv-tip-scope. The walk stops
+// A Eclipse surface: the control or a holder has an fv- / sgf- class, or carries data-fv-tip-scope. The walk stops
 // below <body>, so html.fv-app does not pull ComfyUI's own controls in.
 export function inScope(element) {
     for (let node = element, depth = 0; node && node.nodeType === 1 && depth < 48; node = node.parentElement, depth++) {

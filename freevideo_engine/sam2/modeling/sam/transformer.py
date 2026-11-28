@@ -267,7 +267,7 @@ class RoPEAttention(Attention):
             compute_axial_cis, dim=self.internal_dim // self.num_heads, theta=rope_theta
         )
         freqs_cis = self.compute_cis(end_x=feat_sizes[0], end_y=feat_sizes[1])
-        # FreeVideo: this inference snapshot is CPU-only, including construction.
+        # Eclipse: this inference snapshot is CPU-only, including construction.
         self.freqs_cis = freqs_cis
         self.rope_k_repeat = rope_k_repeat
 

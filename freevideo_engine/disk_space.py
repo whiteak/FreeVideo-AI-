@@ -425,7 +425,7 @@ def location(destination, *, need_bytes=0, suggest=True):
     for disk in others:
         if disk['key'] == here['key'] and not here.get('disconnected'):
             continue
-        # A disk in a format FreeVideo cannot use is listed, unavailable, so its absence is not a puzzle.
+        # A disk in a format Eclipse cannot use is listed, unavailable, so its absence is not a puzzle.
         unusable = install_problem(disk)
         target = Path.home() / 'FreeVideo' if disk.get('system') else Path(disk['mount']) / 'FreeVideo'
         choices.append(dict(name=disk['name'], free_bytes=disk['free_bytes'], free=size_text(disk['free_bytes']),

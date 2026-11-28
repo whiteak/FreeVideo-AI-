@@ -3,7 +3,7 @@
 Network adapted from LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler,
 commit 40316cf008b2fd8663263270669eb4da23f89d2c (MIT).
 Copyright (c) 2026 LBH-123-AI. Full notice: licenses/latent-upscaler-MIT.txt.
-FreeVideo changes: independent loader, meta initialization, pinned checkpoint
+Eclipse changes: independent loader, meta initialization, pinned checkpoint
 validation, normalized-space API and explicit model cleanup.
 """
 import gc

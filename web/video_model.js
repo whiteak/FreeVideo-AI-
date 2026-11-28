@@ -20,7 +20,7 @@ export async function addVideoModel(fetchApi, t) {
     } catch { launcher = false; }
     return launcher
         ? t('Confirm the download in the launcher.', '请在启动器中确认下载。')
-        : t('Open the FreeVideo launcher to add the video model.', '请打开 FreeVideo 启动器添加视频模型。');
+        : t('Open the Eclipse launcher to add the video model.', '请打开 Eclipse 启动器添加视频模型。');
 }
 
 export const addVideoLabel = t => t('Add video model', '添加视频模型');

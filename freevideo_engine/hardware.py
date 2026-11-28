@@ -67,7 +67,7 @@ class Hardware:
         error = None
         if not admitted:
             if known:
-                error = ('[CUDA_ARCH_UNSUPPORTED] ' + detail + '. FreeVideo requires '
+                error = ('[CUDA_ARCH_UNSUPPORTED] ' + detail + '. Eclipse requires '
                          'native BF16 GPU computation (compute capability 8.0 / SM80 or newer). '
                          'This GPU is below that hardware requirement; a driver update cannot add it.')
             else:

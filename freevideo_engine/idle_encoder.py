@@ -236,7 +236,7 @@ class IdleEncoder:
                     processes.stop(self.process, grace=1.)
                 save(report, dict(state='failed', reason=str(error), error_type=type(error).__name__))
 
-        self.thread = threading.Thread(target=work, name='FreeVideo idle encoder', daemon=True)
+        self.thread = threading.Thread(target=work, name='Eclipse idle encoder', daemon=True)
         self.thread.start()
         return True
 

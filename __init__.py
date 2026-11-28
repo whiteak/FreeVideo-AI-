@@ -24,7 +24,7 @@ async def comfy_entrypoint():
         chain_routes()
     except Exception as error:
         import logging
-        logging.warning('[FreeVideo] Chain routes not registered: %s', error)
+        logging.warning('[Eclipse] Chain routes not registered: %s', error)
     from .freevideo_engine.comfy_upload import register
     register()
     from .freevideo_engine.comfy_setup import register as setup_routes
@@ -36,27 +36,27 @@ async def comfy_entrypoint():
         image_routes()
     except Exception as error:
         import logging
-        logging.warning('[FreeVideo] Image generation routes not registered: %s', error)
+        logging.warning('[Eclipse] Image generation routes not registered: %s', error)
     try:
         from .freevideo_engine.dubbing.service import register as dubbing_routes
         dubbing_routes()
     except Exception as error:
         import logging
-        logging.warning('[FreeVideo] Dubbing routes not registered: %s', error)
+        logging.warning('[Eclipse] Dubbing routes not registered: %s', error)
     try:
-        # FreeVideo's opening screen from the page's first frame (no ComfyUI loading screen first).
+        # Eclipse's opening screen from the page's first frame (no ComfyUI loading screen first).
         from .freevideo_engine.comfy_boot import register as boot_screen
         boot_screen()
     except Exception as error:
         import logging
-        logging.warning('[FreeVideo] Opening screen not registered: %s', error)
+        logging.warning('[Eclipse] Opening screen not registered: %s', error)
     try:
         # The page's files once, compressed, then checked again instead of downloaded again on every visit.
         from .freevideo_engine.web_cache import register as page_cache
         page_cache()
     except Exception as error:
         import logging
-        logging.warning('[FreeVideo] Page file caching not registered: %s', error)
+        logging.warning('[Eclipse] Page file caching not registered: %s', error)
     from .freevideo_engine.comfy_launcher_api import register as launcher_routes
     launcher_routes()
     from .freevideo_engine.comfy_updates import register as update_routes
@@ -90,14 +90,14 @@ async def comfy_entrypoint():
         agent_routes()
     except Exception as error:
         import logging
-        logging.warning('[FreeVideo] Agent routes not registered: %s', error)
+        logging.warning('[Eclipse] Agent routes not registered: %s', error)
     try:
         # LoRA Studio: training sets, H3 LoRA training and @Name LoRAs (fork addition).
         from .freevideo_engine.lora_studio.routes import register as lora_studio_routes
         lora_studio_routes()
     except Exception as error:
         import logging
-        logging.warning('[FreeVideo] LoRA Studio routes not registered: %s', error)
+        logging.warning('[Eclipse] LoRA Studio routes not registered: %s', error)
     from .freevideo_engine.comfy_nodes import FreeVideoExtension, register_prompt_cleanup
     register_prompt_cleanup()
     from .freevideo_engine.comfy_nodes import schedule_startup_prefetch

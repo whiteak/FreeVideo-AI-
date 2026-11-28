@@ -1,4 +1,4 @@
-// Evidence and copy shared by every FreeVideo error card. No notice is shown
+// Evidence and copy shared by every Eclipse error card. No notice is shown
 // merely because an extension is installed or fetch has been wrapped.
 // Store listings checked 2026-10-10. Firefox UUIDs and Safari identifiers are
 // deliberately not mapped: they do not identify a store installation.
@@ -67,16 +67,16 @@ export function requestTimeoutAction(t, stage) {
 }
 // One sentence for a dropped connection (engine closed, network lost); the raw
 // browser wording stays in the technical details.
-export function connectionLostText(t) { return t('Lost the connection to FreeVideo. Try again once it is back.', '与 FreeVideo 的连接已断开，恢复后请重试。'); }
+export function connectionLostText(t) { return t('Lost the connection to Eclipse. Try again once it is back.', '与 Eclipse 的连接已断开，恢复后请重试。'); }
 // The read right after a lost connection was refused at once, on the computer the page runs on: nothing is
-// listening there, so FreeVideo is not running. A read that timed out, or a page opened from another
+// listening there, so Eclipse is not running. A read that timed out, or a page opened from another
 // address, says nothing about whether it is running and keeps the plain "lost the connection" wording.
 export function engineNotRunning(connection) {
     return connection?.engine_answers_after === false && connection.probe_timed_out !== true && connection.page_address === 'this-computer';
 }
-export function engineNotRunningText(t) { return t('Start it again from the FreeVideo launcher.', '请从 FreeVideo 启动器重新启动。'); }
+export function engineNotRunningText(t) { return t('Start it again from the Eclipse launcher.', '请从 Eclipse 启动器重新启动。'); }
 // The read right after a lost connection was not refused but not answered either, on the computer the page runs
-// on, within PROBE_TIMEOUT_MS: that is all the page knows. That FreeVideo is still running and busy is inferred, not
+// on, within PROBE_TIMEOUT_MS: that is all the page knows. That Eclipse is still running and busy is inferred, not
 // measured. The notice goes away by itself when it answers again (the page keeps reading the queue).
 export function engineNotResponding(connection) {
     return connection?.engine_answers_after === false && connection.probe_timed_out === true && connection.page_address === 'this-computer';
@@ -94,7 +94,7 @@ export async function readEngineJson(response) {
         if (!(parse instanceof SyntaxError)) throw parse;
         const type = string(response.headers?.get?.('content-type')).split(';')[0].trim().toLowerCase().slice(0, 60) || 'none';
         const body = /^\s*</.test(text) ? 'an HTML page' : text.trim() ? 'text that is not JSON' : 'an empty body';
-        const error = new TypeError('Failed to fetch: the engine address answered with a web page or text instead of FreeVideo data');
+        const error = new TypeError('Failed to fetch: the engine address answered with a web page or text instead of Eclipse data');
         error.details = `HTTP ${Number.isInteger(response.status) ? response.status : 'unknown'}, content type ${type}, body is ${body} (${text.length} characters).`;
         error.notEngineReply = true;
         throw error;
@@ -214,7 +214,7 @@ export function detectBrowserExtension(error, {kind = 'unknown', known = null, b
 export const wrappedFetchOnly = result => result?.evidence?.length === 1 && result.evidence[0] === 'wrapped-fetch';
 
 export const EXTENSION_COPY = Object.freeze({
-    title: ['A browser extension is interfering with FreeVideo', '浏览器扩展干扰了 FreeVideo'],
+    title: ['A browser extension is interfering with Eclipse', '浏览器扩展干扰了 Eclipse'],
     // English uses straight quotes: curly ones widen in the CJK font stack.
     both: ['The script "{script}" in the browser extension "{extension}" interfered with this page, so this action did not finish.',
         '浏览器扩展“{extension}”里的脚本“{script}”干扰了页面，这次操作没有完成。'],
@@ -224,13 +224,13 @@ export const EXTENSION_COPY = Object.freeze({
         '浏览器里的某个扩展干扰了页面，这次操作没有完成。'],
     // The browser says a client blocked the file: an ad-blocking extension, though not which one.
     blocked: ['An ad-blocking extension in this browser, such as uBlock Origin, AdGuard or Adblock Plus, blocked one of FreeVideo\'s page files, so the page cannot work properly.',
-        '浏览器里的广告拦截类扩展（例如 uBlock Origin、AdGuard、Adblock Plus）拦下了 FreeVideo 的页面文件，页面无法正常运行。'],
+        '浏览器里的广告拦截类扩展（例如 uBlock Origin、AdGuard、Adblock Plus）拦下了 Eclipse 的页面文件，页面无法正常运行。'],
     manager: ['a user script manager', '用户脚本管理器'],
     choose: ['Choose one of these, then reload the page:', '请任选一种做法，然后刷新页面：'],
     steps: [
         ['Turn the extension off for this page, or set its site access to "On click".', '在这个页面关闭这个扩展，或把它的网站访问权限改成“点击时”。'],
         ["Add this page's address {address} to the extension's exclusion list or allowlist.", '把这个页面的地址 {address} 加进扩展的排除列表或白名单。'],
-        ['Open FreeVideo in a window without extensions, such as a private window, or in another browser.', '用不运行扩展的窗口（例如无痕窗口）或另一个浏览器打开 FreeVideo。'],
+        ['Open Eclipse in a window without extensions, such as a private window, or in another browser.', '用不运行扩展的窗口（例如无痕窗口）或另一个浏览器打开 Eclipse。'],
     ],
 });
 export function browserExtensionAdvice(result, t, {blocked = false, host = globalThis.location?.host || ''} = {}) {

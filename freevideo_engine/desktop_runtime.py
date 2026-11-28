@@ -502,7 +502,7 @@ class Runner:
             entry = self.entry_script()
             # Only a command that really starts the script needs it (the ComfyUI host runs from Python directly).
             if entry and str(self.source / entry) in command and not restore_entry(self.source, entry):
-                raise RuntimeError('FreeVideo could not find %s in %s' % (entry, plain(self.source)))
+                raise RuntimeError('Eclipse could not find %s in %s' % (entry, plain(self.source)))
             restored, unrestored = restore_missing_files(self.source)
             restore_note = ''
             if restored or unrestored:

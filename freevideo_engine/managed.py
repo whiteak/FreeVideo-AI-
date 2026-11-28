@@ -49,14 +49,14 @@ def _main(argv=None, *, lock_paths=None):
     parser.add_argument('--root', type=Path, default=Path(os.environ.get('FREEVIDEO_HOME', DEFAULT_ROOT)))
     parser.add_argument('--config', type=Path)
     args, rest = parser.parse_known_args(argv)
-    # On Linux the bare command opens FreeVideo; elsewhere the desktop app does.
+    # On Linux the bare command opens Eclipse; elsewhere the desktop app does.
     if (rest and rest[0] in ('-h', '--help')) or (not rest and not sys.platform.startswith('linux')):
-        print('FreeVideo Engine ' + __version__ + '\n\nUsage: ./freevideo [--root PATH] [COMMAND] [OPTIONS]\n\n'
-              '  (none)     Linux: open FreeVideo in ComfyUI, installing and starting it as needed\n'
+        print('Eclipse Engine ' + __version__ + '\n\nUsage: ./freevideo [--root PATH] [COMMAND] [OPTIONS]\n\n'
+              '  (none)     Linux: open Eclipse in ComfyUI, installing and starting it as needed\n'
               '  open       The same; --port N, --no-browser\n'
-              '  server     Linux: keep FreeVideo running for other computers (SSH tunnel, or\n'
+              '  server     Linux: keep Eclipse running for other computers (SSH tunnel, or\n'
               '             --listen 0.0.0.0 with an access link); --enable starts it with your session\n'
-              '  status     Show whether FreeVideo is running and its address\n'
+              '  status     Show whether Eclipse is running and its address\n'
               '  stop       Stop ComfyUI (not while a job runs, unless --force)\n'
               '  restart    Restart ComfyUI, for example after updating FreeVideo\n'
               '  setup      Detect hardware, review and install from scratch\n'
@@ -70,10 +70,10 @@ def _main(argv=None, *, lock_paths=None):
               '  doctor     Check dependencies and GPU kernels\n'
               '  diagnose   Collect a small local report, including failed installs\n'
               '  bench      Compare attention backends\n'
-              + ('  agent      Drive a running FreeVideo through its agent API (JSON)\n'
+              + ('  agent      Drive a running Eclipse through its agent API (JSON)\n'
                  '  projects   Read and edit shared editor timelines (JSON)\n'
                  '  sessions   Share work messages and plans with the user (JSON)\n'
-                 '  mcp        Serve FreeVideo to AI agents over MCP (stdio); --print-config for setup\n'
+                 '  mcp        Serve Eclipse to AI agents over MCP (stdio); --print-config for setup\n'
                  if agent_enabled() else '') + '\n'
               'Examples:\n  ./freevideo\n  ./freevideo server --listen 0.0.0.0\n  ./freevideo setup --plan\n'
               '  ./freevideo test --suite quick\n  ./freevideo generate --prompt-file prompt.txt --out video.mp4\n\n'

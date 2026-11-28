@@ -1,4 +1,4 @@
-"""Copy the bundled FreeVideo skill folder where Agents that support SKILL.md look for it."""
+"""Copy the bundled Eclipse skill folder where Agents that support SKILL.md look for it."""
 from pathlib import Path
 import shutil
 import tempfile

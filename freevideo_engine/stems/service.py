@@ -43,7 +43,7 @@ def stop_for_generation(server=None):
 
 
 def gpu_total_gib(uuid=None):
-    """Physical memory in GiB of the GPU FreeVideo uses (the first one when its UUID is unknown), or None when unreadable.
+    """Physical memory in GiB of the GPU Eclipse uses (the first one when its UUID is unknown), or None when unreadable.
 
     A reading is kept for the session; a failed one is tried again after RETRY_SECONDS, and waits at most 3 s."""
     key = str(uuid or 0)
@@ -168,7 +168,7 @@ def _run(source, out_dir, server, cancelled, root, machine):
             if not value.get('ok'):
                 errors.seek(0, 2)
                 errors.seek(max(0, errors.tell() - 4000))
-                logging.warning('[FreeVideo] Separation worker failed (exit %s, %s): %s', process.returncode,
+                logging.warning('[Eclipse] Separation worker failed (exit %s, %s): %s', process.returncode,
                                 value.get('error') or 'no result', errors.read().decode('utf-8', 'replace'))
                 code = value.get('error')
                 raise StemsError('out_of_memory' if code == 'out_of_memory' else code if code == 'no_audio'

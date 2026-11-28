@@ -76,9 +76,9 @@ def recipe(text, media, width, height, *, folders=None):
             path = None
         if path is not None and path.is_file():
             media = dict(media, first=str(path))
-            log.info('[FreeVideo] @mention starts the %s shot from the card still %s', shot, name)
+            log.info('[Eclipse] @mention starts the %s shot from the card still %s', shot, name)
         else:
-            log.warning('[FreeVideo] The first-frame still of a cast card is missing: %s', name)
+            log.warning('[Eclipse] The first-frame still of a cast card is missing: %s', name)
     return text, media, width, height
 
 
@@ -102,7 +102,7 @@ def extend(text, media, loras, *, folders=None, check=None):
         name, strength = link.get('lora'), link.get('strength', 1.0)
         if not isinstance(name, str) or name not in names or type(strength) not in (int, float) or not strength:
             if name:
-                log.warning('[FreeVideo] The LoRA linked to a cast card is not in the LoRA folder any more: %s', name)
+                log.warning('[Eclipse] The LoRA linked to a cast card is not in the LoRA folder any more: %s', name)
             continue
         path = str(Path(folders.get_full_path_or_raise('loras', name)).resolve())
         if path in have:
@@ -121,7 +121,7 @@ def extend(text, media, loras, *, folders=None, check=None):
             trigger = link.get('trigger_words') or link.get('trigger')
         if isinstance(trigger, str) and trigger.strip():
             words.append(trigger.strip())
-        log.info('[FreeVideo] @mention loads LoRA %s at %.2f', name, strength)
+        log.info('[Eclipse] @mention loads LoRA %s at %.2f', name, strength)
     if words and isinstance(text, str):
         from ..lora_triggers import prepend_words
         for phrase in reversed(words):

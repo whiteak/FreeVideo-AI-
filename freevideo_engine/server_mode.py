@@ -133,12 +133,12 @@ def released(model, row):
             from . import rewarm
             rewarm.after_release(model, event['reason'], row.get('held'), row.get('worker_rss_bytes'))
         except Exception:
-            logging.warning('[FreeVideo] Could not wait to bring the %s model back', model, exc_info=True)
+            logging.warning('[Eclipse] Could not wait to bring the %s model back', model, exc_info=True)
     for callback in listeners:
         try:
             callback(dict(event))
         except Exception:
-            logging.warning('[FreeVideo] A server release listener failed', exc_info=True)
+            logging.warning('[Eclipse] A server release listener failed', exc_info=True)
 
 
 def reloaded(model, reason):
@@ -151,7 +151,7 @@ def reloaded(model, reason):
         try:
             callback(dict(event))
         except Exception:
-            logging.warning('[FreeVideo] A server release listener failed', exc_info=True)
+            logging.warning('[Eclipse] A server release listener failed', exc_info=True)
 
 
 # How often the picture model's return waits for the video to finish, and for how long at most.
@@ -268,7 +268,7 @@ def _video_fits():
         from .rewarm import Probe
         return Probe('video').room() is not None
     except Exception:
-        logging.warning('[FreeVideo] Reading the room for the video model failed', exc_info=True)
+        logging.warning('[Eclipse] Reading the room for the video model failed', exc_info=True)
         return False
 
 
@@ -295,7 +295,7 @@ def _load(models, videos, images, beside=False):
                                 else dict(model=model, level='full', mode='eager'))
                     images.wait_warm(600.)
     except Exception:
-        logging.warning('[FreeVideo] Server warm-up failed', exc_info=True)
+        logging.warning('[Eclipse] Server warm-up failed', exc_info=True)
     finally:
         with _mutex:
             if _warm['started'] is not None:

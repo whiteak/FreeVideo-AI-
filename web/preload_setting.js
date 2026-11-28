@@ -18,7 +18,7 @@ export function setPreloadMode(mode) {
     window.dispatchEvent(new CustomEvent(PRELOAD_EVENT, {detail: {mode: value}}));
 }
 
-// The listener gets the new mode, from this page or another FreeVideo tab; returns the function that stops it.
+// The listener gets the new mode, from this page or another Eclipse tab; returns the function that stops it.
 export function onPreload(listener) {
     const here = event => listener(event.detail?.mode === 'conservative' ? 'conservative' : 'eager');
     const there = event => { if (event.key === PRELOAD_KEY) listener(preloadMode()); };

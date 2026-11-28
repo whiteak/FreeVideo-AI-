@@ -5,7 +5,7 @@ import {userMessage} from './user_message.js';
 import { isChinese, translator } from './i18n.js';
 import { localized } from './i18n_tables.js';
 
-// FreeVideo's own reason keeps the lead-in that says what failed; browser or program wording becomes a plain sentence.
+// Eclipse's own reason keeps the lead-in that says what failed; browser or program wording becomes a plain sentence.
 const saveFailure = (error, tt) => { const text = userMessage(error, tt, tt('Could not save. Try again.', '没能保存，请重试。'));
     return text === String(error?.message ?? '').trim() ? tt('Save failed: ', '保存失败：') + text : text; };
 const readFailure = (error, tt) => { const text = userMessage(error, tt, tt('Could not read the setting. Try again.', '没能读取设置，请重试。'));
@@ -198,7 +198,7 @@ async function openCompatibilitySheet() {
         button(panel, t('Close', '关闭'), () => panel.close(), true).focus();
     }
 }
-// inFront: the notice waits until FreeVideo is in front (a launcher visit or an open FreeVideo view).
+// inFront: the notice waits until Eclipse is in front (a launcher visit or an open Eclipse view).
 export async function notifyCompatibility({inFront = () => true} = {}) {
     try {
         const request=await client(), value=await request('check');
@@ -220,5 +220,5 @@ export async function notifyCompatibility({inFront = () => true} = {}) {
         button(panel, t('Adjust settings', '调整设置'), () => finish(true));
         const ok = button(panel, t('OK', '知道了'), () => finish(false), true);
         show(panel, ok);
-    } catch(error) { console.warn('FreeVideo compatibility check:',error.message); }
+    } catch(error) { console.warn('Eclipse compatibility check:',error.message); }
 }

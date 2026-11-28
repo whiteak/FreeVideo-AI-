@@ -4,7 +4,7 @@ body:
   - type: input
     id: version
     attributes:
-      label: FreeVideo version / FreeVideo 版本
+      label: Eclipse version / Eclipse 版本
   - type: textarea
     id: problem
     attributes:

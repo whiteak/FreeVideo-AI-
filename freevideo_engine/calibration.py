@@ -359,13 +359,13 @@ def main(argv=None):
                            'returncode': returncode, 'log': str(log)}
                 # A memory stop is not a held lease: say which it was, and do
                 # not tell a machine that ran out of memory to look for another
-                # FreeVideo process.
+                # Eclipse process.
                 shortage = next((line for line in reversed(output.splitlines())
                                  if line.startswith('MemoryError: RAM guard')), None)
                 if shortage:
                     failure.update(reason='memory', detail=shortage)
                 else:
-                    failure['if_lease_held'] = ('A held installation lease means another FreeVideo '
+                    failure['if_lease_held'] = ('A held installation lease means another Eclipse '
                                                 'process is using the card. Finish or cancel it, then '
                                                 'run the placement test again.')
                 raise SystemExit(json.dumps(failure))

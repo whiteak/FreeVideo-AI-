@@ -1,7 +1,7 @@
 """Subtitle "ears": the timeline's sound -> timed text (alignment or recognition).
 
-FreeVideo only listens here. Proofreading, translation, segmentation and
-layout are the brain's job (an Agent, or FreeVideo AI), which then writes the
+Eclipse only listens here. Proofreading, translation, segmentation and
+layout are the brain's job (an Agent, or Eclipse AI), which then writes the
 subtitle track with ordinary editor commands.
 
 * align:      the lines are known; return when each is spoken. A line that

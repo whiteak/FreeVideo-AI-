@@ -35,7 +35,7 @@ def read(path, limit):
 def reason_code(error):
     """Classify existing GiveWay messages; never persist their free text."""
     text = str(error)
-    if text == 'stopped by FreeVideo':
+    if text == 'stopped by Eclipse':
         return 'foreground_work'
     for prefix, code in (('memory:', 'ram_pressure'), ('gpu busy:', 'gpu_busy'),
                          ('gpu memory:', 'gpu_memory_pressure'),
@@ -78,7 +78,7 @@ def record(root, state, *, reason=None, started_at=None, shapes=None, pid=None, 
             change['sequence'] = _queued
             _queue.append(change)
             if _writer is None:
-                _writer = threading.Thread(target=_write, name='FreeVideo precompile status', daemon=True)
+                _writer = threading.Thread(target=_write, name='Eclipse precompile status', daemon=True)
                 _writer.start()
             _wake.notify_all()
     except Exception:

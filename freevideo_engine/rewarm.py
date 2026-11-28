@@ -94,7 +94,7 @@ def watch(probe, generation, *, clock=time.monotonic, sleep=time.sleep):
                 return 'loaded'
             now_used = None if probe.busy() else probe.room()
         except Exception:
-            logging.warning('[FreeVideo] Reading the room for the %s model failed', model, exc_info=True)
+            logging.warning('[Eclipse] Reading the room for the %s model failed', model, exc_info=True)
             now_used = None
         now = clock()
         if now_used is None:
@@ -109,7 +109,7 @@ def watch(probe, generation, *, clock=time.monotonic, sleep=time.sleep):
         try:
             answer = probe.load() or {}
         except Exception:
-            logging.warning('[FreeVideo] Bringing back the %s model failed', model, exc_info=True)
+            logging.warning('[Eclipse] Bringing back the %s model failed', model, exc_info=True)
             return 'skipped'
         if answer.get('warm') == 'skipped':
             if answer.get('reason') in BUSY:

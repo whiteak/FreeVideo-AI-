@@ -79,7 +79,7 @@ const NOTE_STATES = new Set(['done', 'failed', 'interrupted']);
 const reasonOf = failure => {
     const code = failure?.code;
     if (code === 'engine_closed') return words(['Connection lost', '连接中断']);
-    if (code === 'engine_restarted') return words(['FreeVideo restarted', 'FreeVideo 已重新启动']);
+    if (code === 'engine_restarted') return words(['Eclipse restarted', 'Eclipse 已重新启动']);
     return '';
 };
 export function noteFromJob(row, previous, now = Date.now()) {
@@ -519,7 +519,7 @@ function buildToast(item, more) {
         act.textContent = words(spec.action.label || ['Undo', '撤销']);
         Object.assign(act.dataset, {fvTipName: act.textContent, fvTipUse: words(spec.action.use || ['Take back what just happened', '撤回刚才的操作'])});
         if (spec.action.key) act.dataset.fvTipKey = spec.action.key;
-        act.onclick = () => { queue.close(item); try { spec.action.run(); } catch (error) { console.warn('FreeVideo notice action:', error); } };
+        act.onclick = () => { queue.close(item); try { spec.action.run(); } catch (error) { console.warn('Eclipse notice action:', error); } };
         box.append(act);
     }
     if (more > 0) { const chip = document.createElement('span'); chip.className = 'fv-toast-more'; chip.textContent = `+${more}`; setTip(chip, {name: t('{more} more after this', '后面还有 {more} 条', { more })}); box.append(chip); }

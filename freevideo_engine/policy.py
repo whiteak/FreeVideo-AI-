@@ -630,7 +630,7 @@ class ResourceBudgetError(ValueError):
         # budgets happened to fail: a VRAM refusal is the one a user most
         # needs it for, because the way out is a smaller request.
         self.details['geometry'] = dict(canvas) if canvas is not None else None
-        lines = ['FreeVideo resource planning could not admit this request: ' + ', '.join(name.upper() for name in failed),
+        lines = ['Eclipse resource planning could not admit this request: ' + ', '.join(name.upper() for name in failed),
                  'GPU: %s (%s)' % (hardware.gpu_name, hardware.system)]
         if ram_requirement == 'text_encoder_host':
             lines.append('The text encoder holds %.2f GiB of host memory while it runs, and this '
@@ -681,7 +681,7 @@ class ResourceBudgetError(ValueError):
         self.args = ((self.args[0] + '\n' if self.args else '') + line,)
 
     def add_own_memory(self, own):
-        """Say how much of the physical RAM already taken is FreeVideo's own."""
+        """Say how much of the physical RAM already taken is Eclipse's own."""
         self.details.update(own)
         parts = []
         if 'own_private_working_set_bytes' in own:

@@ -177,7 +177,7 @@ class ModelReadAhead:
         if os.environ.get('FREEVIDEO_MODEL_READ_AHEAD', 'auto').lower() in ('off', '0', 'false'):
             self.result.update(state='skipped', reason='Disabled by FREEVIDEO_MODEL_READ_AHEAD')
             return self
-        self.thread = threading.Thread(target=self._run, name='FreeVideo model read-ahead', daemon=True)
+        self.thread = threading.Thread(target=self._run, name='Eclipse model read-ahead', daemon=True)
         self.thread.start()
         return self
 

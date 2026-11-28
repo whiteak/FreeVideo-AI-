@@ -2,7 +2,7 @@
 
 English · [中文](LoRA.zh-CN.md)
 
-FreeVideo supports community LoRAs for MiniMax H3. Each comparison uses the same prompt and seed.
+Eclipse supports community LoRAs for MiniMax H3. Each comparison uses the same prompt and seed.
 
 ## [VHS](https://huggingface.co/KennethFal/vh5tape-vhs-lora-minimax-h3)
 

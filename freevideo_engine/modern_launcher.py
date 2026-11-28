@@ -12,8 +12,8 @@ from .long_paths import io_path, plain
 # Font order by interface language: Latin first, then the system's Chinese, Japanese and Korean fonts. Traditional Chinese takes
 # its own fonts (Traditional glyph forms), the same order as the web page; every other language keeps the Simplified ones.
 FONT_FAMILIES = {
-    '': ('FreeVideo UI', ('Segoe UI', 'Microsoft YaHei UI', 'Noto Sans', 'Noto Sans CJK SC')),
-    'zh-Hant': ('FreeVideo UI Hant', ('Segoe UI', 'PingFang TC', 'Microsoft JhengHei UI', 'Noto Sans', 'Noto Sans CJK TC')),
+    '': ('Eclipse UI', ('Segoe UI', 'Microsoft YaHei UI', 'Noto Sans', 'Noto Sans CJK SC')),
+    'zh-Hant': ('Eclipse UI Hant', ('Segoe UI', 'PingFang TC', 'Microsoft JhengHei UI', 'Noto Sans', 'Noto Sans CJK TC')),
 }
 
 
@@ -381,7 +381,7 @@ def create_ui(session, *, show=True, instance=None):
             if session.controller.busy or session.importer.busy:
                 return
             paths, _ = QFileDialog.getOpenFileNames(None, session.t('Import offline packages', '导入离线包'),
-                                                    '', 'FreeVideo (*.zip)')
+                                                    '', 'Eclipse (*.zip)')
             if paths:
                 self.invoke(session.import_packages, paths)
 
@@ -394,7 +394,7 @@ def create_ui(session, *, show=True, instance=None):
             if session.controller.busy or session.importer.busy:
                 return
             paths, _ = QFileDialog.getOpenFileNames(None, session.t('Choose environment ZIP', '选择运行环境包'),
-                                                    '', 'FreeVideo (*.zip)')
+                                                    '', 'Eclipse (*.zip)')
             if paths:
                 self.invoke(session.import_packages, paths)
 
@@ -626,7 +626,7 @@ def create_ui(session, *, show=True, instance=None):
             tray = QSystemTrayIcon(icon, self)
             tray.setToolTip('FreeVideo')
             menu = QMenu()
-            open_action = QAction(session.t('Open FreeVideo', '打开 FreeVideo'), menu)
+            open_action = QAction(session.t('Open Eclipse', '打开 Eclipse'), menu)
             exit_action = QAction(session.t('Exit', '退出'), menu)
             open_action.triggered.connect(self.show_window)
             exit_action.triggered.connect(self.exit_from_tray)
@@ -658,7 +658,7 @@ def create_ui(session, *, show=True, instance=None):
     engine.load(QUrl.fromLocalFile(str(Path(__file__).parent / 'launcher/Main.qml')))
     if not engine.rootObjects():
         bridge.timer.stop()
-        raise RuntimeError('FreeVideo desktop layout could not be loaded')
+        raise RuntimeError('Eclipse desktop layout could not be loaded')
     window = engine.rootObjects()[0]
     window.setIcon(icon)
     bridge.instance = serve_instance(app, session, bridge, instance) if instance else None

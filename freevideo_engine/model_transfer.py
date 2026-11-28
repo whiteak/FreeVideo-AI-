@@ -240,7 +240,7 @@ def sdk_worker(request):
             method='http-ranges' if request.get('manual_ranges') else 'modelscope-ranges'
             emit(phase='backend', backend=method, streams=DOWNLOAD_PARALLELS, part_bytes=DOWNLOAD_PART_SIZE)
             backend.append(method)
-            # FreeVideo owns final integrity handling. Passing no SDK hash
+            # Eclipse owns final integrity handling. Passing no SDK hash
             # avoids its delete-and-retry behavior for a rejected download.
             _download.requests.get = get
             from .provider_resume import ms_parallel

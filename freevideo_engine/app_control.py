@@ -75,7 +75,7 @@ def _checked(name, original, modules):
                     importlib.import_module(module)
             except ImportError as error:
                 _unusable['scipy'] = describe(error)
-                print('FreeVideo: SciPy cannot be loaded (%s); continuing without it.' % _unusable['scipy'],
+                print('Eclipse: SciPy cannot be loaded (%s); continuing without it.' % _unusable['scipy'],
                       file=sys.stderr, flush=True)
         return 'scipy' not in _unusable
     available.__name__ = original.__name__

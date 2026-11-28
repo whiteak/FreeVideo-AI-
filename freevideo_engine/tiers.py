@@ -62,7 +62,7 @@ UPSCALE_SHARE = {2: 1., 1.5: 1.27, 1.2: 1.72}
 
 
 def on_mac():
-    """FreeVideo runs on Apple's MPS backend on every Mac."""
+    """Eclipse runs on Apple's MPS backend on every Mac."""
     return sys.platform == 'darwin'
 
 

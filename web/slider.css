@@ -1,4 +1,4 @@
-/* One slider look for FreeVideo's own surfaces, on every platform (the browser's own is drawn by the system and differs):
+/* One slider look for Eclipse's own surfaces, on every platform (the browser's own is drawn by the system and differs):
    a 4 px track, a round accent knob. Scope as in a11y.css; the zero-specificity :where lets a view's own sizes (the touch 44 px
    rows, the image editor's filled track, the chat seek) keep winning.
    No filled part (Chrome cannot draw one; Firefox would, so neither does): the knob shows the value. Mixed-value sliders hide the knob in editor_audio.css. */

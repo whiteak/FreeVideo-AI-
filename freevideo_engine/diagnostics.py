@@ -271,7 +271,7 @@ def web_files(root, machine):
         return dict(source=plain(source), manifest=rows is not None, files=len(present),
                     missing=sorted(set(expected) - set(present)), changed=changed,
                     extra=sorted(set(present) - set(expected)) if rows is not None else [])
-    return dict(error='No FreeVideo source is recorded')
+    return dict(error='No Eclipse source is recorded')
 
 
 def windows_state(bootstrap):
@@ -455,7 +455,7 @@ def collect(root, config, run, output, *, complete=False, extra_files=(), notes=
             manifest['errors'].append({'file': sources_name, 'error': type(error).__name__})
         # What the browser page found (web/health.js), and the page files of the
         # source ComfyUI served: a missing or changed file explains a page
-        # without FreeVideo's styles or workspace.
+        # without Eclipse's styles or workspace.
         for name in ('page-check.json', 'page-checks.jsonl', 'workflow-repairs.jsonl'):
             if (root / 'logs' / name).is_file():
                 add_path('logs/' + name, root / 'logs' / name)

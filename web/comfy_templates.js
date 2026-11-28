@@ -1,10 +1,10 @@
-// ComfyUI's own Templates window, shown over the Nodes view: FreeVideo says its search box and its first category in the
+// ComfyUI's own Templates window, shown over the Nodes view: Eclipse says its search box and its first category in the
 // interface language (ComfyUI's Chinese file reads the search box as "搜索占位符", and the category name is not translated),
 // and comfy_templates.css brings the window into the light theme. The window is added to the page body when it opens.
 import { isChinese } from './i18n.js';
 export const chinese = isChinese();
 
-// English text of a ComfyUI-made label -> the Chinese FreeVideo shows in its place.
+// English text of a ComfyUI-made label -> the Chinese Eclipse shows in its place.
 export const LABELS = {Popular: '热门'};
 export const SEARCH = {'搜索占位符': '搜索模板'};
 

@@ -2,30 +2,30 @@
 
 [English](Linux.md) · 中文
 
-FreeVideo 支持 x86_64 Linux，需要 NVIDIA 显卡和 580 及以上版本的驱动。桌面环境下，AppImage 的用法与 Windows 启动器相同；在终端或服务器上，运行 `./setup.sh` 即可一次装好，之后用 `freevideo` 命令打开。
+Eclipse 支持 x86_64 Linux，需要 NVIDIA 显卡和 580 及以上版本的驱动。桌面环境下，AppImage 的用法与 Windows 启动器相同；在终端或服务器上，运行 `./setup.sh` 即可一次装好，之后用 `freevideo` 命令打开。
 
 ## 桌面：AppImage
 
 1. [下载 FreeVideo-Linux-x86_64.AppImage](https://github.com/FlashML-org/FreeVideo/releases/latest/download/FreeVideo-Linux-x86_64.AppImage)。
 2. 在文件属性中勾选**允许作为程序执行**，或运行 `chmod +x FreeVideo-Linux-x86_64.AppImage`，然后打开它。
-3. 选择新安装的文件夹或已有的 ComfyUI，点击**安装并启动**。ComfyUI 会在浏览器中打开，并进入 FreeVideo 创作面板。
+3. 选择新安装的文件夹或已有的 ComfyUI，点击**安装并启动**。ComfyUI 会在浏览器中打开，并进入 Eclipse 创作面板。
 
-安装完成后，应用菜单和桌面上会出现 FreeVideo，启动器也会像 Windows 版一样自动更新。AppImage 需要 2022 年以后的发行版（Ubuntu 22.04、Debian 12、Fedora 36、RHEL 9 或更新版本）；更老的系统请使用下面的终端安装方式。如果系统缺少 Git 或 C++ 编译器，FreeVideo 会在安装时自行下载，不需要管理员权限。
+安装完成后，应用菜单和桌面上会出现 Eclipse，启动器也会像 Windows 版一样自动更新。AppImage 需要 2022 年以后的发行版（Ubuntu 22.04、Debian 12、Fedora 36、RHEL 9 或更新版本）；更老的系统请使用下面的终端安装方式。如果系统缺少 Git 或 C++ 编译器，Eclipse 会在安装时自行下载，不需要管理员权限。
 
 ## 终端：一条命令
 
 ```bash
-git clone https://github.com/FlashML-org/FreeVideo.git && cd FreeVideo
+git clone https://github.com/FlashML-org/FreeVideo.git && cd Eclipse
 ./setup.sh
 ```
 
-安装程序会检查显卡、内存和硬盘，显示安装计划，确认后安装运行环境、模型和 ComfyUI，然后启动 ComfyUI，并在浏览器中打开 FreeVideo。所有文件都在 FreeVideo 文件夹内。
+安装程序会检查显卡、内存和硬盘，显示安装计划，确认后安装运行环境、模型和 ComfyUI，然后启动 ComfyUI，并在浏览器中打开 Eclipse。所有文件都在 Eclipse 文件夹内。
 
 之后在任意终端输入 `freevideo` 即可再次打开。ComfyUI 会在后台持续运行，直到手动停止：
 
 | 命令 | 作用 |
 | --- | --- |
-| `freevideo` | 打开 FreeVideo；ComfyUI 没有运行时先启动它 |
+| `freevideo` | 打开 Eclipse；ComfyUI 没有运行时先启动它 |
 | `freevideo status` | 查看是否在运行，以及访问地址 |
 | `freevideo stop` | 停止 ComfyUI；有视频正在生成时需加 `--force` |
 | `freevideo restart` | 重启 ComfyUI |
@@ -48,9 +48,9 @@ ssh -N -L 8188:127.0.0.1:8188 用户名@服务器
 freevideo server --listen 0.0.0.0
 ```
 
-这会打印一个带访问令牌的链接和对应的二维码（可用手机相机扫描），持有链接的人都可以使用这台服务器上的 FreeVideo；用 `freevideo server --listen 0.0.0.0 --new-token` 可以换一个新链接，`freevideo status` 可以再次查看。ComfyUI 本身仍然只监听服务器本机，前面的访问代理会拒绝所有不带令牌的请求。连接没有加密，请只在可信的网络中使用，或加上 `--tls-cert cert.pem --tls-key key.pem` 使用 HTTPS。通过链接只能打开 ComfyUI 输入文件夹中 FreeVideo 自己子文件夹里的图片。
+这会打印一个带访问令牌的链接和对应的二维码（可用手机相机扫描），持有链接的人都可以使用这台服务器上的 Eclipse；用 `freevideo server --listen 0.0.0.0 --new-token` 可以换一个新链接，`freevideo status` 可以再次查看。ComfyUI 本身仍然只监听服务器本机，前面的访问代理会拒绝所有不带令牌的请求。连接没有加密，请只在可信的网络中使用，或加上 `--tls-cert cert.pem --tls-key key.pem` 使用 HTTPS。通过链接只能打开 ComfyUI 输入文件夹中 Eclipse 自己子文件夹里的图片。
 
-如需随服务器启动，加上 `--enable`，FreeVideo 会注册为 systemd 用户服务；若要在注销后保持运行、开机自动启动，还需运行一次 `sudo loginctl enable-linger $USER`。`freevideo server --disable` 会移除这个服务。
+如需随服务器启动，加上 `--enable`，Eclipse 会注册为 systemd 用户服务；若要在注销后保持运行、开机自动启动，还需运行一次 `sudo loginctl enable-linger $USER`。`freevideo server --disable` 会移除这个服务。
 
 ## 命令行生成
 

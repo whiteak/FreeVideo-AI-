@@ -1,4 +1,4 @@
-"""A small standard-library client for the FreeVideo agent API (used by the MCP server and the CLI).
+"""A small standard-library client for the Eclipse agent API (used by the MCP server and the CLI).
 
     from freevideo_engine.agent.client import Client
     fv = Client()                                   # finds the server and token of this installation
@@ -40,9 +40,9 @@ def local_file(path):
             return source
     except (OSError, ValueError, TypeError):
         pass
-    # Agents often pass a path FreeVideo returned (assets, inputs, outputs) as a local file.
+    # Agents often pass a path Eclipse returned (assets, inputs, outputs) as a local file.
     raise ApiError(422, 'invalid_media', 'There is no readable file at this path on this computer.', dict(
-        next='Use "path" only for a file on this computer. Send a file FreeVideo returned as {"file": "<that path>"}.',
+        next='Use "path" only for a file on this computer. Send a file Eclipse returned as {"file": "<that path>"}.',
         details=[dict(field='path')]))
 
 
@@ -161,7 +161,7 @@ class Client:
                            inbox=body.get('inbox')) from None
         except urllib.error.URLError:
             submission = method == 'POST' and (path.endswith('/jobs') or path.endswith('/resume'))
-            raise ApiError(0, 'unreachable', 'The FreeVideo server could not be reached.',
+            raise ApiError(0, 'unreachable', 'The Eclipse server could not be reached.',
                            stage='submission_unknown' if submission else 'request') from None
         return payload if raw else json.loads(payload or b'{}')
 
@@ -382,6 +382,6 @@ class Client:
                 dict(details=[], next='GET /freevideo/agent/v1/library and use an existing asset ID.',
                      retryable=False) | {k: v for k, v in problem.items() if k not in ('code', 'message')}) from None
         except urllib.error.URLError:
-            raise ApiError(0, 'unreachable', 'The FreeVideo server could not be reached.',
-                           dict(details=[], next='Start FreeVideo, then retry the asset download.', retryable=True)) from None
+            raise ApiError(0, 'unreachable', 'The Eclipse server could not be reached.',
+                           dict(details=[], next='Start Eclipse, then retry the asset download.', retryable=True)) from None
         return target

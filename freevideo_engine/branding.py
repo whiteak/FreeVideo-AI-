@@ -363,6 +363,6 @@ def wordmark(parent, width=228):
     original = tk.PhotoImage(master=parent, file=str(Path(__file__).with_name('assets') / 'wordmark.png'))
     ratio = max(1, round(original.width() / width))
     photo = original.subsample(ratio)
-    label = ttk.Label(parent, image=photo, text='FreeVideo')
+    label = ttk.Label(parent, image=photo, text='Eclipse')
     label.image = photo  # Tk does not retain the Python image object.
     return label

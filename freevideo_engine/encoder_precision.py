@@ -4,7 +4,7 @@ ComfyUI's text-encoder base builds the input embeddings in FP32 and calls the
 language model with dtype=float32, so every NVFP4 weight is dequantized to
 FP32 and every matmul runs in FP32, without tensor cores. The official MiniMax
 H3 pipeline runs this encoder in BF16, the model's own dtype, and conditions
-the transformer on BF16 hidden states; FreeVideo saves them in BF16 too. BF16
+the transformer on BF16 hidden states; Eclipse saves them in BF16 too. BF16
 halves the working memory per token and uses tensor cores.
 """
 from contextlib import contextmanager

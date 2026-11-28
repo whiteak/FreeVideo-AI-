@@ -1,10 +1,10 @@
-"""Remove FreeVideo's own superseded copies after an update; never models or user files.
+"""Remove Eclipse's own superseded copies after an update; never models or user files.
 
 Every launcher update leaves the previous executable twice (its download and the
 copy behind the desktop shortcut) and the previous source twice (the launcher's
 copy and the installation's). An update of the user's ComfyUI used to leave a
 whole separate ComfyUI environment, PyTorch included. Once the new version runs
-ComfyUI, none of these is read again. Removal is limited to copies FreeVideo
+ComfyUI, none of these is read again. Removal is limited to copies Eclipse
 itself wrote:
 
 * updates/<sha256>/ in the launcher folder: the executable that digest names,
@@ -105,7 +105,7 @@ def plain_tree(path):
 
 def references():
     """Every path a running process names: its program, working folder, arguments
-    and PYTHONPATH, which is how FreeVideo starts workers from a source folder."""
+    and PYTHONPATH, which is how Eclipse starts workers from a source folder."""
     try:
         import psutil
     except ImportError:

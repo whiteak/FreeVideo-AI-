@@ -242,7 +242,7 @@ function renderJobs() {
         if (img.firstChild && hintWanted()) {
             const hint = el('div', 'phone-hint'), close = button('phone-hint-close', '×', () => { markHintSeen(); jobsSignature = ''; renderJobs(); });
             close.setAttribute('aria-label', t('Close', '关闭'));
-            hint.append(el('span', '', t('The preview can be set to loop in FreeVideo Settings on the computer.', '预览可在电脑上的 FreeVideo 设置中改为循环播放。')), close); card.append(hint);
+            hint.append(el('span', '', t('The preview can be set to loop in Eclipse Settings on the computer.', '预览可在电脑上的 Eclipse 设置中改为循环播放。')), close); card.append(hint);
         }
         card.append(info); generations.append(card);
     }
@@ -286,8 +286,8 @@ function completed(job) {
     toastJob = job; toast.replaceChildren(picture(job), el('span', '', t('Your video is ready', '生成好了')), button('phone-link', t('View', '查看'), () => { show('jobs'); openResult(job); }));
     main.classList.add('toast-space'); renderShell(); clearTimeout(toastTimer);
     toastTimer = setTimeout(() => { toastJob = null; toast.hidden = true; main.classList.remove('toast-space'); }, 6000);
-    clearInterval(flash); let lit = false; flash = setInterval(() => { document.title = (lit = !lit) ? t('Your video is ready', '生成好了') : 'FreeVideo'; }, 1000);
-    setTimeout(() => { clearInterval(flash); document.title = 'FreeVideo'; }, 6000);
+    clearInterval(flash); let lit = false; flash = setInterval(() => { document.title = (lit = !lit) ? t('Your video is ready', '生成好了') : 'Eclipse Image and Video Creator'; }, 1000);
+    setTimeout(() => { clearInterval(flash); document.title = 'Eclipse Image and Video Creator'; }, 6000);
     if ('Notification' in window) {
         if (document.hidden && Notification.permission === 'granted') { try { const n = new Notification(t('Your video is ready', '生成好了')); n.onclick = () => { window.focus(); show('jobs'); openResult(job); n.close(); }; } catch {} }
         if (!permissionAsked && Notification.permission === 'default') { permissionAsked = true; try { localStorage.setItem('freevideo.phone.notification-asked', '1'); } catch {} Notification.requestPermission().catch(() => {}); }
@@ -327,7 +327,7 @@ main.addEventListener('scroll', async () => {
     try { const data = await json(await dataLayer.activity(cursor)); jobs = mergePhoneJobs(jobs, {}, data.jobs || []); cursor = data.next_cursor ?? null; historyStarted = true; limit += 30; renderJobs(); }
     catch { connection(false); } finally { loadingMore = false; }
 }, {passive: true});
-document.addEventListener('visibilitychange', () => { if (!document.hidden) { clearInterval(flash); document.title = 'FreeVideo'; poller.poll(); } else poller.reschedule(); });
+document.addEventListener('visibilitychange', () => { if (!document.hidden) { clearInterval(flash); document.title = 'Eclipse Image and Video Creator'; poller.poll(); } else poller.reschedule(); });
 window.addEventListener('pagehide', event => { if (!event.persisted) { stopped = true; closed.abort(); poller.dispose(); clearInterval(countdown); clearInterval(flash); clearTimeout(toastTimer); } });
 window.addEventListener('pageshow', event => { if (event.persisted) poller.poll(); });
 renderShell(); poller.poll();

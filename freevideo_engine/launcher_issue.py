@@ -62,7 +62,7 @@ def environment_line(version=None, hardware=None):
         return '%.1f GiB' % (value / 2**30) if type(value) is int and value > 0 else ''
 
     gpu = ', '.join(part for part in (str(hardware.get('gpu_name') or ''), gib('vram_total') + ' VRAM' if gib('vram_total') else '') if part)
-    parts = ['FreeVideo ' + str(version).lstrip('v') if version else '', str(hardware.get('system') or ''), gpu,
+    parts = ['Eclipse ' + str(version).lstrip('v') if version else '', str(hardware.get('system') or ''), gpu,
              'driver ' + str(hardware['driver_version']) if hardware.get('driver_version') else '',
              gib('ram_total') + ' RAM' if gib('ram_total') else '']
     return scrub(' · '.join(part for part in parts if part))[:300]
@@ -114,7 +114,7 @@ def issue_url(error, version=None, title=None, zh=False, environment='', diagnos
     causes = _lines(_without_ready_curl_diagnostics(str(error))) or lines
     first = (causes[-1] if causes and causes[0].startswith('Traceback') else (causes[0] if causes else '')).strip()
     place = '启动器' if zh else 'Launcher'
-    problem = ('FreeVideo 启动器显示了一个错误。\n' if zh else 'The FreeVideo launcher showed an error.\n') + first[:300]
+    problem = ('Eclipse 启动器显示了一个错误。\n' if zh else 'The Eclipse launcher showed an error.\n') + first[:300]
     report = '\n'.join(lines)
     # The environment line is for triage, so it stays English in either language and is kept whole;
     # only the error text gives way to fit the address.

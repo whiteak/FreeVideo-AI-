@@ -1,7 +1,7 @@
 /* ═══════════════════════════════════════════════════════════════════════════════════════════════
-   FreeVideo design tokens · the single source (glob, v1 · 2026-11-14 23:20 PST)
+   Eclipse design tokens · the single source (glob, v1 · 2026-11-14 23:20 PST)
    ───────────────────────────────────────────────────────────────────────────────────────────────
-   Everything every view, popover, tooltip and the floating task window reads. Names are FreeVideo's
+   Everything every view, popover, tooltip and the floating task window reads. Names are Eclipse's
    own (--fv-*); they never touch ComfyUI's theme. The names match what shell already committed in
    web/theme.css (f77c46ea8) so nothing has to be renamed; values that changed are marked  ▲ changed .
    TOKENS.md explains each group, when to use what, and the measured contrast.
@@ -36,7 +36,7 @@
   --fv-gutter:24px;                   /* top bar sides, centred column gutter */
 
   /* ── 3 · Type: four sizes, three weights, digits tabular ───────────────────────────────── */
-  --fv-font:-apple-system,BlinkMacSystemFont,"Segoe UI Variable Text","Segoe UI","FreeVideo Quotes",
+  --fv-font:-apple-system,BlinkMacSystemFont,"Segoe UI Variable Text","Segoe UI","Eclipse Quotes",
             "PingFang SC","Hiragino Sans GB","Microsoft YaHei UI","Noto Sans CJK SC","Noto Sans SC",system-ui,sans-serif;
   --fv-font-mono:ui-monospace,"SF Mono",Menlo,Consolas,"Cascadia Mono","Noto Sans Mono CJK SC",monospace;
   --fv-fs-1:12px;  --fv-lh-1:16px;    /* caption, badge, timecode, shortcut key, helper line */

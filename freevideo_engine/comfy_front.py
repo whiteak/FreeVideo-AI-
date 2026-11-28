@@ -13,7 +13,7 @@ import uuid
 
 
 # The error panel recognises these texts; keep them in step (web/error_panel.js).
-NO_EXECUTOR = 'No GPU is available: every GPU process has stopped. Restart FreeVideo.'
+NO_EXECUTOR = 'No GPU is available: every GPU process has stopped. Restart Eclipse.'
 EXITED_AGAIN = 'The GPU process exited again while running this task, so it was not moved to another GPU'
 LOG_ERROR = re.compile(r'\b\w*(?:Error|Exception)\b:|Fatal Python error|Segmentation fault|CUDA error|\bKilled\b|\bAborted\b')
 
@@ -427,10 +427,10 @@ class Front:
         if mark is not None:
             mark(uuid)
         if any(other.device.uuid not in self.unavailable and not self._exited(other) for other in self.workers()):
-            logging.warning('[FreeVideo] The executor for GPU %s exited (%s); its tasks move to the remaining GPUs',
+            logging.warning('[Eclipse] The executor for GPU %s exited (%s); its tasks move to the remaining GPUs',
                             worker.device.index, exit_cause(worker))
         else:
-            logging.warning('[FreeVideo] The executor for GPU %s exited (%s); no GPU remains',
+            logging.warning('[Eclipse] The executor for GPU %s exited (%s); no GPU remains',
                             worker.device.index, exit_cause(worker))
 
     def _requeue(self, row):
@@ -772,7 +772,7 @@ def register(server, *, scheduler=None, supervisor=None, envelope=None):
                 # Keep reservations on protocol errors; never report an unknown worker idle.
                 kind = type(error).__name__
                 if kind != last_error:
-                    logging.warning('[FreeVideo] Pool scheduling pass failed (%s)', kind)
+                    logging.warning('[Eclipse] Pool scheduling pass failed (%s)', kind)
                 last_error = kind
             await asyncio.sleep(.5)
 

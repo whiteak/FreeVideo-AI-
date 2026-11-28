@@ -1,4 +1,4 @@
-"""Names a LoRA file uses for the FreeVideo model, shared by the engine and the pre-check."""
+"""Names a LoRA file uses for the Eclipse model, shared by the engine and the pre-check."""
 import re
 
 

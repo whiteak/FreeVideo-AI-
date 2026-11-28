@@ -70,13 +70,13 @@ if (!globalThis.FreeVideoPolish) {
 }
 
 // The studio's Media tray is laid out by its own module (presentation only; it installs itself).
-import('./media_tray.js').catch(error => console.warn('FreeVideo media tray:', error));
+import('./media_tray.js').catch(error => console.warn('Eclipse media tray:', error));
 // The studio's Advanced tray, likewise (its controls stay studio.js's own; the run mode joins it from under Generate).
 // If it cannot load, the run mode stays under Generate where studio.js built it (fv-at-moved is taken off again).
 import('./advanced_tray.js').catch(error => {
-    console.warn('FreeVideo advanced tray:', error); document.documentElement.dataset.fvAt = 'failed';
+    console.warn('Eclipse advanced tray:', error); document.documentElement.dataset.fvAt = 'failed';
     const keep = () => { for (const row of document.querySelectorAll('.fv-runrow.fv-at-moved')) row.classList.remove('fv-at-moved'); };
     keep(); new MutationObserver(keep).observe(document.body, {childList: true, subtree: true});   // also rows built later
 });
 // The look layer over the views (glass and light). It installs itself; ?look=off leaves it out.
-import('./look_lux.js').catch(error => console.warn('FreeVideo look layer:', error));
+import('./look_lux.js').catch(error => console.warn('Eclipse look layer:', error));

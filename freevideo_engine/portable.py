@@ -86,7 +86,7 @@ def listing(root):
 def manifest(root):
     value = json.loads((io_path(root) / 'portable.json').read_text(encoding='utf-8'))
     if value.get('schema_version') != 1 or value.get('variant') not in ('rowwise', 'per_tensor', 'int8_convrot'):
-        raise ValueError('Invalid FreeVideo portable bundle')
+        raise ValueError('Invalid Eclipse portable bundle')
     seen = set()
     for row in value['files']:
         # Links anywhere in the bundle are refused by the directory walk in verify.
@@ -253,7 +253,7 @@ def connect(root, value, machine, progress=lambda **kw: None, cancelled=None, *,
     from .comfy_launcher_runtime import Controller, deploy, node_target
     comfy = io_path(inside(root, value['comfy']))
     if resolved(node_target(comfy)) != resolved(machine['source']):
-        # An environment package brings ComfyUI without the FreeVideo node: the
+        # An environment package brings ComfyUI without the Eclipse node: the
         # launcher source it was imported with backs one, as in any installation.
         deploy(comfy, machine['source'], machine['root'])
     controller = Controller(machine['source'], child_environment=lambda: environment(root, value))
@@ -270,7 +270,7 @@ def connect(root, value, machine, progress=lambda **kw: None, cancelled=None, *,
             raise RuntimeError('Startup cancelled')
     if previous is not None and previous.owns_server():
         # A ComfyUI this launcher started for an earlier attempt, e.g. one that
-        # came up without FreeVideo: connecting restarts it instead of asking to.
+        # came up without Eclipse: connecting restarts it instead of asking to.
         controller.server, controller.server_log = previous.server, previous.server_log
         if isinstance(previous, Controller):
             for name in ('server_address', 'server_url', 'access_proxy', 'access_configuration', 'access_links', 'access_polled'):

@@ -497,7 +497,7 @@ class Service:
                 try:
                     release_native(comfy_server())
                 except Exception:  # only frees memory early; the load's own free-memory check still decides
-                    logging.warning('[FreeVideo] Could not unload ComfyUI models before the prompt model', exc_info=True)
+                    logging.warning('[Eclipse] Could not unload ComfyUI models before the prompt model', exc_info=True)
             with runtime_lock(Path(root) / 'engine.lock', inherit=False) as descriptor:
                 self.check()
                 if action == 'install':
@@ -523,7 +523,7 @@ class Service:
             # the other jobs keep their own failure codes.
             rejected = isinstance(error, rules.InvalidOutput) and action not in ('ask', 'split', 'reverse')
             if str(error) not in known and not rejected:
-                logging.warning('[FreeVideo] Prompt model job %s failed: %s', action, type(error).__name__, exc_info=True)
+                logging.warning('[Eclipse] Prompt model job %s failed: %s', action, type(error).__name__, exc_info=True)
             self.progress(dict(phase='failed', error='invalid_output' if rejected
                                else str(error) if str(error) in known
                                else 'disk_space' if isinstance(error, OSError) and ran_out(error)
@@ -543,7 +543,7 @@ class Service:
                 if counts:
                     self.progress(dict(check_counts=counts))
             except Exception:  # the counts are a nicety: whatever is wrong with them must not stop the report below
-                logging.warning('[FreeVideo] Could not update the prompt check counts', exc_info=True)
+                logging.warning('[Eclipse] Could not update the prompt check counts', exc_info=True)
             # Allowlisted metadata only, never original/rewritten text or input paths.
             # Output rejections contain condition IDs, counts, typed media labels and retry flags only.
             report = {key: item for key, item in self.state.items()
@@ -930,7 +930,7 @@ def register():
             return web.json_response(result)
         except (ValueError, OSError) as error:
             if isinstance(error, OSError):
-                logging.warning('[FreeVideo] Prompt model request failed: %s', type(error).__name__, exc_info=True)
+                logging.warning('[Eclipse] Prompt model request failed: %s', type(error).__name__, exc_info=True)
             codes = {'invalid_request', 'invalid_prompt', 'invalid_duration', 'too_many_images',
                      'unsupported_media', 'mixed_media', 'busy', 'model_missing', 'consent_required', 'unknown_job'}
             return web.json_response(dict(error=str(error) if str(error) in codes else 'invalid_media'), status=400)

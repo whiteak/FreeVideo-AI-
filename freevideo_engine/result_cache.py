@@ -73,7 +73,7 @@ def inspect_bounded(operation, *, interrupted=None, timeout=CHECK_SECONDS):
             _inspection_lock.release()
             done.set()
     try:
-        thread = threading.Thread(target=run, name='FreeVideo saved-result check', daemon=True)
+        thread = threading.Thread(target=run, name='Eclipse saved-result check', daemon=True)
         thread.start()
     except Exception:
         _inspection_lock.release()

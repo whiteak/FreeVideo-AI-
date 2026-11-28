@@ -891,8 +891,8 @@ def installation(source=None, environ=None):
     try:
         machine = json.loads((io_path(root) / 'machine.json').read_text(encoding='utf-8'))
     except FileNotFoundError as error:
-        raise ValueError('FreeVideo setup is missing. ' + repair_hint() + ' Or run setup.cmd (Windows) or setup.sh (Linux) '
-                         'in the FreeVideo folder, or set FREEVIDEO_HOME to your existing installation. '
+        raise ValueError('Eclipse setup is missing. ' + repair_hint() + ' Or run setup.cmd (Windows) or setup.sh (Linux) '
+                         'in the Eclipse folder, or set FREEVIDEO_HOME to your existing installation. '
                          'A prepared engine installation is required.') from error
     required = ('root', 'python', 'cache', 'base', 'checkpoint', 'comfy_python',
                 'comfy_root', 'vdn_root', 'model_paths', 'model_root', 'encoder')
@@ -900,14 +900,14 @@ def installation(source=None, environ=None):
         # An image-only installation has no prepared video model, so no sampling cache.
         required = tuple(k for k in required if k != 'cache')
     if not isinstance(machine, dict) or not machine.get('ready') or any(not machine.get(k) for k in required):
-        raise ValueError('FreeVideo setup is incomplete in %s. %s Existing files are reused.' % (root, repair_hint()))
+        raise ValueError('Eclipse setup is incomplete in %s. %s Existing files are reused.' % (root, repair_hint()))
     identity = 'device_identity' if machine.get('device_backend') == 'mps' else 'gpu_uuid'
     if not machine.get(identity):
-        raise ValueError('FreeVideo device configuration is missing. ' + repair_hint())
+        raise ValueError('Eclipse device configuration is missing. ' + repair_hint())
     if resolved(Path(machine['root']).expanduser()) != resolved(root):
-        raise ValueError('The FreeVideo installation was moved. Rerun setup in the selected folder.')
+        raise ValueError('The Eclipse installation was moved. Rerun setup in the selected folder.')
     if not io_path(machine['python']).is_file():
-        raise ValueError('The FreeVideo Python environment is missing. Rerun setup in %s.' % root)
+        raise ValueError('The Eclipse Python environment is missing. Rerun setup in %s.' % root)
     from .comfy_environment import executor_device
     device_id = executor_device(environ)
     if device_id:
@@ -1206,13 +1206,13 @@ def preview_request(output_directory, relative):
     try:
         video.relative_to(output_root / 'FreeVideo')
     except ValueError:
-        raise ValueError('Choose a FreeVideo preview from this output folder') from None
+        raise ValueError('Choose a Eclipse preview from this output folder') from None
     path = video.parent / 'comfy-request.json'
     state = json.loads(path.read_text(encoding='utf-8')) if path.is_file() else {}
     if (not isinstance(state, dict) or state.get('preview') is not True or state.get('status') != 'complete'
             or Path(state.get('output', '')).resolve() != video or not isinstance(state.get('command'), list)
             or 'generate' not in state['command']):
-        raise ValueError('This video is not a finished FreeVideo preview')
+        raise ValueError('This video is not a finished Eclipse preview')
     if not video.is_file():
         raise ValueError('The preview video is no longer there; generate it again')
     return video, state
@@ -1500,7 +1500,7 @@ def generate(prompt, width, height, seconds, seed, output_directory, *,
     if step_cache == 'fbcache' and machine.get('device_backend') == 'mps':
         # Only the audio-video EasyCache is ported to Mac: the request samples every step,
         # and its identity is that of the same request without a cache.
-        logging.warning('[FreeVideo] The first-block cache is not available on Mac yet; sampling every step.')
+        logging.warning('[Eclipse] The first-block cache is not available on Mac yet; sampling every step.')
         step_cache = None
     if continue_from is not None:
         validate_route(preview=preview, refine_from=refine_from, backend=machine.get('device_backend', 'cuda'))
@@ -1904,7 +1904,7 @@ def generate(prompt, width, height, seconds, seed, output_directory, *,
                 or (report.get('output_size') or None) != output_size):
             from .comfy_launcher_api import repair_hint
             from .failure_details import generation_failure
-            raise RuntimeError('FreeVideo did not complete the requested video.\n' + generation_failure(run, repair=repair_hint()))
+            raise RuntimeError('Eclipse did not complete the requested video.\n' + generation_failure(run, repair=repair_hint()))
         if report_extra:
             # Only the newly generated, verified result is annotated. Cache hits
             # return earlier and retain their historical report byte for byte.

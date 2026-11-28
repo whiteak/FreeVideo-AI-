@@ -20,7 +20,7 @@ BLENDS = ('source-over', 'multiply', 'screen', 'overlay', 'soft-light', 'darken'
 ADJUSTMENTS = ('exposure', 'contrast', 'highlights', 'shadows', 'temperature', 'tint', 'hue', 'saturation',
                'vibrance', 'sharpen', 'blur', 'noise', 'vignette')
 RANGES = dict({k: (-100, 100) for k in ADJUSTMENTS}, hue=(-180, 180), sharpen=(0, 100), blur=(0, 100), noise=(0, 100))
-# The families of web/fonts.js, bundled with FreeVideo: the browser editor draws with the same files.
+# The families of web/fonts.js, bundled with Eclipse: the browser editor draws with the same files.
 FONT_DIR = Path(__file__).resolve().parents[2] / 'web' / 'fonts'
 FONTS = {
     'sans': {400: 'FreeVideoSansSC-Regular.woff2', 700: 'FreeVideoSansSC-Bold.woff2'},

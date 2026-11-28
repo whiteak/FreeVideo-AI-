@@ -6,7 +6,7 @@ import { listenDialogKey } from './dialog_keys.js';
 import { agentPost } from './agent_session.js';
 import { LANGUAGE } from './i18n.js';
 
-// The order of the list: the languages FreeVideo's users read most first (plan.md 9.3), then any other by name.
+// The order of the list: the languages Eclipse's users read most first (plan.md 9.3), then any other by name.
 const ORDER = ['zh-Hans', 'zh-Hant', 'en', 'es', 'pt-BR', 'ru', 'uk', 'ja', 'ko', 'fr', 'de', 'tr', 'id', 'vi', 'it', 'ar', 'fa'];
 // English names, so a search for "spanish" finds Español.
 const ENGLISH = {'zh-Hans': 'Chinese Simplified', 'zh-Hant': 'Chinese Traditional', en: 'English', es: 'Spanish', 'pt-BR': 'Portuguese Brazil',
@@ -43,7 +43,7 @@ export function languagePicker({api, t, state, onSaved, onError}) {
     trigger.setAttribute('aria-haspopup', 'listbox'); trigger.setAttribute('aria-expanded', 'false');
     const name = el('span', 'w');
     trigger.append(icon('globe'), name, icon('chev'));
-    // FreeVideo's own tip, as on the other settings buttons (no browser tooltip); the same words as before.
+    // Eclipse's own tip, as on the other settings buttons (no browser tooltip); the same words as before.
     tip(trigger, t('Interface language', '界面语言'), '');
     const pop = el('div', 'st-lang-pop'); pop.hidden = true;
     const search = el('input', 'st-lang-find'); search.type = 'search';

@@ -1,4 +1,4 @@
-"""FreeVideo in ComfyUI from a Linux terminal: install once, then open, serve and stop.
+"""Eclipse in ComfyUI from a Linux terminal: install once, then open, serve and stop.
 
 The graphical launcher's control plane does the work: the same ComfyUI
 application and environment, the same node installation and the same startup
@@ -36,11 +36,11 @@ RECORD = 'comfyui-cli.json'
 STATE = 'service.json'
 TOKEN = 'access-token'
 UNIT = 'freevideo.service'
-WRAPPER_MARK = '# FreeVideo command, written by FreeVideo setup.'
+WRAPPER_MARK = '# Eclipse command, written by Eclipse setup.'
 DESKTOP_ID = 'freevideo.desktop'
 LOOPBACK = ('127.0.0.1', 'localhost', '::1')
 NODE_PACKAGES_NOTE = ('The packages for the Agent editing tools could not be updated now; everything else works. '
-                      'FreeVideo will try again later.')
+                      'Eclipse will try again later.')
 COMMANDS = ('open', 'stop', 'status', 'restart', 'server')
 
 
@@ -120,7 +120,7 @@ def host_setup(root, source, machine, comfy, *, download=False):
 def add_node_packages(root, source, machine, comfy, out=say):
     """An update gave our nodes a package: add it to the environment ComfyUI already uses.
 
-    ComfyUI and generation run without it, so a failure (offline, say) never stops FreeVideo:
+    ComfyUI and generation run without it, so a failure (offline, say) never stops Eclipse:
     only what needs the package is not offered, and it is tried again later.
     """
     from .comfy_launcher_runtime import node_packages_failed, node_packages_pending
@@ -151,7 +151,7 @@ def install(root, source, machine, port, out=say):
     comfy = Path(layout['root'])
     python = managed_python(Path(root), comfy) if (comfy / 'main.py').is_file() else None
     if python is None:
-        out('Installing ComfyUI for FreeVideo. This happens once; the next start takes seconds.')
+        out('Installing ComfyUI for Eclipse. This happens once; the next start takes seconds.')
         if host_setup(root, source, machine, comfy, download=not (comfy / 'main.py').is_file()):
             raise RuntimeError('ComfyUI could not be installed. Run the same command again to continue; '
                                'downloaded files are kept. ' + DIAGNOSE)
@@ -335,7 +335,7 @@ def serve(root, *, port=DEFAULT_PORT, listen='127.0.0.1', tls=None):
     try:
         lease = acquire(lock_path(root), wait=3)
     except BlockingIOError:
-        print('FreeVideo is already running for %s.' % root, file=sys.stderr)
+        print('Eclipse is already running for %s.' % root, file=sys.stderr)
         return 1
     with lease:
         state = dict(status='starting', pid=os.getpid(), port=port, listen=listen, started=time.time(),
@@ -367,10 +367,10 @@ def serve(root, *, port=DEFAULT_PORT, listen='127.0.0.1', tls=None):
             except ValueError as error:
                 if 'port is in use' not in str(error):
                     raise
-                raise RuntimeError('Port %d is in use by another program. Start FreeVideo on another port, for '
+                raise RuntimeError('Port %d is in use by another program. Start Eclipse on another port, for '
                                    'example: freevideo open --port %d' % (internal, internal + 2)) from None
             if controller.state.get('status') == 'restart-required':
-                raise RuntimeError('Another ComfyUI already uses port %d. Stop it, or start FreeVideo on another port, '
+                raise RuntimeError('Another ComfyUI already uses port %d. Stop it, or start Eclipse on another port, '
                                    'for example: freevideo open --port %d' % (internal, internal + 2))
             if controller.state.get('status') != 'open':
                 raise RuntimeError(controller.state.get('error') or 'ComfyUI did not open')
@@ -403,7 +403,7 @@ def serve(root, *, port=DEFAULT_PORT, listen='127.0.0.1', tls=None):
                 save(state_file, dict(state, status='stopped', stopped=time.time()))
                 return 0
             save(state_file, dict(state, status='failed', error=str(error), stopped=time.time()))
-            print('FreeVideo service failed: %s' % error, file=sys.stderr, flush=True)
+            print('Eclipse service failed: %s' % error, file=sys.stderr, flush=True)
             return 1
         finally:
             if proxy is not None:
@@ -449,7 +449,7 @@ def wait_until_open(root, process, *, timeout=300, out=say):
             raise RuntimeError(state.get('error') or 'ComfyUI could not start.')
         if process.poll() is not None:
             raise RuntimeError(state.get('error') if mine and state.get('error') else
-                               'The FreeVideo service stopped while starting. See %s. %s' % (folder(root) / 'service.log', DIAGNOSE))
+                               'The Eclipse service stopped while starting. See %s. %s' % (folder(root) / 'service.log', DIAGNOSE))
         if time.monotonic() - shown >= interval:
             shown = time.monotonic()
             out('  still starting (%d s) ...' % (timeout - (deadline - time.monotonic())))
@@ -468,7 +468,7 @@ def stop(root, *, force=False, out=say):
     from .comfy_launcher_runtime import queue_busy
     state = running(root)
     if state is None:
-        out('FreeVideo is not running.')
+        out('Eclipse is not running.')
         return 0
     if not force and state.get('url') and queue_busy(state['url']):
         out('ComfyUI is running a job. Run freevideo stop again after it finishes, or freevideo stop --force to stop it now.')
@@ -489,7 +489,7 @@ def stop(root, *, force=False, out=say):
             except ProcessLookupError:
                 pass
         time.sleep(1)
-    out('FreeVideo stopped.' if running(root) is None else 'FreeVideo is still stopping; check freevideo status.')
+    out('Eclipse stopped.' if running(root) is None else 'Eclipse is still stopping; check freevideo status.')
     return 0 if running(root) is None else 1
 
 
@@ -565,21 +565,21 @@ def describe(root, state, *, browser_opened=False, out=say):
     access = state.get('access')
     if access:
         secret = token(root)
-        out('FreeVideo is running. Open it from another computer with:')
+        out('Eclipse is running. Open it from another computer with:')
         links = ['%s/?freevideo=launch&token=%s' % (host_url(access['scheme'], address, access['port']), secret)
                  for address in addresses(state.get('listen', ''))]
         for link in links:
             out('  ' + link)
         for line in qr_lines(links[0] if links else ''):
             out('  ' + line)
-        out('Anyone with this link can use FreeVideo on this computer; freevideo server --new-token replaces it.')
+        out('Anyone with this link can use Eclipse on this computer; freevideo server --new-token replaces it.')
         if access['scheme'] == 'http':
             out('The connection is not encrypted. Use it on a network you trust, add --tls-cert/--tls-key, or use an SSH tunnel.')
         out('On this computer: %s' % url)
     elif browser_opened:
-        out('FreeVideo is open in your browser: %s' % url)
+        out('Eclipse is open in your browser: %s' % url)
     else:
-        out('FreeVideo is running: %s' % url)
+        out('Eclipse is running: %s' % url)
         if os.environ.get('SSH_CONNECTION') or not desktop_session():
             port = port_of(state['url'])
             out('Only this computer can connect. From your own computer, run:')
@@ -627,8 +627,8 @@ def write_desktop_entry(root, source, *, home=None):
     icon = Path(source) / 'freevideo_engine' / 'assets' / 'icon.png'
     from .desktop_shortcut import desktop_quote
     entry = ' '.join(desktop_quote(p) for p in command_line(root, source) + ['open'])
-    content = ('[Desktop Entry]\nType=Application\nName=FreeVideo\nComment=Create videos with FreeVideo in ComfyUI\n'
-               'Comment[zh_CN]=在 ComfyUI 中用 FreeVideo 生成视频\nExec=%s\nIcon=%s\nTerminal=false\n'
+    content = ('[Desktop Entry]\nType=Application\nName=FreeVideo\nComment=Create videos with Eclipse in ComfyUI\n'
+               'Comment[zh_CN]=在 ComfyUI 中用 Eclipse 生成视频\nExec=%s\nIcon=%s\nTerminal=false\n'
                'Categories=AudioVideo;Video;Graphics;\nStartupNotify=false\n' % (entry, icon))
     try:
         if path.is_file() and path.read_text(encoding='utf-8') == content:
@@ -647,7 +647,7 @@ def shortcuts(root, source, out=say):
         if not wrapper.get('on_path'):
             out('  It works in new terminals. In this one, run: export PATH="$HOME/.local/bin:$PATH"')
     elif wrapper['status'] == 'kept':
-        out('Kept the existing %s; run %s to open FreeVideo.' % (wrapper['path'], ' '.join(command_line(root, source))))
+        out('Kept the existing %s; run %s to open Eclipse.' % (wrapper['path'], ' '.join(command_line(root, source))))
     if desktop_session() and os.environ.get('XDG_CURRENT_DESKTOP'):
         write_desktop_entry(root, source)
 
@@ -660,8 +660,8 @@ def ensure_installed(root, port, out=say):
     machine = ready_machine(root)
     if machine is None:
         # ./setup.sh also installs the system tools it needs, then continues here.
-        raise RuntimeError('FreeVideo is not set up in %s yet. Run ./setup.sh: it installs FreeVideo and ComfyUI, '
-                           'then opens FreeVideo.' % root)
+        raise RuntimeError('Eclipse is not set up in %s yet. Run ./setup.sh: it installs Eclipse and ComfyUI, '
+                           'then opens Eclipse.' % root)
     record = installed(root)
     if record is None or Path(record['source']).resolve() != source or not Path(record['python']).is_file():
         record = install(root, source, machine, port or (port_of(record['url']) if record else first_free_port()), out=out)
@@ -685,10 +685,10 @@ def open_command(root, *, port=None, browser=True, restart=False, out=say):
     if state and (restart or moved or state.get('source_stamp') != source_stamp(source)):
         from .comfy_launcher_runtime import queue_busy
         if queue_busy(state['url']) and not restart:
-            out('FreeVideo was updated; it loads the update when ComfyUI restarts after the current job '
+            out('Eclipse was updated; it loads the update when ComfyUI restarts after the current job '
                 '(freevideo restart).')
         else:
-            out('Restarting ComfyUI ...' if restart or moved else 'Restarting ComfyUI to load the updated FreeVideo ...')
+            out('Restarting ComfyUI ...' if restart or moved else 'Restarting ComfyUI to load the updated Eclipse ...')
             previous = state
             if stop(root, force=restart, out=lambda *_: None):
                 raise RuntimeError('ComfyUI did not stop; check freevideo status.')
@@ -726,15 +726,15 @@ def status_command(root, out=say):
     root = Path(root).expanduser().resolve()
     record = installed(root)
     if ready_machine(root) is None:
-        out('FreeVideo is not set up in %s. Run ./setup.sh.' % root)
+        out('Eclipse is not set up in %s. Run ./setup.sh.' % root)
         return 1
     if record is None:
-        out('FreeVideo is set up; ComfyUI is not installed yet. Run freevideo to install and open it.')
+        out('Eclipse is set up; ComfyUI is not installed yet. Run freevideo to install and open it.')
         return 0
     state = running(root)
     if state is None:
         previous = read_json(folder(root) / STATE) or {}
-        out('FreeVideo is not running. Start it with: freevideo')
+        out('Eclipse is not running. Start it with: freevideo')
         reason = (previous.get('error') or '').strip().splitlines()
         if previous.get('status') == 'failed' and reason:
             out('The last start failed: %s' % reason[0][:300])
@@ -775,7 +775,7 @@ def unit_text(root, source, listen, port, tls):
         'server', '--foreground', '--listen', listen, '--port', str(port)]
     if tls:
         command += ['--tls-cert', str(tls[0]), '--tls-key', str(tls[1])]
-    return ('[Unit]\nDescription=FreeVideo (ComfyUI with FreeVideo)\nAfter=network-online.target\n\n'
+    return ('[Unit]\nDescription=Eclipse (ComfyUI with FreeVideo)\nAfter=network-online.target\n\n'
             '[Service]\nType=simple\nExecStart=%s\nRestart=on-failure\nRestartSec=10\nTimeoutStopSec=60\n\n'
             '[Install]\nWantedBy=default.target\n') % ' '.join(systemd_quote(p) for p in command)
 
@@ -801,7 +801,7 @@ def enable_unit(root, source, listen, port, tls, out=say):
         result = systemctl(*arguments)
         if result.returncode:
             raise RuntimeError('systemctl --user %s failed: %s' % (' '.join(arguments), (result.stderr or result.stdout).strip()))
-    out('FreeVideo now starts with your user session (%s).' % path)
+    out('Eclipse now starts with your user session (%s).' % path)
     linger = subprocess.run(['loginctl', 'show-user', getpass.getuser(), '-P', 'Linger'], capture_output=True, text=True)
     if linger.stdout.strip() != 'yes':
         out('To keep it running after you log out and start it at boot, run once: sudo loginctl enable-linger %s'
@@ -815,7 +815,7 @@ def disable_unit(out=say):
     if path.exists():
         path.unlink()
         systemctl('daemon-reload')
-    out('FreeVideo no longer starts with your user session.')
+    out('Eclipse no longer starts with your user session.')
 
 
 def server_command(root, *, listen='127.0.0.1', port=None, tls=None, renew=False, foreground=False,
@@ -837,7 +837,7 @@ def server_command(root, *, listen='127.0.0.1', port=None, tls=None, renew=False
         return 0
     if foreground:
         if running(root) is not None:
-            raise RuntimeError('FreeVideo is already running; stop it first (freevideo stop).')
+            raise RuntimeError('Eclipse is already running; stop it first (freevideo stop).')
         return serve(root, port=port, listen=listen, tls=tls)
     state = running(root)
     if state and state.get('status') == 'starting':
@@ -860,7 +860,7 @@ def server_command(root, *, listen='127.0.0.1', port=None, tls=None, renew=False
 def cli(command, root, arguments, out=say):
     """`./freevideo open|stop|status|restart|server` on Linux."""
     if not sys.platform.startswith('linux'):
-        out('This command is for Linux. On Windows and macOS, open the FreeVideo app.')
+        out('This command is for Linux. On Windows and macOS, open the Eclipse app.')
         return 1
     parser = argparse.ArgumentParser(prog='freevideo ' + command)
     if command in ('open', 'restart', 'server'):
@@ -899,12 +899,12 @@ def cli(command, root, arguments, out=say):
                               renew=args.new_token, foreground=args.foreground, enable=args.enable,
                               disable=args.disable, force=args.force, out=out)
     except (RuntimeError, ValueError, OSError) as error:
-        print('FreeVideo could not %s: %s' % ('start' if command != 'stop' else 'stop', error), file=sys.stderr)
+        print('Eclipse could not %s: %s' % ('start' if command != 'stop' else 'stop', error), file=sys.stderr)
         return 1
 
 
 def continues_after_setup(*, no_launch=False, approved_plan=None, environ=None, system=None):
-    """Whether ./setup.sh goes on to open FreeVideo: a terminal setup on Linux does.
+    """Whether ./setup.sh goes on to open Eclipse: a terminal setup on Linux does.
 
     The desktop launcher and the ComfyUI settings panel run setup with UI events
     and an approved plan, and continue on their own.
@@ -916,12 +916,12 @@ def continues_after_setup(*, no_launch=False, approved_plan=None, environ=None, 
 
 
 def after_setup(root, out=say):
-    """The end of ./setup.sh: install ComfyUI, start it and open FreeVideo."""
+    """The end of ./setup.sh: install ComfyUI, start it and open Eclipse."""
     out('')
     try:
         return open_command(root, out=out)
     except (RuntimeError, ValueError, OSError) as error:
-        print('\nThe engine is set up, but FreeVideo could not open: %s\nRun freevideo to try again.' % error, file=sys.stderr)
+        print('\nThe engine is set up, but Eclipse could not open: %s\nRun freevideo to try again.' % error, file=sys.stderr)
         return 1
 
 

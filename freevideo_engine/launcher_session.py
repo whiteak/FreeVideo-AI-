@@ -253,7 +253,7 @@ class Session:
         self.browser_url = None
         self.port_notice_url = None
         self.browser_error = ''
-        # What the opened page reported about loading FreeVideo (web/health.js).
+        # What the opened page reported about loading Eclipse (web/health.js).
         from .page_check import PageCheck
         self.page_check = PageCheck()
         self.browser_opened = None
@@ -770,7 +770,7 @@ class Session:
                 or name == 'primary' and self.page != 'launcher'):
             return
         # The model download holds the setup lease; launching and opening
-        # FreeVideo continue, anything that would start setup waits for it.
+        # Eclipse continue, anything that would start setup waits for it.
         # Retrying a failed start only launches again.
         if (self.upgrade.active or self.model_switch) and (
                 name == 'setup' or (name == 'retry' and self.retry_kind() != 'launch')
@@ -1155,7 +1155,7 @@ class Session:
             # What the download waits for: a video, a picture, or another task holding the graphics card.
             detail = {'busy_video': self.t('Paused while a video generates', '视频生成中，已暂停'),
                       'busy_picture': self.t('Paused while an image is made', '正在出图，已暂停'),
-                      'busy_setup': self.t('Paused while FreeVideo installs, updates or cleans up', 'FreeVideo 正在安装、更新或清理，已暂停')}.get(
+                      'busy_setup': self.t('Paused while Eclipse installs, updates or cleans up', 'Eclipse 正在安装、更新或清理，已暂停')}.get(
                 active.get('reason'), self.t('Paused: the graphics card is busy', '显卡忙，已暂停'))
         elif active.get('state') == 'cancelled':
             detail = self.t('Paused', '已暂停')
@@ -1166,7 +1166,7 @@ class Session:
         blocked = (self.controller.busy or self.importer.busy or self.cleaner.busy or self.archives_busy
                    or self.closing or self.engine_updating or self.update_intent or self.upgrade.active or self.model_switch
                    or self.updater and self.updater.busy)
-        # Only a card that offers Repair or Remove asks whether FreeVideo is running.
+        # Only a card that offers Repair or Remove asks whether Eclipse is running.
         offers = not busy and (removable > 0 or repairable and value.get('downloaded_bytes', 0) > 0)
         engine_state = self._image_engine_state(engine) if offers else 'unknown'
         running = engine_state == 'running'
@@ -1523,7 +1523,7 @@ class Session:
             query.append(('freevideo_port_from', moved_from))
             address = urlunsplit((parsed.scheme, parsed.netloc, parsed.path,
                                  urlencode(query), parsed.fragment))
-        # ComfyUI itself may follow the browser's language, but the FreeVideo
+        # ComfyUI itself may follow the browser's language, but the Eclipse
         # panels need an explicit choice when the launcher language differs
         # from the operating system. Keep the controller's canonical URL
         # unchanged so saved installations and existing integrations remain
@@ -1970,7 +1970,7 @@ class Session:
                 self.resume_pages = resumed.get('pages', False)
 
     def _clients_connected(self):
-        """A FreeVideo page reconnected to the restarted server."""
+        """A Eclipse page reconnected to the restarted server."""
         now = time.monotonic()
         if now - self.clients_polled < 1:
             return False
@@ -2306,7 +2306,7 @@ class Session:
         selection = getattr(self.controller, 'selection', None)
         if (row.get('status') == 'open' and not busy and not self.smoke and selection
                 and selection.get('source') != self.old_versions_retired):
-            # ComfyUI runs this version now: earlier FreeVideo copies are no longer read.
+            # ComfyUI runs this version now: earlier Eclipse copies are no longer read.
             self.old_versions_retired = selection.get('source')
             retire = getattr(self.controller, 'retire_old_versions', None)
             if retire:
@@ -2410,7 +2410,7 @@ class Session:
                 self.action(name, accepted)
 
     def _tick_page_check(self, row):
-        """Show a page that failed to load FreeVideo, or never reported, in the failure card."""
+        """Show a page that failed to load Eclipse, or never reported, in the failure card."""
         if row.get('status') != 'open' or self.closing or self.smoke:
             self.page_check.reset()
             self.browser_opened, self.page_error = None, ''
@@ -2438,7 +2438,7 @@ class Session:
         return self.both(lambda zh: describe(value, zh))
 
     def old_versions_text(self):
-        """What the background removal of earlier FreeVideo copies freed this session."""
+        """What the background removal of earlier Eclipse copies freed this session."""
         value = getattr(self.controller, 'old_versions', None)
         released = value.get('released_bytes') if isinstance(value, dict) else None
         if isinstance(released, int):
@@ -2462,9 +2462,9 @@ class Session:
         if value.get('copied_model_reason') == 'exfat':
             return self.t('This disk uses exFAT, so %s of models had to be copied instead of shared with your model library.',
                           '这块硬盘是 exFAT 格式，有 %s 的模型只能复制，不能和模型库共用。') % size_text(copied)
-        return self.t('%s of models were copied from another disk. Keep your model library on the same disk as FreeVideo '
+        return self.t('%s of models were copied from another disk. Keep your model library on the same disk as Eclipse '
                       'to avoid this.',
-                      '有 %s 的模型是从另一块硬盘复制来的。把模型库和 FreeVideo 放在同一块硬盘上，就不会多占这部分空间。') % size_text(copied)
+                      '有 %s 的模型是从另一块硬盘复制来的。把模型库和 Eclipse 放在同一块硬盘上，就不会多占这部分空间。') % size_text(copied)
 
     def archive_offer(self):
         """The imported ZIPs whose contents the running installation holds, verified."""
@@ -2595,9 +2595,9 @@ class Session:
             title = self.t('Free up %s of disk space', '可以释放 %s 磁盘空间') % size
         return dict(remind=bool(remind), size=size, count=count, retry=retry, title=title,
                     body='' if retry else self.t(
-                        'The imported offline package ZIPs are still on the drive, and FreeVideo no longer needs them. '
+                        'The imported offline package ZIPs are still on the drive, and Eclipse no longer needs them. '
                         'Deleting them does not affect models, the runtime or your videos.',
-                        '导入过的离线包压缩包仍保留在磁盘上，FreeVideo 已不再需要。删除后，模型、运行环境和作品都不受影响。'),
+                        '导入过的离线包压缩包仍保留在磁盘上，Eclipse 已不再需要。删除后，模型、运行环境和作品都不受影响。'),
                     delete_text=(self.t('Deleting…', '正在删除…') if self.archives_busy else
                                  self.t('Retry', '重试') if retry else
                                  self.t('Delete and free %s', '删除并释放 %s') % size),
@@ -2922,7 +2922,7 @@ class Session:
             if note:
                 failure['note'] = note
             if only_other_vendors(names):
-                # No NVIDIA card is listed: the card says what FreeVideo needs; the note names what was found.
+                # No NVIDIA card is listed: the card says what Eclipse needs; the note names what was found.
                 from .failure_details import UNSUPPORTED_VENDOR
                 failure['title'], failure['action'] = self.both(lambda zh: UNSUPPORTED_VENDOR[1 if zh else 0])
             elif nvidia_driver_listed(names):

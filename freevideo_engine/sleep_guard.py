@@ -85,7 +85,7 @@ def _linux_inhibitors():
     logind = shutil.which('systemd-inhibit')
 
     def hold(what):
-        return [logind, f'--what={what}', '--who=FreeVideo', f'--why={WHY}', '--mode=block', *wait]
+        return [logind, f'--what={what}', '--who=Eclipse', f'--why={WHY}', '--mode=block', *wait]
     if logind:
         commands.append(hold('sleep:idle'))
     started = [(command, _start(command)) for command in commands]

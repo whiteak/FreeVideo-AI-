@@ -131,7 +131,7 @@ def release_cache(root):
     """Release completed wheel archives only after every environment has used them."""
     directory = Path(root) / 'downloads' / 'torch-wheels'
     if directory.is_symlink() or not directory.resolve().is_relative_to(Path(root).resolve()):
-        raise ValueError('The GPU package cache points outside this FreeVideo folder; cleanup stopped.')
+        raise ValueError('The GPU package cache points outside this Eclipse folder; cleanup stopped.')
     for row in catalog():
         path = directory / row['filename']
         if path.is_file() and not path.is_symlink():

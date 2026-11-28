@@ -6,21 +6,21 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you for submitting a diagnostic report. We'll use it to optimize FreeVideo specifically for your hardware configuration, and it helps other users too. The report contains hardware details, generation settings and timings only, with no prompts, reference images or videos.
+        Thank you for submitting a diagnostic report. We'll use it to optimize Eclipse specifically for your hardware configuration, and it helps other users too. The report contains hardware details, generation settings and timings only, with no prompts, reference images or videos.
 
         感谢您提交诊断报告。我们会据此针对您的硬件配置进行专门优化，也能帮助其他用户。报告仅包含硬件信息、生成参数和耗时，不含提示词、参考图或视频。
   - type: textarea
     id: report
     attributes:
       label: Diagnostic report / 诊断报告
-      description: Please drag the downloaded report (FreeVideo-report-….json or .zip) here. A link appears when the upload finishes. In FreeVideo, select Diagnostic report under a finished video. / 请将下载的诊断报告（FreeVideo-report-….json 或 .zip，在 FreeVideo 视频下方点击「诊断报告」获得）拖到这里，上传完成后会出现一个链接。
+      description: Please drag the downloaded report (FreeVideo-report-….json or .zip) here. A link appears when the upload finishes. In Eclipse, select Diagnostic report under a finished video. / 请将下载的诊断报告（FreeVideo-report-….json 或 .zip，在 Eclipse 视频下方点击「诊断报告」获得）拖到这里，上传完成后会出现一个链接。
       placeholder: Drop FreeVideo-report-….json or .zip here / 将 FreeVideo-report-….json 或 .zip 拖到这里
     validations:
       required: true
   - type: input
     id: version
     attributes:
-      label: FreeVideo version / FreeVideo 版本
+      label: Eclipse version / Eclipse 版本
   - type: input
     id: hardware
     attributes:

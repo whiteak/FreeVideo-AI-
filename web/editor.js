@@ -88,8 +88,8 @@ export function partsLimitText(code, t = translatorFor(null, false), limit = nul
 // Shared by error() and actions.reasonText: one sentence naming the failed step.
 export function editorErrorText(value, t = translatorFor(null, false)) {
     if (isNetworkTypeError(value) || isNetworkTypeError(value?.detail)) return connectionLostText(t);
-    // The worker's own "FreeVideo generation failed (exit 1)" header names nothing the user can act on.
-    const oneLine = value => typeof value === 'string' ? value.trim().split(/[\r\n]+/).find(line => line.trim() && !/^\s*FreeVideo generation failed(?: \(exit -?\d+\))?\s*$/.test(line))?.trim() || '' : '';
+    // The worker's own "Eclipse generation failed (exit 1)" header names nothing the user can act on.
+    const oneLine = value => typeof value === 'string' ? value.trim().split(/[\r\n]+/).find(line => line.trim() && !/^\s*Eclipse generation failed(?: \(exit -?\d+\))?\s*$/.test(line))?.trim() || '' : '';
     const detail = value?.detail || (value?.error && typeof value.error === 'object' ? value.error : value);
     const raw = [detail?.response?.error?.message, detail?.response?.error, detail?.response?.message,
         detail?.exception_message, detail?.message, value?.error?.message, value?.error, value].map(oneLine).find(Boolean) || '';
@@ -108,7 +108,7 @@ export function editorErrorText(value, t = translatorFor(null, false)) {
             '有短于 {fullSeconds} 秒的段时，一个连续镜头最多 {shortMaxParts} 段。', { fullSeconds: model.RULES.fullSeconds, shortMaxParts: model.RULES.shortMaxParts }),
         chain_too_long: t('One continuous shot can have up to {maxParts} parts.', '一个连续镜头最多 {maxParts} 段。', { maxParts: model.RULES.maxParts }),
         too_long: t('This part is longer than the maximum length. Shorten it and try again.', '这一段超过了最长时长，请缩短后再试。'),
-        missing_node: t('Generation is not ready. Restart FreeVideo.', '生成功能没有就绪，请重新启动 FreeVideo。'),
+        missing_node: t('Generation is not ready. Restart Eclipse.', '生成功能没有就绪，请重新启动 Eclipse。'),
         chain_missing: t('Generation could not start. Choose "Generate" again.', '生成没能开始，请再点“生成”。'),
         result_mismatch: t('Could not read the result. Choose "Generate" again.', '没能读取结果，请再点“生成”。'),
         no_material: t('The media this part uses is missing. Import it again from the library.', '找不到这一段用到的素材，请在素材库重新导入。'),
@@ -345,7 +345,7 @@ export function openEditor({api, app, from = null, panel = {}, components: given
     tip(leaveUnsaved, {name: t('Leave without saving', '放弃改动并离开'), use: t('Go on; the latest changes are lost', '离开这里，最近的改动会丢失')});
     const notices = el('div', 'fv-ed-notice-stack');
     // Where the server cannot generate, the bar's row says so instead of standing empty.
-    const goneLine = el('div', 'fv-ed-genbar-gone', t('Generating is not available here right now. Restart FreeVideo to try again.', '这台电脑现在不能生成。重新启动 FreeVideo 后再试。')); goneLine.hidden = true; goneLine.setAttribute('role', 'status');
+    const goneLine = el('div', 'fv-ed-genbar-gone', t('Generating is not available here right now. Restart Eclipse to try again.', '这台电脑现在不能生成。重新启动 Eclipse 后再试。')); goneLine.hidden = true; goneLine.setAttribute('role', 'status');
     transport.append(drawer);
     projectRow.append(menu, saveWarning);
     element.append(top, projectRow, leftRail, rightRail, libraryHost, preview, transport, genHost, goneLine, tracksHost, zoomHost, notices);
@@ -512,7 +512,7 @@ export function openEditor({api, app, from = null, panel = {}, components: given
         // Parts queued while waiting for the answer never start here; they go back to drafts with the reason.
         else if (store.generationGone && held.length) {
             for (const entry of held.splice(0)) markHeld(entry.ids, false);
-            rememberView(); notify(t('Restart FreeVideo to generate.', '请重新启动 FreeVideo 后再生成。'));
+            rememberView(); notify(t('Restart Eclipse to generate.', '请重新启动 Eclipse 后再生成。'));
         }
         tracks?.refresh?.(); genbar?.update(mostRecentJob ? barJob(jobStatuses.get(mostRecentJob)) : null);
         updateTransport(); adjustPanel?.update();
@@ -1782,12 +1782,12 @@ export function openEditor({api, app, from = null, panel = {}, components: given
     function exportLost() {
         if (disposed) return;
         exportStatus = null; exportCancel.hidden = true; updateTop();
-        notify(t('Lost the connection to FreeVideo, so the export progress cannot be read. Export again once it is back.', '与 FreeVideo 的连接已断开，无法读取导出进度。恢复后请重新导出。'), EXPORT_ISSUE, 'export:lost');
+        notify(t('Lost the connection to Eclipse, so the export progress cannot be read. Export again once it is back.', '与 Eclipse 的连接已断开，无法读取导出进度。恢复后请重新导出。'), EXPORT_ISSUE, 'export:lost');
     }
     function updateExport(value) {
         // A running export the engine no longer knows was lost in a restart: free the button and say so.
         if (!value) { if (!disposed && exportStatus?.state === 'running') { exportStatus = null; exportCancel.hidden = true; updateTop();
-            notify(t('FreeVideo restarted and the export stopped. Export again.', 'FreeVideo 已重启，导出已中断。请重新导出。'), EXPORT_ISSUE, 'export:gone'); } return false; }
+            notify(t('Eclipse restarted and the export stopped. Export again.', 'Eclipse 已重启，导出已中断。请重新导出。'), EXPORT_ISSUE, 'export:gone'); } return false; }
         if (exportSnapshot) exportSnapshot = {...exportSnapshot, id: value.project_id, revision: value.revision};
         exportStatus = value; const running = value.state === 'running' || value.state === 'queued';
         if (disposed) { if (!running) window.FreeVideoNotifyTaskDone?.({kind: 'export', id: value.id, ok: value.state === 'done'}); return running; }
@@ -2240,7 +2240,7 @@ export function openEditor({api, app, from = null, panel = {}, components: given
         state.select(null, {history: true});
     });
     const stopKeys = isolateDialogKeys(element, (event, inside) => {
-        // FreeVideo's shared menus (a text box's Cut/Copy/Paste, and any menu opened over the editor) live inside this
+        // Eclipse's shared menus (a text box's Cut/Copy/Paste, and any menu opened over the editor) live inside this
         // dialog and listen through dialog_keys: their arrows, Enter, Esc and Tab are theirs, with no editor shortcut.
         if (inside && event.target.closest?.('.fv-cm[role=menu]')) { routeDialogKey(event, element); return; }
         if (guide?.handleKey(event)) return;
@@ -2303,7 +2303,7 @@ export function openEditor({api, app, from = null, panel = {}, components: given
     // A page kept for going back (bfcache) keeps its history, so its takes stay.
     const leaving = event => { player.pause(); rememberView(); if (queue.dirty) queue.flush(); if (!event?.persisted) { releaseTakes({keepalive: true}); store.releaseLease(); } };
     window.addEventListener('pagehide', leaving);
-    // A workflow without FreeVideo nodes came to the front: the editing view makes way (unsaved edits stay open).
+    // A workflow without Eclipse nodes came to the front: the editing view makes way (unsaved edits stay open).
     const collapse = () => { void handle.close(); };
     window.addEventListener('freevideo-collapse', collapse);
     const handle = {element, state, actions, store, adjust, audio, music, notify,

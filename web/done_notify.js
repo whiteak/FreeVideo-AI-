@@ -1,7 +1,7 @@
-// Tells the user a long run has finished while FreeVideo is in a background tab:
+// Tells the user a long run has finished while Eclipse is in a background tab:
 // the tab title flashes and one short beep plays until the page is shown again.
 // Desktop notifications default on; an explicit opt-out keeps them off.
-// Only a queue that ran a FreeVideo node counts: other workflows finish silently.
+// Only a queue that ran a Eclipse node counts: other workflows finish silently.
 export const DESKTOP_SETTING = 'FreeVideo.DoneNotify.Desktop';
 const PERMISSION_ASKED = 'freevideo.desktop.notification-asked';
 const permissionAsked = new WeakSet();
@@ -89,7 +89,7 @@ function playBeep(win) {
 function desktopNotice(win, label, clicked) {
     const Notice = win.Notification;
     if (!Notice || Notice.permission !== 'granted') return;
-    const notice = new Notice(`${label} · FreeVideo`);
+    const notice = new Notice(`${label} · Eclipse`);
     notice.onclick = () => { clicked(); notice.close?.(); };
 }
 

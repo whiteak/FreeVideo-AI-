@@ -1,5 +1,5 @@
-// The FreeVideo files the open workflow uses, told to the engine so that its cleanup keeps them while this page
-// has them. Only names of FreeVideo's own files are sent; a tab's newest list replaces its last one.
+// The Eclipse files the open workflow uses, told to the engine so that its cleanup keeps them while this page
+// has them. Only names of Eclipse's own files are sent; a tab's newest list replaces its last one.
 import {api} from '../../scripts/api.js';
 import {app} from '../../scripts/app.js';
 import {privacyOffered} from './private_offers.js';

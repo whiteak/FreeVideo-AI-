@@ -105,7 +105,7 @@ def temporary_environment(root, environ):
         _clean_temporary(folder)
         return dict(environ, **{key: str(temporary) for key in (*TEMP_KEYS, TEMP_ROOT_ENV)})
     except Exception as error:  # A temporary folder choice never blocks the engine from starting.
-        logging.warning('[FreeVideo] Compiler temporary folder unchanged: %s',
+        logging.warning('[Eclipse] Compiler temporary folder unchanged: %s',
                         str(error).replace('\r', ' ').replace('\n', ' '))
         return environ
 
@@ -126,7 +126,7 @@ def own_temporary_environment(root=None):
         elif tempfile.tempdir and not runtime_alias._backend.ansi_path(tempfile.tempdir):
             tempfile.tempdir = None  # a cached folder the system code page cannot spell is looked up again
     except Exception as error:  # A temporary folder choice never blocks the engine from starting.
-        logging.warning('[FreeVideo] Compiler temporary folder unchanged: %s',
+        logging.warning('[Eclipse] Compiler temporary folder unchanged: %s',
                         str(error).replace('\r', ' ').replace('\n', ' '))
 
 

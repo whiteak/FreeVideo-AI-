@@ -32,18 +32,18 @@ def clean_prompt(json_data):
         if isinstance(inputs, dict) and 'frames' in inputs and not isinstance(inputs['frames'], list):
             frames = node_frames(inputs['frames'])
             if frames != inputs['frames'] or type(frames) is not type(inputs['frames']):
-                logging.info('[FreeVideo] Total frames %r is not a frame count; the length follows Duration.',
+                logging.info('[Eclipse] Total frames %r is not a frame count; the length follows Duration.',
                              str(inputs['frames'])[:40])
                 inputs['frames'] = frames
         if isinstance(inputs, dict):
             repaired += workflow_repairs.repair_inputs(inputs)
     if repaired:
-        logging.info('[FreeVideo] Optional inputs from an older workflow were reset to their defaults: %s.',
+        logging.info('[Eclipse] Optional inputs from an older workflow were reset to their defaults: %s.',
                      ', '.join(sorted(set(repaired))))
         try:
             workflow_repairs.record(comfy_bridge.installation_root(), 'request', repaired)
         except (OSError, ValueError) as error:
-            logging.warning('[FreeVideo] Could not note the reset inputs: %s', error)
+            logging.warning('[Eclipse] Could not note the reset inputs: %s', error)
     return json_data
 
 
@@ -108,9 +108,9 @@ class FreeVideoGenerate(io.ComfyNode):
     @classmethod
     def define_schema(cls):
         return io.Schema(
-            node_id='FreeVideoGenerate', display_name='FreeVideo · Video + Audio',
+            node_id='FreeVideoGenerate', display_name='Eclipse · Video + Audio',
             category='FreeVideo', search_aliases=['VDN', 'H3', 'i2v', 'fl2v', 'ref2v', *LEGACY_INPUT_NAMES],
-            description='Generate a video with audio using your FreeVideo installation. Memory placement, '
+            description='Generate a video with audio using your Eclipse installation. Memory placement, '
                         'caches and validated optimizations are automatic. Outputs and diagnostics are retained.',
             inputs=[
                 io.String.Input('text', display_name='Prompt', multiline=True, default=DEFAULT_PROMPT,
@@ -126,7 +126,7 @@ class FreeVideoGenerate(io.ComfyNode):
                 io.Image.Input('last', display_name='Last frame', optional=True,
                     tooltip='One image. With first frame enables FL2VA; alone enables L2VA.'),
                 References.Input('references', optional=True,
-                    tooltip='Experimental Ref2VA. Use FreeVideo Reference nodes. VDN is not reference-trained.'),
+                    tooltip='Experimental Ref2VA. Use Eclipse Reference nodes. VDN is not reference-trained.'),
                 LoRAs.Input('loras', display_name='LoRAs', optional=True),
                 io.Conditioning.Input('conditioning', optional=True,
                     tooltip='Native MiniMax-H3 conditioning from a compatible community node, with keyframes or references. '
@@ -274,7 +274,7 @@ class FreeVideoGenerate(io.ComfyNode):
                 from .lora_studio.cast_loras import recipe as cast_recipe
                 text, media, width, height = cast_recipe(text, media, width, height)
         except Exception as error:
-            logging.warning('[FreeVideo] LoRAs linked to cast cards were not added: %s', error)
+            logging.warning('[Eclipse] LoRAs linked to cast cards were not added: %s', error)
         node_id = cls.hidden.unique_id
         chain = block_context(PromptServer.instance, node_id)
         options = request_options(continue_from, node_frames(frames))
@@ -334,22 +334,22 @@ class FreeVideoGenerate(io.ComfyNode):
                              upscale=upscale_option(upscale_factor).get('upscale_factor', 2)) if plain else None
                 stop_image_for_generation(PromptServer.instance, video=video)
             except Exception as error:
-                logging.warning('[FreeVideo] Could not stop image generation before the video: %s', error)
+                logging.warning('[Eclipse] Could not stop image generation before the video: %s', error)
             try:   # nor music for a cut, which composes again after the video
                 from .music.service import stop_for_generation as stop_music_for_generation
                 stop_music_for_generation(PromptServer.instance)
             except Exception as error:
-                logging.warning('[FreeVideo] Could not stop music before the video: %s', error)
+                logging.warning('[Eclipse] Could not stop music before the video: %s', error)
             try:   # the picture worker keeps the card longer only for people who mostly make pictures
                 from .image_gen.keep import note, path
                 note('video', path(comfy_bridge.installation_root()))
             except Exception as error:
-                logging.warning('[FreeVideo] Could not record the video for the picture worker: %s', error)
+                logging.warning('[Eclipse] Could not record the video for the picture worker: %s', error)
             try:   # nor splitting a clip's sound, which starts again after the video
                 from .stems.service import stop_for_generation as stop_stems_for_generation
                 stop_stems_for_generation(PromptServer.instance)
             except Exception as error:
-                logging.warning('[FreeVideo] Could not stop sound separation before the video: %s', error)
+                logging.warning('[Eclipse] Could not stop sound separation before the video: %s', error)
         prewarm = {}
         result_reused = [False]
         result_report = [None]
@@ -369,7 +369,7 @@ class FreeVideoGenerate(io.ComfyNode):
         bar = ProgressBar(total_steps, node_id=node_id)
         last_message = [None]
         last_count = [None]
-        # Without FreeVideo's page scripts the nodes still generate; say why the
+        # Without Eclipse's page scripts the nodes still generate; say why the
         # creative workspace is missing in ComfyUI's own node text.
         from .comfy_launcher_api import page_notice
         notice = page_notice(PromptServer.instance)
@@ -377,13 +377,13 @@ class FreeVideoGenerate(io.ComfyNode):
             # Runs queued by scripts never open a page, so the console says it once, not on every prompt.
             if not getattr(PromptServer.instance, '_freevideo_page_notice_logged', False):
                 PromptServer.instance._freevideo_page_notice_logged = True
-                logging.warning('[FreeVideo] %s (shown once; API and script runs need no page)', notice)
+                logging.warning('[Eclipse] %s (shown once; API and script runs need no page)', notice)
             PromptServer.instance.send_progress_text(notice, node_id)
         if two_pass and not refine_from and not preview and not upscale_from:
             from .two_pass import one_pass_note
             step_note = one_pass_note(base_steps)
             if step_note:
-                logging.warning('[FreeVideo] %s', step_note)
+                logging.warning('[Eclipse] %s', step_note)
                 notice = notice + '\n' + step_note if notice else step_note
         notice = notice + '\n' if notice else ''
         def said():
@@ -445,7 +445,7 @@ class FreeVideoGenerate(io.ComfyNode):
                 PromptServer.instance.send_progress_text(said().rstrip('\n'), node_id)
             return result
         for line in notes:
-            logging.info('[FreeVideo] %s', line)
+            logging.info('[Eclipse] %s', line)
         if notes and PromptServer.instance is not None:
             PromptServer.instance.send_progress_text(said().rstrip('\n'), node_id)
         publish(PromptServer.instance, node_id, {'label': 'Preparing video', 'new_request': True})
@@ -560,7 +560,7 @@ class FreeVideoMedia(io.ComfyNode):
     @classmethod
     def define_schema(cls):
         from .comfy_assets import REFERENCE_INPUTS
-        return io.Schema(node_id='FreeVideoMedia', display_name='FreeVideo · Media', category='FreeVideo',
+        return io.Schema(node_id='FreeVideoMedia', display_name='Eclipse · Media', category='FreeVideo',
             description='Connect IMAGE or AUDIO outputs from generation, editing or loading nodes, or upload files. '
                         'Several reference images can be connected; uploaded references come first, then connected images from top to bottom. '
                         'Choose first/last frames or experimental references. Empty media means text to video.',
@@ -607,7 +607,7 @@ class FreeVideoMedia(io.ComfyNode):
 class FreeVideoReference(io.ComfyNode):
     @classmethod
     def define_schema(cls):
-        return io.Schema(node_id='FreeVideoReference', display_name='FreeVideo · Reference (experimental)',
+        return io.Schema(node_id='FreeVideoReference', display_name='Eclipse · Reference (experimental)',
             category='FreeVideo', is_experimental=True,
             description='Append one image, video or audio reference in order. A clip is cut to the generated length, at most 15 s, and the cut is reported. '
                         'Connect the stack to Generate. VDN reference quality is experimental.',
@@ -638,8 +638,8 @@ class FreeVideoLoRA(io.ComfyNode):
     def define_schema(cls):
         import folder_paths
         names = [name for name in folder_paths.get_filename_list('loras') if name.lower().endswith('.safetensors')]
-        return io.Schema(node_id='FreeVideoLoRA', display_name='FreeVideo · LoRA', category='FreeVideo',
-            description='FreeVideo needs no acceleration LoRA.',
+        return io.Schema(node_id='FreeVideoLoRA', display_name='Eclipse · LoRA', category='FreeVideo',
+            description='Eclipse needs no acceleration LoRA.',
             inputs=[io.Combo.Input('lora', options=[NO_LORA, *names]),
                     io.Float.Input('strength', default=1., min=-100., max=100., step=.05),
                     LoRAs.Input('previous', optional=True)], outputs=[LoRAs.Output('loras')])
@@ -659,8 +659,8 @@ class FreeVideoLoRA(io.ComfyNode):
 class FreeVideoLoRAStack(io.ComfyNode):
     @classmethod
     def define_schema(cls):
-        return io.Schema(node_id='FreeVideoLoRAStack', display_name='FreeVideo · LoRAs', category='FreeVideo',
-            description='FreeVideo needs no acceleration LoRA.',
+        return io.Schema(node_id='FreeVideoLoRAStack', display_name='Eclipse · LoRAs', category='FreeVideo',
+            description='Eclipse needs no acceleration LoRA.',
             inputs=[io.String.Input('adapters', default='[]'), LoRAs.Input('previous', optional=True)],
             outputs=[LoRAs.Output('loras')])
 
@@ -683,7 +683,7 @@ class FreeVideoLoRAStack(io.ComfyNode):
 class FreeVideoFrames(io.ComfyNode):
     @classmethod
     def define_schema(cls):
-        return io.Schema(node_id='FreeVideoFrames', display_name='FreeVideo · First / Last Frame', category='FreeVideo',
+        return io.Schema(node_id='FreeVideoFrames', display_name='Eclipse · First / Last Frame', category='FreeVideo',
             description='Extract just the first and last frames for image processing or the next video segment. '
                         'The full decoded movie is not retained in RAM.',
             inputs=[io.Video.Input('video')], outputs=[io.Image.Output('first'), io.Image.Output('last')])
@@ -695,7 +695,7 @@ class FreeVideoFrames(io.ComfyNode):
         import tempfile
         # save_to preserves native trims and crops; a temporary remux avoids
         # ignoring edits when get_stream_source points at the untrimmed file.
-        with tempfile.TemporaryDirectory(prefix='FreeVideo frames ') as directory:
+        with tempfile.TemporaryDirectory(prefix='Eclipse frames ') as directory:
             path = Path(directory) / 'frames.mp4'
             video.save_to(str(path))
             first = last = None
@@ -751,5 +751,5 @@ class FreeVideoExtension(ComfyExtension):
             start_background_compile()
         except Exception as error:
             # Optional: the first request compiles what it needs, as before.
-            logging.warning('[FreeVideo] Background compile not started: %s', error)
+            logging.warning('[Eclipse] Background compile not started: %s', error)
         return [FreeVideoGenerate, FreeVideoMedia, FreeVideoReference, FreeVideoLoRA, FreeVideoLoRAStack, FreeVideoFrames]

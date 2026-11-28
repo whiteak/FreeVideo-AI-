@@ -19,7 +19,7 @@ export function createLanAccess(t, api) {
     skin();
     const element = el('div', 'fv-lan'), trigger = button('fv-lan-trigger', t('Phone', '手机'), toggle), panel = el('section', 'fv-lan-panel');
     const label = t('Phone access', '手机连接'); trigger.setAttribute('aria-label', label);
-    trigger.dataset.fvTipName = label; trigger.dataset.fvTipUse = t('Open FreeVideo on a phone on this network', '在同一网络的手机上打开 FreeVideo'); trigger.setAttribute('aria-expanded', 'false'); trigger.setAttribute('aria-haspopup', 'dialog');
+    trigger.dataset.fvTipName = label; trigger.dataset.fvTipUse = t('Open Eclipse on a phone on this network', '在同一网络的手机上打开 Eclipse'); trigger.setAttribute('aria-expanded', 'false'); trigger.setAttribute('aria-haspopup', 'dialog');
     const dot = el('i', 'fv-lan-dot'); dot.hidden = true; dot.setAttribute('aria-hidden', 'true'); trigger.append(dot);
     panel.hidden = true; panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-label', label);
     const head = el('div', 'fv-lan-heading'), toggleButton = button('fv-lan-switch', '', changeEnabled);
@@ -49,18 +49,18 @@ export function createLanAccess(t, api) {
     problem.append(problemText, retry); problem.hidden = true; problemText.setAttribute('role', 'status');
     const reasons = {
         ports_in_use: t('The ports for phone access are in use or reserved by the system.', '手机连接所需的端口已被占用或被系统保留。'),
-        comfy_on_network: t('FreeVideo is already open to the whole network. Start it for this computer only, then try again.', 'FreeVideo 已直接对整个网络开放。请改为只在本机运行后重试。'),
+        comfy_on_network: t('Eclipse is already open to the whole network. Start it for this computer only, then try again.', 'Eclipse 已直接对整个网络开放。请改为只在本机运行后重试。'),
         no_address: t('No LAN address found. Connect to Wi-Fi or a wired network first.', '未找到局域网地址，请先连接 Wi-Fi 或有线网络。'),
         failed: t('Phone access could not be opened.', '手机连接无法打开。'),
-        late: t('Phone access has not opened yet. Make sure the FreeVideo launcher is running.', '手机连接尚未打开。请确认 FreeVideo 启动器正在运行。'),
-        unavailable: t('Phone access needs FreeVideo started from its launcher on this computer.', '手机连接需要通过本机的 FreeVideo 启动器启动。'),
+        late: t('Phone access has not opened yet. Make sure the Eclipse launcher is running.', '手机连接尚未打开。请确认 Eclipse 启动器正在运行。'),
+        unavailable: t('Phone access needs Eclipse started from its launcher on this computer.', '手机连接需要通过本机的 Eclipse 启动器启动。'),
     };
     const openWait = 30000;
     panel.append(head, starting, problem, content, error); element.append(trigger, panel, tip);
     let state = {enabled: false, link: '', password_set: false}, seen = false, disposed = false, writing = false, desired = null, reading = false, timer = null, copied = null, drawn = '', since = 0;
     try { seen = localStorage.getItem(seenKey) === '1'; } catch {}
     const windows = /Win/i.test(globalThis.navigator?.platform || globalThis.navigator?.userAgent || '');
-    // The panel's one error line: why the last step failed (a lost connection, or FreeVideo's HTTP status).
+    // The panel's one error line: why the last step failed (a lost connection, or Eclipse's HTTP status).
     function fail(text) { error.textContent = text; error.hidden = false; }
     // A toolbar with a transform or blur becomes the frame of fixed children; take its offset back out so they sit by the button.
     function place(node, top, left) {

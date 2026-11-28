@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "freevideo-engine"
 version = "2026.9.16.41444"
-description = "FreeVideo video and audio generation with automatic GPU and memory optimization"
+description = "Eclipse video and audio generation with automatic GPU and memory optimization"
 requires-python = ">=3.12,<3.13"
 readme = "README.md"
 license = "Apache-2.0"

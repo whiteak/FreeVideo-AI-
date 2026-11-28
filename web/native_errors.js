@@ -1,12 +1,12 @@
 // ComfyUI answers every node error with its own overlay (or dialog) carrying a traceback, local
-// paths and a link to ComfyUI's issue tracker. FreeVideo shows its own failure panel instead, so
-// for errors that belong to FreeVideo those two are skipped while the event is delivered; the
+// paths and a link to ComfyUI's issue tracker. Eclipse shows its own failure panel instead, so
+// for errors that belong to Eclipse those two are skipped while the event is delivered; the
 // event itself still reaches ComfyUI's stores and every other listener. The stored record keeps its node
 // but carries our written explanation instead of the traceback.
 const EVENT = 'execution_error';
 const DIALOG_KEY = 'global-execution-error';
 
-/** True when the failing node is a FreeVideo node or feeds one (a loader or media node upstream). */
+/** True when the failing node is a Eclipse node or feeds one (a loader or media node upstream). */
 export function ownsFailure(detail, graph) {
     const failing = String(detail?.node_id ?? '');
     if (/^FreeVideo/.test(String(detail?.node_type ?? ''))) return true;
@@ -36,7 +36,7 @@ function stores(app) {
     } catch { return {}; }
 }
 
-/** Skip ComfyUI's own error overlay and dialog for FreeVideo errors. Does nothing when the page lacks them. */
+/** Skip ComfyUI's own error overlay and dialog for Eclipse errors. Does nothing when the page lacks them. */
 export function installNativeErrorGuard({api, app, owns = detail => ownsFailure(detail, app?.graph), describe = null}) {
     if (!api || api.freevideoNativeErrorGuard) return;
     api.freevideoNativeErrorGuard = true;

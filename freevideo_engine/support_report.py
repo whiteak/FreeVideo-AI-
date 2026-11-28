@@ -128,9 +128,9 @@ def summarize(report, engine, encoding):
     if checkpoint.get('tested_size') is False and actual is not None and expected is not None:
         actual, expected = encoder_sizes(actual, expected)
         hints.append(dict(kind='configuration',
-            message='The text encoder file used is %s GiB, not the %s GiB file with the same name that FreeVideo installs and tests. '
+            message='The text encoder file used is %s GiB, not the %s GiB file with the same name that Eclipse installs and tests. '
                     'Results and speed are not guaranteed to match the tested version.' % (actual, expected),
-            message_zh='这次使用的文本编码器文件为 %s GiB，不是 FreeVideo 安装并测试的同名文件（%s GiB）。'
+            message_zh='这次使用的文本编码器文件为 %s GiB，不是 Eclipse 安装并测试的同名文件（%s GiB）。'
                        '生成结果和速度都不保证与测试过的版本一致。' % (actual, expected)))
     if (mapping(engine.get('config')).get('resident_blocks') == 50
             and number(offload.get('transfers')) == 0 and number(offload.get('h2d_bytes')) == 0):

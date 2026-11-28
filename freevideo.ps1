@@ -136,7 +136,7 @@ try {
                   if ($installed) { break }
                   $attempt++
                   $env:UV_PYTHON_INSTALL_MIRROR = $route
-                  Write-Progress -Activity 'FreeVideo bootstrap' -Status ('Install isolated Python ' + $versions.python)
+                  Write-Progress -Activity 'Eclipse bootstrap' -Status ('Install isolated Python ' + $versions.python)
                   $pythonOutput = ''
                   $pythonLabel = "Install Python $($versions.python), attempt $attempt ($proxyRoute connection)"
                   if ($profile.Mode -eq 'patient') { $pythonLabel += ", $($profile.Mode)" }
@@ -180,7 +180,7 @@ try {
                 Write-Host '{"event":"freevideo_ui","kind":"progress","key":"download-patient-python","label":"Download","detail":"","state":"complete"}'
             }
             $bootstrapLock.Dispose()
-            Write-Progress -Activity 'FreeVideo bootstrap' -Completed
+            Write-Progress -Activity 'Eclipse bootstrap' -Completed
         }
     }
     # Restore only our download defaults before Python determines user overrides.
@@ -214,7 +214,7 @@ try {
         }
     }
 } catch {
-    Write-Host ("FreeVideo could not start: " + $_.Exception.Message) -ForegroundColor Red
+    Write-Host ("Eclipse could not start: " + $_.Exception.Message) -ForegroundColor Red
     Write-Host 'Existing files are retained. Retry the same command after resolving the reported issue.'
     $freevideoReportLog = ''
     if ($bootstrapLog -and (Test-Path -LiteralPath $bootstrapLog)) { $freevideoReportLog = " and attach $bootstrapLog" }

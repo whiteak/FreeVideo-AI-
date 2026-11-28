@@ -81,7 +81,7 @@ VSVersionInfo(
   kids=[StringFileInfo([
     StringTable('040904B0', [
       StringStruct('CompanyName', 'FlashML'),
-      StringStruct('FileDescription', 'FreeVideo launcher'),
+      StringStruct('FileDescription', 'Eclipse launcher'),
       StringStruct('FileVersion', '%s'),
       StringStruct('InternalName', 'FreeVideo'),
       StringStruct('OriginalFilename', 'FreeVideo.exe'),

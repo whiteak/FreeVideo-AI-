@@ -49,7 +49,7 @@ export function failureIssue(report, kind, {lora = false, t = translatorFor(null
     const lines = String(report?.message || '').split(/\r?\n/).filter(line => line.trim());
     // A traceback ends with the line that names the error; any other message starts with it.
     const first = (/^Traceback/.test(lines[0] || '') ? lines[lines.length - 1] : lines[0]) || '';
-    const text = [lora ? 'FreeVideo refused this LoRA. The verdict is reported as a misjudgment.' : 'FreeVideo reported a generation failure.',
+    const text = [lora ? 'Eclipse refused this LoRA. The verdict is reported as a misjudgment.' : 'Eclipse reported a generation failure.',
         `Stage: ${stage ? stage[0] : report?.stage || 'unknown'}`, `Error: ${first.trim().slice(0, 300)}`,
         `Kind: ${kind || 'unknown'}`].join('\n');
     const types = (report?.nodes || []).map(node => node.type).filter(Boolean);

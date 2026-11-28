@@ -214,7 +214,7 @@ async function openVideoFolder(id) {
     } catch { return null; }
 }
 const videoFolderMessage = (t, answer, single = false) => !answer
-    ? t('Could not open the folder. Open it on the computer that runs FreeVideo.', '没能打开文件夹。请在运行 FreeVideo 的电脑上打开。')
+    ? t('Could not open the folder. Open it on the computer that runs Eclipse.', '没能打开文件夹。请在运行 Eclipse 的电脑上打开。')
     : answer.missing ? t('The video file cannot be found. If you moved the file, refresh the page.', '找不到这条视频的文件。如果移动过文件，请刷新页面。')
     : answer.opened === false && answer.folder
         ? (single ? t('Could not open the folder. This video is in {folder}', '没能打开文件夹。视频在 {folder}', { folder: answer.folder })
@@ -272,7 +272,7 @@ export async function libraryPage(t, {limit = 24, before = null, favorite = null
     if (before) query.set('before', before);
     if (favorite !== null) query.set('favorite', String(favorite));
     const response = await api.fetchApi('/freevideo/library?' + query, {signal});
-    if (response.status === 404) throw Object.assign(new Error(t('Restart FreeVideo after updating to open the creations.', '更新后重启 FreeVideo，可打开作品。')), {restart: true});
+    if (response.status === 404) throw Object.assign(new Error(t('Restart Eclipse after updating to open the creations.', '更新后重启 Eclipse，可打开作品。')), {restart: true});
     if (!response.ok) throw new Error(t('The creations could not be loaded.', '作品暂时无法读取。'));
     return response.json();
 }
@@ -326,7 +326,7 @@ async function workflowBackfill(collection, t, before = null) {
         const result = value?.result || {};
         heading.textContent = result.embedded ? t('Settings added to {embedded} videos', '已为 {embedded} 个视频补上生成设置', { embedded: result.embedded }) : t('No video was changed', '没有视频被改动');
         text.textContent = result.embedded
-            ? t('Drop them back onto FreeVideo to bring back the settings they were made with. Each original is kept as a backup.', '把它们拖回 FreeVideo 即可还原生成时的设置。每个原视频都另存了一份备份。')
+            ? t('Drop them back onto Eclipse to bring back the settings they were made with. Each original is kept as a backup.', '把它们拖回 Eclipse 即可还原生成时的设置。每个原视频都另存了一份备份。')
             : t('Videos that could not be checked safely were left as they were.', '无法安全确认的视频都保持原样。');
         if (result.failed) text.textContent += ' ' + t('{failed} videos were left unchanged and will be offered again.', '另有 {failed} 个视频未改动，之后会再次提示。', { failed: result.failed });
         const full = Math.min(Number.isSafeInteger(result.no_space) ? result.no_space : 0, result.failed || 0);
@@ -336,8 +336,8 @@ async function workflowBackfill(collection, t, before = null) {
     }
     if (value.state === 'running') { follow(); return; }
     heading.textContent = t('Add settings to earlier videos', '为之前的视频补上生成设置');
-    text.textContent = t('{count} earlier videos can get the settings they were made with, so dropping them back onto FreeVideo brings those settings back. Nothing changes before confirming, and each original is kept as a backup (about {size} GB).',
-        '有 {count} 个之前生成的视频可以补上生成时的设置，之后拖回 FreeVideo 即可还原。确认前不会改动任何文件，每个原视频都会另存一份备份（约 {size} GB）。', { count: value.count, size: gb(value.bytes) });
+    text.textContent = t('{count} earlier videos can get the settings they were made with, so dropping them back onto Eclipse brings those settings back. Nothing changes before confirming, and each original is kept as a backup (about {size} GB).',
+        '有 {count} 个之前生成的视频可以补上生成时的设置，之后拖回 Eclipse 即可还原。确认前不会改动任何文件，每个原视频都会另存一份备份（约 {size} GB）。', { count: value.count, size: gb(value.bytes) });
     const run = button(t('Add settings', '补上设置'), async () => {
         run.disabled = later.disabled = true;
         try { if (!(await post('run')).ok) throw new Error(); follow(); }
@@ -487,7 +487,7 @@ export function openLibrary(t, options = {}) {
                 // On the stage the viewer sits in the page body, not in the dialog.
                 if (viewer.parentNode === dialog) dialog.insertBefore(room.element, viewer); else dialog.append(room.element);
                 castRoom = room;
-            } catch (error) { castRoom = null; console.warn('FreeVideo cast room:', error); showTab('works'); return; }
+            } catch (error) { castRoom = null; console.warn('Eclipse cast room:', error); showTab('works'); return; }
         }
         if (tab !== 'cast') return;
         body.hidden = true; castRoom.element.hidden = false; castRoom.refresh();
@@ -1004,7 +1004,7 @@ export function openLibrary(t, options = {}) {
         }
     }
     const refusal = (reason, kept = []) => reason === 'foreign-files'
-        ? t('Not deleted: the folder also holds files FreeVideo did not write: ', '未删除：文件夹里还有不是 FreeVideo 生成的文件：') + kept.join(', ')
+        ? t('Not deleted: the folder also holds files Eclipse did not write: ', '未删除：文件夹里还有不是 Eclipse 生成的文件：') + kept.join(', ')
         : reason === 'editor-in-use' ? t('Not deleted: these edits use it: ', '未删除：这些剪辑正在使用它：') + kept.join(', ')
         : reason === 'editor-unavailable' ? t('Not deleted: saved edits could not be checked. Try again in a moment.', '未删除：暂时无法检查已保存的剪辑，请稍后再试。')
         : reason === 'continuation-in-use' ? t('Not deleted: a video continuing from it is running or queued. Try again after it finishes.', '未删除：接在这条视频后面的生成正在运行或排队，请等它完成后再试。')

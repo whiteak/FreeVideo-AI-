@@ -138,7 +138,7 @@ export function createCastRoom({api, t, viewURL: outputURL}) {
         }
         message.replaceChildren();
         collection.dataset.empty = String(!ordered.length);
-        if (state === 'off') message.textContent = t('The assistant features are turned off on this computer, so the character library is unavailable. Turn that setting back on and restart FreeVideo to use it.', '这台电脑关闭了助手功能，角色库因此不可用。重新打开该设置并重启 FreeVideo 后可以使用。');
+        if (state === 'off') message.textContent = t('The assistant features are turned off on this computer, so the character library is unavailable. Turn that setting back on and restart Eclipse to use it.', '这台电脑关闭了助手功能，角色库因此不可用。重新打开该设置并重启 Eclipse 后可以使用。');
         else if (state === 'error') { message.textContent = t('The character library could not be read. Try Refresh.', '角色库暂时无法读取，请点击刷新。'); message.append(issueButton(t, () => ({where: ['Character library', '角色库'], message: message.firstChild?.textContent || ''}))); }
         else if (state === 'loading' && !rows.length) message.textContent = t('Loading…', '正在读取…');
         else if (!ordered.length) message.textContent = query ? t('No name matches this search.', '没有符合搜索的名称。')

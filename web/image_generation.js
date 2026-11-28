@@ -214,8 +214,8 @@ export function packView(info, t) {
         return {loading: true, waiting, noButton: waiting && install.reason === 'busy_setup', button: waiting ? t('Continue download', '继续下载') : t('Pause', '暂停'), fraction: total > 0 ? Math.min(1, (install.done || 0) / total) : 0,
             note: waiting ? (install.reason === 'busy_video' ? t('Paused while a video generates', '视频生成中，已暂停')
                 : install.reason === 'busy_picture' ? t('Paused while an image is made', '正在出图，已暂停')
-                : install.reason === 'busy_setup' ? t('Paused while FreeVideo installs, updates or cleans up', 'FreeVideo 正在安装、更新或清理，已暂停')
-                : t('Paused while FreeVideo uses the graphics card for another task', 'FreeVideo 正在用显卡做别的任务，已暂停'))
+                : install.reason === 'busy_setup' ? t('Paused while Eclipse installs, updates or cleans up', 'Eclipse 正在安装、更新或清理，已暂停')
+                : t('Paused while Eclipse uses the graphics card for another task', 'Eclipse 正在用显卡做别的任务，已暂停'))
                 : t('Downloading · {done}\u00a0GB / {size}{time}', '正在下载 · {done}\u00a0GB / {size}{time}', { done: gb(install.done || 0), size, time })};
     }
     const resume = install.state === 'failed' || install.state === 'cancelled' || install.done > 0;
@@ -226,33 +226,33 @@ export function packView(info, t) {
     return {loading: false, fraction: null, reason: !!reason, button: resume ? t('Resume download', '继续下载') : t('Download image generation models', '下载图像生成模型'),
         note: reason || (resume ? t('{done}\u00a0GB / {size}{time}', '{done}\u00a0GB / {size}{time}', { done: gb(install.done || 0), size, time }) : size + time)};
 }
-// FreeVideo went away while a picture was being made (#1121): why, as far as the launcher saw it end, and what next. The
+// Eclipse went away while a picture was being made (#1121): why, as far as the launcher saw it end, and what next. The
 // page's cause (task_store, engine_exit.js exitCause) picks the row; a restart without a record reads as quitting
 // unexpectedly. Lane, review/engine-closed-reason copy_lane.
 const LOST_ENGINE = {
     engine_restarted: {
-        memory: [["The system closed FreeVideo, most likely because the computer ran out of memory. FreeVideo has restarted.", "FreeVideo 被系统关闭，很可能是因为电脑内存不足。FreeVideo 已重新启动。"], ["Use a smaller size, or close other programs that use memory, then generate again.", "请缩小尺寸，或关闭其他占用内存的程序后重新生成。"]],
+        memory: [["The system closed Eclipse, most likely because the computer ran out of memory. Eclipse has restarted.", "Eclipse 被系统关闭，很可能是因为电脑内存不足。Eclipse 已重新启动。"], ["Use a smaller size, or close other programs that use memory, then generate again.", "请缩小尺寸，或关闭其他占用内存的程序后重新生成。"]],
         // Lane 11-25 (copy_lane_memory_maybe_0613).
-        memory_maybe: [["The system ended FreeVideo, possibly because the computer ran out of memory. FreeVideo has restarted.", "FreeVideo 被系统结束，可能是因为电脑内存不足。FreeVideo 已重新启动。"], ["Use a smaller size, or close other programs that use memory, then generate again.", "请缩小尺寸，或关闭其他占用内存的程序后重新生成。"]],
-        ended: [["The system or another program ended FreeVideo. It has restarted.", "FreeVideo 被系统或其他程序结束，已重新启动。"], ["Generate again.", "请重新生成。"]],
-        crashed: [["FreeVideo crashed. It has restarted.", "FreeVideo 意外崩溃，已重新启动。"], ["Generate again. If it happens again, choose \"Report a problem\".", "请重新生成。再次出现时，请点击“提交问题”。"]],
-        unknown: [["FreeVideo quit unexpectedly. It has restarted.", "FreeVideo 意外退出，已重新启动。"], ["Generate again. If it happens again, choose \"Report a problem\".", "请重新生成。再次出现时，请点击“提交问题”。"]],
+        memory_maybe: [["The system ended Eclipse, possibly because the computer ran out of memory. Eclipse has restarted.", "Eclipse 被系统结束，可能是因为电脑内存不足。Eclipse 已重新启动。"], ["Use a smaller size, or close other programs that use memory, then generate again.", "请缩小尺寸，或关闭其他占用内存的程序后重新生成。"]],
+        ended: [["The system or another program ended Eclipse. It has restarted.", "Eclipse 被系统或其他程序结束，已重新启动。"], ["Generate again.", "请重新生成。"]],
+        crashed: [["Eclipse crashed. It has restarted.", "Eclipse 意外崩溃，已重新启动。"], ["Generate again. If it happens again, choose \"Report a problem\".", "请重新生成。再次出现时，请点击“提交问题”。"]],
+        unknown: [["Eclipse quit unexpectedly. It has restarted.", "Eclipse 意外退出，已重新启动。"], ["Generate again. If it happens again, choose \"Report a problem\".", "请重新生成。再次出现时，请点击“提交问题”。"]],
     },
     engine_closed: {
-        unreachable: [["The connection to FreeVideo was lost and did not come back within 2 minutes.", "与 FreeVideo 的连接中断，2 分钟内没有恢复。"], ["Open the launcher, make sure FreeVideo is running, then generate again.", "请打开启动器，确认 FreeVideo 正在运行后重新生成。"]],
-        stopped_waiting: [["Stopped waiting for FreeVideo to reconnect.", "已停止等待 FreeVideo 恢复连接。"], ["Open the launcher, make sure FreeVideo is running, then generate again.", "请打开启动器，确认 FreeVideo 正在运行后重新生成。"]],
+        unreachable: [["The connection to Eclipse was lost and did not come back within 2 minutes.", "与 Eclipse 的连接中断，2 分钟内没有恢复。"], ["Open the launcher, make sure Eclipse is running, then generate again.", "请打开启动器，确认 Eclipse 正在运行后重新生成。"]],
+        stopped_waiting: [["Stopped waiting for Eclipse to reconnect.", "已停止等待 Eclipse 恢复连接。"], ["Open the launcher, make sure Eclipse is running, then generate again.", "请打开启动器，确认 Eclipse 正在运行后重新生成。"]],
     },
 };
 const LOST_DEFAULT = {engine_restarted: 'unknown', engine_closed: 'unreachable'};
-/** [cause, next step] of a picture that FreeVideo's going away ended, or null for any other code. */
+/** [cause, next step] of a picture that Eclipse's going away ended, or null for any other code. */
 export function lostEngineText(code, cause, t) {
     if (typeof code !== 'string' || !Object.hasOwn(LOST_ENGINE, code)) return null;
     const rows = LOST_ENGINE[code];
     const [said, next] = rows[typeof cause === 'string' && Object.hasOwn(rows, cause) ? cause : LOST_DEFAULT[code]];
     return [t(...said), t(...next)];
 }
-/** While the page waits for FreeVideo to come back: the line and the button that stops waiting. */
-export const WAITING_TEXT = {status: ["Lost the connection to FreeVideo. Waiting for it to come back…", "与 FreeVideo 的连接中断，正在等待恢复…"], stop: ["Stop waiting", "停止等待"],
+/** While the page waits for Eclipse to come back: the line and the button that stops waiting. */
+export const WAITING_TEXT = {status: ["Lost the connection to Eclipse. Waiting for it to come back…", "与 Eclipse 的连接中断，正在等待恢复…"], stop: ["Stop waiting", "停止等待"],
     short: ["Reconnecting…", "等待恢复连接…"]};
 
 export function imageGenError(code, info, t) {
@@ -271,7 +271,7 @@ export function imageGenError(code, info, t) {
         busy: ['The image queue is full. Wait for the earlier images to finish, then try again.', '等待生成的图片已满，请等前面的图片完成后再试。'],
         model_unavailable: ['This computer does not support the chosen image model. Use Qwen-Image 2.1.', '这台电脑不支持所选的图片模型。请改用 Qwen-Image 2.1。'],
         // Lane 11-25 (image-prompt-read-failure-reason copy_lane_gpu_kernels).
-        gpu_kernels_failed: ["The graphics card's computation check did not pass. Update the graphics card driver, then restart FreeVideo. If the check still does not pass, download the report and report the problem.", "\u663e\u5361\u7684\u8ba1\u7b97\u68c0\u67e5\u672a\u901a\u8fc7\u3002\u8bf7\u66f4\u65b0\u663e\u5361\u9a71\u52a8\u540e\u91cd\u65b0\u542f\u52a8 FreeVideo\uff1b\u5982\u4ecd\u672a\u901a\u8fc7\uff0c\u8bf7\u4e0b\u8f7d\u62a5\u544a\u5e76\u63d0\u4ea4\u95ee\u9898\u3002"],
+        gpu_kernels_failed: ["The graphics card's computation check did not pass. Update the graphics card driver, then restart Eclipse. If the check still does not pass, download the report and report the problem.", "\u663e\u5361\u7684\u8ba1\u7b97\u68c0\u67e5\u672a\u901a\u8fc7\u3002\u8bf7\u66f4\u65b0\u663e\u5361\u9a71\u52a8\u540e\u91cd\u65b0\u542f\u52a8 FreeVideo\uff1b\u5982\u4ecd\u672a\u901a\u8fc7\uff0c\u8bf7\u4e0b\u8f7d\u62a5\u544a\u5e76\u63d0\u4ea4\u95ee\u9898\u3002"],
         model_unreadable: ['The image generation model files could not be read. Repair them in the launcher and try again.',
             '图像生成模型的文件读不出来。在启动器里修复后再试。'],
         device_unavailable: ['The graphics card is not available right now. Try again later.', '显卡暂时用不了，稍后再试。'],
@@ -296,7 +296,7 @@ export function imageGenError(code, info, t) {
         segment_not_installed: ['The click-select model is not installed. Download it first.', '点选模型尚未安装，请先下载点选模型。'],
         reload: ['Image generation was interrupted. Try again.', '图片生成中途被打断，请重试。'],
         engine_error: ['The image engine returned an unreadable answer. Try again; if it keeps failing, report the problem.', '图像引擎返回了无法读取的结果。请重试；仍然失败请提交问题。'],
-        connection_lost: ['Lost the connection to FreeVideo. Try again once it is back.', '与 FreeVideo 的连接已断开，恢复后请重试。'],
+        connection_lost: ['Lost the connection to Eclipse. Try again once it is back.', '与 Eclipse 的连接已断开，恢复后请重试。'],
         generation_failed: ['Image generation ran into an error. Try again.', '图像生成出错了，请再试一次。'],
         small_memory: ['This Mac has less than 16 GB of memory and cannot generate images.',
             '这台 Mac 的内存不足 16 GB，无法生成图片。'],
@@ -442,7 +442,7 @@ export function renderImageFailure(host, {error, report_id, stage, step, fitted,
     let bar;
     if (report_id) ({bar} = imageReportBar(card, report_id, t, {productVersion, fetchApi}));
     else {
-        // A picture FreeVideo's going away ended (#1121) names why (fixed words) and the last asks that failed.
+        // A picture Eclipse's going away ended (#1121) names why (fixed words) and the last asks that failed.
         const facts = [[['Error code', '错误码'], error], [['Stage', '阶段'], stage], [['Step', '步骤'], step || (stage || cause ? '' : 'unreported')],
             [['Cause', '原因'], cause], [['Last attempts', '最后几次请求'], Array.isArray(misses) ? misses.slice(-3).map(miss => typeof miss === 'string' && /^[a-z][a-z0-9_]{0,31}$/.test(miss) ? miss : 'other').join(', ') : ''], [['Memory', '内存'], memory]].filter(([, v]) => v);
         bar = doc.createElement('div'); bar.className = 'fv-actions';

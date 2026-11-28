@@ -178,7 +178,7 @@ const shell = () => globalThis.FreeVideoShell || null;
 export const currentView = () => shell()?.view?.() || 'nodes';
 const VIEW_ICONS = {studio: 'film', image: 'image', nodes: 'nodes', editor: 'scissors', autopilot: 'chat'};
 const VIEW_KEYS = ['studio', 'image', 'nodes', 'editor', 'autopilot'];
-// FreeVideo is on screen (a view, or the node view of a FreeVideo workflow), not the user's own ComfyUI workflow.
+// Eclipse is on screen (a view, or the node view of a Eclipse workflow), not the user's own ComfyUI workflow.
 export const shellActive = () => browser && ['view', 'nodes'].includes(document.documentElement.dataset.fvShell || '');
 const viewTab = view => document.querySelector(`dialog.fv-studio[open] .fv-view-switch [data-view="${view}"], .fv-view-navigation .fv-view-switch [data-view="${view}"]`);
 
@@ -187,7 +187,7 @@ export async function goToView(view) {
     try { await shell().go(view); return true; } catch { /* No switch on the view in front: the node toolbar's, if it shows. */ }
     const tab = document.querySelector(`.fv-view-navigation:not([hidden]) [data-view="${view}"]`);
     if (tab) { tab.click(); return true; }
-    toast(t('Open a FreeVideo workflow first.', '请先打开 FreeVideo 工作流。'), {tone: 'caution'});
+    toast(t('Open a Eclipse workflow first.', '请先打开 Eclipse 工作流。'), {tone: 'caution'});
     return false;
 }
 // The library opens from the view's own Creations button when it has one (it carries that view's upscale and
@@ -282,7 +282,7 @@ export function builtinCommands() {
             run: () => reloadIn(CN ? 'en' : 'zh')},
         {id: 'shortcuts.open', group: G.help, icon: 'keyboard', key: '?', title: ['Keyboard shortcuts', '快捷键速查'], use: ['Every shortcut of every view', '所有视图的快捷键'],
             keywords: ['keys', 'hotkeys', 'kuaijiejian', 'kjj'], run: () => openShortcuts()},
-        {id: 'tutorial.open', group: G.help, icon: 'book', title: ['Tutorial', '教程'], use: ['Learn FreeVideo step by step', '一步步学会 FreeVideo'],
+        {id: 'tutorial.open', group: G.help, icon: 'book', title: ['Tutorial', '教程'], use: ['Learn Eclipse step by step', '一步步学会 Eclipse'],
             keywords: ['guide', 'help', 'learn', 'jiaocheng', 'jc'], run: async () => (await import('./tutorial_book.js')).openTutorialBook({chapter: 'quick-start'})},
         {id: 'feedback.open', group: G.help, icon: 'message', title: ['Feedback', '反馈'], use: ['Tell us what to improve', '告诉我们哪里需要改进'],
             keywords: ['report', 'bug', 'issue', 'fankui', 'fk'], run: async () => (await import('./feedback.js')).openFeedback(t)},
@@ -593,7 +593,7 @@ function mark(scroll = true) {
 
 function runActive() {
     const row = rows[active]; if (!row) return;
-    if (row.type === 'result') { closePalette({animate: false}); queueMicrotask(() => { try { row.item.open(); } catch (error) { console.warn('FreeVideo search:', error); } }); return; }
+    if (row.type === 'result') { closePalette({animate: false}); queueMicrotask(() => { try { row.item.open(); } catch (error) { console.warn('Eclipse search:', error); } }); return; }
     const {command} = row.entry;
     const why = reasonOf(command);
     if (why) {
@@ -611,10 +611,10 @@ function execute(command) {
     // The palette is gone and focus is back where it was before the action runs.
     queueMicrotask(async () => {
         try { await command.run({view: currentView(), source: 'palette'}); }
-        catch (error) { console.warn('FreeVideo command:', error); commandFailed(command, error); }
+        catch (error) { console.warn('Eclipse command:', error); commandFailed(command, error); }
     });
 }
-// A known cause (offline, an extension, FreeVideo's own sentence) is the whole notice. An unknown one or a server
+// A known cause (offline, an extension, Eclipse's own sentence) is the whole notice. An unknown one or a server
 // error names the command and offers a report that carries the raw error and the command id.
 export function commandFailure(command, error, report = openIssue) {
     const name = words(command.title);

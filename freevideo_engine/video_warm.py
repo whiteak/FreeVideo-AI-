@@ -89,7 +89,7 @@ class VideoWarmer:
                          else self.read_ahead(root, machine, encoder=True))
         except Exception as error:
             from .failure_details import raised_at
-            logging.warning('[FreeVideo] Video warm-up failed: %s at %s', type(error).__name__, raised_at(error))
+            logging.warning('[Eclipse] Video warm-up failed: %s at %s', type(error).__name__, raised_at(error))
             self.last = dict(state='failed', reason=type(error).__name__)
 
     def read_ahead(self, root, machine, *, encoder):
@@ -177,7 +177,7 @@ class VideoWarmer:
         if current is not None and current != allocator:
             # Another allocator restarts the worker and loses what it holds: the video loads its model as before.
             result = dict(state='skipped', reason='allocator_changed')
-            logging.info('[FreeVideo] Video model not preloaded: the last video used other allocator settings')
+            logging.info('[Eclipse] Video model not preloaded: the last video used other allocator settings')
             return result
         environment.update(PYTORCH_ALLOC_CONF=allocator, PYTORCH_CUDA_ALLOC_CONF=allocator)
         directory = Path(endpoint).parent
@@ -203,7 +203,7 @@ class VideoWarmer:
                           reason=str(error)[-300:])
         result.pop('success', None)
         geometry = value.get('geometry') or {}
-        logging.info('[FreeVideo] Video model preload with the last video settings (%sx%s, %s s): %s%s',
+        logging.info('[Eclipse] Video model preload with the last video settings (%sx%s, %s s): %s%s',
                      geometry.get('width'), geometry.get('height'), geometry.get('requested_seconds'),
                      result.get('state'), (' (%s)' % result['reason']) if result.get('reason') else
                      (' in %.1f s' % result['seconds']) if result.get('seconds') is not None else '')
@@ -230,7 +230,7 @@ class VideoWarmer:
             thread.join(timeout=limit)
             if thread.is_alive():
                 # The request then waits for the GPU lease on its own; this line names who kept it.
-                logging.warning('[FreeVideo] Video warm-up did not stop within %.0f s; it still holds the GPU.', limit)
+                logging.warning('[Eclipse] Video warm-up did not stop within %.0f s; it still holds the GPU.', limit)
         return dict(warm='cancelled')
 
 

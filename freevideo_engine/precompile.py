@@ -103,7 +103,7 @@ def watch_stop_file(interval=.1):
             time.sleep(interval)
         time.sleep(STOP_EXIT_SECONDS)
         try:
-            print(json.dumps(dict(event='give_way', reason='stopped by FreeVideo', at=time.time())), flush=True)
+            print(json.dumps(dict(event='give_way', reason='stopped by Eclipse', at=time.time())), flush=True)
         finally:
             os._exit(BUSY_EXIT)
     if os.environ.get(STOP_ENV):
@@ -113,7 +113,7 @@ def watch_stop_file(interval=.1):
 def checkpoint(room=None, sample=None):
     """GiveWay when the session stopped this run or the room is needed now."""
     if stop_requested():
-        raise GiveWay('stopped by FreeVideo')
+        raise GiveWay('stopped by Eclipse')
     reason = room.run_reason(sample) if room is not None else None
     if reason:
         raise GiveWay(reason)
@@ -646,7 +646,7 @@ def main(argv=None):
             flush(cancelled=CANCELLED)  # A stop must not wait for diagnostic I/O.
             print(json.dumps(dict(event='give_way', reason=str(error), at=time.time())), flush=True)
             return BUSY_EXIT
-        # FreeVideo works either way; record why.
+        # Eclipse works either way; record why.
         receipt = dict(success=False, error=repr(error))
         save(Path(machine['root']) / 'precompile.json', receipt)
     from .precompile_state import flush, record

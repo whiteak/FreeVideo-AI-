@@ -222,7 +222,7 @@ class Images:
             with Image.open(path) as image:
                 width, height = ImageOps.exif_transpose(image).size
         except (OSError, ValueError, Image.DecompressionBombError) as error:
-            raise JobError('invalid_media', 'The source is not a picture FreeVideo can read.') from error
+            raise JobError('invalid_media', 'The source is not a picture Eclipse can read.') from error
         if width > 8192 or height > 8192 or width * height > schema.IMAGE_MAX_PIXELS:
             raise JobError('image_size', 'The source picture is larger than 8192 pixels on a side.')
         return dict(file=relative, digest='sha256:' + digest.hexdigest(), width=width, height=height)
@@ -337,7 +337,7 @@ class Images:
             with Image.open(file) as image:
                 return ImageOps.exif_transpose(image).size
         except (OSError, ValueError, Image.DecompressionBombError):
-            raise _invalid(path, 'a picture FreeVideo can read', src) from None
+            raise _invalid(path, 'a picture Eclipse can read', src) from None
 
     def _rejected(self, reply, record, operations):
         error, index = reply['error'], reply.get('index')

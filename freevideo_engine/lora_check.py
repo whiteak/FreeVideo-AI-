@@ -1,4 +1,4 @@
-"""Tell from a LoRA file's header alone whether it can be used with the FreeVideo model.
+"""Tell from a LoRA file's header alone whether it can be used with the Eclipse model.
 
 Only the key names and tensor shapes are read; no weights are loaded. The fixed
 layout supports precision-independent checks without a prepared model. The UI
@@ -57,9 +57,9 @@ def _layout():
 
 
 LAYOUT = _layout()
-UNUSABLE = 'This LoRA was not trained for the FreeVideo model and cannot be used.'
+UNUSABLE = 'This LoRA was not trained for the Eclipse model and cannot be used.'
 ACCELERATION = ('This acceleration LoRA was made for the original model and cannot be used. '
-                'The FreeVideo model is already accelerated and does not need one.')
+                'The Eclipse model is already accelerated and does not need one.')
 # Step-distillation adapters (for example parallel-decoding ones) ship a bank of
 # whole replacement output heads, one per stretch of the sampling schedule.
 HEADS = ('proj_out', 'audio_proj_out')

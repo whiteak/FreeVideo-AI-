@@ -1,4 +1,4 @@
-"""Agent-native control of FreeVideo: job specs, media tools, headless edits and MCP.
+"""Agent-native control of Eclipse: job specs, media tools, headless edits and MCP.
 
 Agent features are enabled by default. Set FREEVIDEO_AGENT=0 (or false, no, off)
 where ComfyUI runs and for the managed commands to disable the agent API, token,

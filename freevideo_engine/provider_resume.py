@@ -154,7 +154,7 @@ def hf_download(request, module, progress, *, incomplete_path, destination_path,
     """Keep HTTP prefixes; never pretend an Xet output is a resumable prefix.
 
     Hub 1.30 creates a fresh UUID temporary file and unlinks it on exceptions.
-    FreeVideo owns the installation lease, so it can retain a stable file here.
+    Eclipse owns the installation lease, so it can retain a stable file here.
     Metadata/authentication and the actual Xet engine remain provider-owned.
     """
     row, stage = request['row'], Path(request['stage'])

@@ -155,7 +155,7 @@ export function menuSelect(select, {groups = {}, search = null, overlay = false,
     return {wrap, trigger, refresh, close, open};
 }
 
-// A select that a FreeVideo page made without skinSelect gets the same menu when it is first reached. Only inside FreeVideo's own
+// A select that a Eclipse page made without skinSelect gets the same menu when it is first reached. Only inside Eclipse's own
 // containers (where the theme variables exist, so the menu is opaque): the selects of ComfyUI, of other extensions and of the
 // settings dialog (no theme variables there) stay as they are.
 const OWN = '.fv-studio, .fv-setup, .fv-panel, .fv-image-editor, .fv-create';

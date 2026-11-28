@@ -14,7 +14,7 @@ import {fontCSS as bundledFontCSS, fontLoaded, loadFonts} from './fonts.js';
 // A blocked font must not turn otherwise readable text into the bundled box glyph.
 const fontCSS = (name, weight, size) => {
     const css = bundledFontCSS(name, weight, size);
-    return fontLoaded(name, weight) ? css : css.replace('"FreeVideo Box"', 'sans-serif');
+    return fontLoaded(name, weight) ? css : css.replace('"Eclipse Box"', 'sans-serif');
 };
 
 export const BLENDS = ['source-over', 'multiply', 'screen', 'overlay', 'soft-light', 'darken', 'lighten',
@@ -991,7 +991,7 @@ export class Renderer {
     }
     async preload(doc) {
         for (const l of doc.layers) if (l.src) { const img = await this.image(l.src); this.images.get(l.src).value = img; }
-        await loadFonts(textFonts(doc)).catch(error => console.warn('FreeVideo image editor fonts unavailable; using fallback fonts.', error));
+        await loadFonts(textFonts(doc)).catch(error => console.warn('Eclipse image editor fonts unavailable; using fallback fonts.', error));
     }
     // Raster of a layer at scale × its native pixels, edits applied (before
     // adjustments and mask), reusing the cached prefix of its edits. exact: for a saved

@@ -380,16 +380,16 @@ def comfy_prompt(spec, node, *, prompt, assets, refine_from=''):
     if spec.get('upscale_factor', 2) != 2 and spec['two_pass'] and not spec['preview']:
         inputs['upscale_factor'] = '%g' % spec['upscale_factor']
     graph = {node: {'class_type': 'FreeVideoGenerate', 'inputs': inputs,
-                    '_meta': {'title': 'FreeVideo · ' + (spec.get('label') or 'Agent job')}}}
+                    '_meta': {'title': 'Eclipse · ' + (spec.get('label') or 'Agent job')}}}
     if assets:
         graph[node + 'm'] = {'class_type': 'FreeVideoMedia', 'inputs': {'assets': json.dumps(assets)},
-                             '_meta': {'title': 'FreeVideo · Media'}}
+                             '_meta': {'title': 'Eclipse · Media'}}
         inputs['media'] = [node + 'm', 0]
     if spec.get('loras'):
         graph[node + 'l'] = {'class_type': 'FreeVideoLoRAStack',
                              'inputs': {'adapters': json.dumps([dict(r, enabled=True) for r in spec['loras']
                                                                if r.get('enabled', True)])},
-                             '_meta': {'title': 'FreeVideo · LoRAs'}}
+                             '_meta': {'title': 'Eclipse · LoRAs'}}
         inputs['loras'] = [node + 'l', 0]
     return graph
 
@@ -399,4 +399,4 @@ def upscale_prompt(node, preview_video):
     inputs = dict(text='(continues the preview request)', width=1344, height=768, seconds=10., seed=0,
                   two_pass=True, base_steps=8, refine_steps=3, force_regenerate=False, preview=False,
                   refine_from=preview_video)
-    return {node: {'class_type': 'FreeVideoGenerate', 'inputs': inputs, '_meta': {'title': 'FreeVideo · Second pass'}}}
+    return {node: {'class_type': 'FreeVideoGenerate', 'inputs': inputs, '_meta': {'title': 'Eclipse · Second pass'}}}

@@ -101,7 +101,7 @@ MAX_FRAMES = 721 + 22
 
 
 class PromptEnvelope:
-    """Estimate literal, text-only FreeVideo requests up to the policy reference.
+    """Estimate literal, text-only Eclipse requests up to the policy reference.
 
     Count prepared weights, encoder and VAEs' mapped input AND rounded native
     storage. Cold preparation has no whole-task model and stays exclusive.

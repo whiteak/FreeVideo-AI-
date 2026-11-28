@@ -17,7 +17,7 @@ export function closeDialog(dialog) {
             dialog.onclose = null;
             // A view kept alive closes again later: its handler comes back once the browser's own close event is past.
             dialog.addEventListener('close', () => { if (dialog.onclose === null) dialog.onclose = handler; }, {once: true});
-            try { handler.call(dialog, new Event('close')); } catch (error) { console.error('FreeVideo view close:', error); }
+            try { handler.call(dialog, new Event('close')); } catch (error) { console.error('Eclipse view close:', error); }
         }
         return;
     }

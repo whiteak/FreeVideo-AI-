@@ -45,8 +45,8 @@ export const continueUse = () => t('Download now; a video or image being made ma
 export function pausedText(state) {
     return state.waitsFor === 'busy_video' ? t('Paused while a video generates; resumes after it, or continue now', '视频生成中，下载已暂停，之后自动继续，也可以现在继续下载')
         : state.waitsFor === 'busy_picture' ? t('Paused while an image is made; resumes after it, or continue now', '正在出图，下载已暂停，出完自动继续，也可以现在继续下载')
-        : state.waitsFor === 'busy_setup' ? t('Paused while FreeVideo installs, updates or cleans up; resumes after it', 'FreeVideo 正在安装、更新或清理，下载已暂停，结束后自动继续')
-        : t('Paused while FreeVideo uses the graphics card for another task; resumes after it, or continue now', 'FreeVideo 正在用显卡做别的任务，下载已暂停，之后自动继续，也可以现在继续下载');
+        : state.waitsFor === 'busy_setup' ? t('Paused while Eclipse installs, updates or cleans up; resumes after it', 'Eclipse 正在安装、更新或清理，下载已暂停，结束后自动继续')
+        : t('Paused while Eclipse uses the graphics card for another task; resumes after it, or continue now', 'Eclipse 正在用显卡做别的任务，下载已暂停，之后自动继续，也可以现在继续下载');
 }
 // Checking files already on disk: a percentage only when the engine reports one.
 export const verifyText = state => state.unknown ? t('Verifying', '正在校验') : t('Verifying {percent}%', '正在校验 {percent}%', { percent: Math.floor(state.fraction * 100) });

@@ -96,7 +96,7 @@ class CapabilityCache:
             self.logged = True
         # Exception messages can contain installation/report paths. Keep this
         # advisory failure private and never let it interfere with generation.
-        logging.warning('FreeVideo capabilities are unavailable; background estimation failed.')
+        logging.warning('Eclipse capabilities are unavailable; background estimation failed.')
 
     def refresh(self):
         """History/saved snapshot IO only; called in a thread, never the loop."""

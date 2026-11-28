@@ -240,13 +240,13 @@ def _follow(path):
     try:
         path.resolve(strict=True)
     except (OSError, RuntimeError) as error:
-        logging.warning('[FreeVideo] An image model link leads nowhere: %s', redacted_launcher_error(str(path)))
+        logging.warning('[Eclipse] An image model link leads nowhere: %s', redacted_launcher_error(str(path)))
         raise PackError('broken_link', link=str(path)) from error
 
 
 def _path(folder, name, *, kind='record'):
     """Where `name` lives in the pack. People keep models on another drive with a link, so the pack folder, its
-    subfolders and the weights ('weight') may be links that lead to something that exists. A file FreeVideo writes
+    subfolders and the weights ('weight') may be links that lead to something that exists. A file Eclipse writes
     itself is never a link: a partial or source record ('beside') sits in its weight's folder wherever that is, and
     any other record (receipts, ownership, the lock, logs, the notice) stays inside the pack folder itself.
     Names never leave the pack: _relative refuses absolute paths and '..'."""
@@ -259,7 +259,7 @@ def _path(folder, name, *, kind='record'):
         if not _linked(path):
             continue
         if index == len(relative.parts) - 1 and kind != 'weight':
-            logging.warning('[FreeVideo] An image model record file is a link: %s', redacted_launcher_error(str(path)))
+            logging.warning('[Eclipse] An image model record file is a link: %s', redacted_launcher_error(str(path)))
             raise PackError('unsafe_path', link=str(path))
         _follow(path)
     if kind == 'record' and len(relative.parts) > 1:
@@ -268,7 +268,7 @@ def _path(folder, name, *, kind='record'):
         except (OSError, RuntimeError):
             inside = False
         if not inside:
-            logging.warning('[FreeVideo] An image model record folder leads outside the pack: %s', redacted_launcher_error(str(path)))
+            logging.warning('[Eclipse] An image model record folder leads outside the pack: %s', redacted_launcher_error(str(path)))
             raise PackError('unsafe_path', link=str(path.parent))
     return path
 
@@ -428,7 +428,7 @@ def _write_notice(folder, owned, *, group='image'):
         notice.write_bytes(NOTICES[_notice_key(group)][1])
         _own(folder, owned, notice)
     except Exception as error:
-        logging.warning('[FreeVideo] Could not write the image model notice: %s', redacted_launcher_error(error))
+        logging.warning('[Eclipse] Could not write the image model notice: %s', redacted_launcher_error(error))
 
 
 _RECHECKS = {}
@@ -490,7 +490,7 @@ def _recheck(root, folder, pending):
             save(_path(folder, LEDGER), ledger)
     except Exception as error:
         published = []
-        logging.warning('[FreeVideo] Could not re-check the image model files: %s', redacted_launcher_error(error))
+        logging.warning('[Eclipse] Could not re-check the image model files: %s', redacted_launcher_error(error))
     finally:
         with _RECHECK_GUARD:
             for name in pending:
@@ -633,7 +633,7 @@ def engine_state(engine_root):
     """Whether something holds the installation lease that repair and remove need first.
 
     'running' when the lease is held, 'stopped' when it is free, 'unknown' when it cannot be told.
-    Holding it is not the same as FreeVideo being open: an open, idle FreeVideo does not hold it. It is held
+    Holding it is not the same as Eclipse being open: an open, idle Eclipse does not hold it. It is held
     while a video or picture is made, while an idle image session waits for the next picture (45 s, up to
     10 min after mostly pictures), during an installation or update, while the background compile runs and
     while the prompt model, dubbing or stems run. It asks the same lease those actions take, without
@@ -1097,7 +1097,7 @@ def repair(root=None, progress=None, check=None, *, engine_root=None, group='ima
 
 
 def _kinds(group):
-    """The files of a group FreeVideo may remove, by kind for _path: each weight and what resumes its download."""
+    """The files of a group Eclipse may remove, by kind for _path: each weight and what resumes its download."""
     kinds = {}
     for row in rows(group=group):
         if not row.get('shared'):

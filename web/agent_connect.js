@@ -16,10 +16,10 @@ export function connectionLabel(agent, t) {
 
 export function connectionSentence(address, t) {
     const url = address + '/freevideo/agent';
-    return t('Connect to FreeVideo: open {url} and follow the instructions.', '请连接 FreeVideo：打开 {url} 并按说明操作。', { url });
+    return t('Connect to Eclipse: open {url} and follow the instructions.', '请连接 Eclipse：打开 {url} 并按说明操作。', { url });
 }
 
-// Whether this FreeVideo has the Agent interface on: 'on', 'off' or 'unknown'. Only an explicit `enabled: false`
+// Whether this Eclipse has the Agent interface on: 'on', 'off' or 'unknown'. Only an explicit `enabled: false`
 // is off; a check that failed (no answer, an error status, an unreadable reply) is not an answer.
 export async function agentInterfaceState(api) {
     try {
@@ -34,7 +34,7 @@ export async function agentInterfaceState(api) {
 // reply could not be read, or it held no address. The page cannot tell these apart for the user, and in each the
 // way back is the same.
 export function noAnswerHint(kind, t) {
-    return kind ? t('Could not reach FreeVideo on this computer. Make sure it is still running, then retry.', '无法连接本机的 FreeVideo 服务，请确认它仍在运行后重试。') : '';
+    return kind ? t('Could not reach Eclipse on this computer. Make sure it is still running, then retry.', '无法连接本机的 Eclipse 服务，请确认它仍在运行后重试。') : '';
 }
 
 // How this page was opened, as a kind only: a computer or network name does not belong in a report that may be
@@ -48,18 +48,18 @@ export function addressKind(host) {
 
 // What to tell the user when the address lookup is refused: only refusals that say what to do are named; any other
 // failure keeps the plain "could not get address". A page opened by any address but localhost is refused for that
-// alone when FreeVideo runs on the same computer, so then the hint names the localhost address to open, as plain
+// alone when Eclipse runs on the same computer, so then the hint names the localhost address to open, as plain
 // text: a link would not open on another device.
 export function localhostAddress(location = globalThis.location) {
     return location?.protocol ? `${location.protocol}//localhost${location.port ? ':' + location.port : ''}` : '';
 }
 
 export function refusalHint(code, t, kind = addressKind(globalThis.location?.hostname), address = localhostAddress()) {
-    if (code === 'origin_forbidden') return t('Open FreeVideo on this computer with a localhost address, then retry.', '请在本机使用 localhost 地址打开 FreeVideo，然后重试。');
+    if (code === 'origin_forbidden') return t('Open Eclipse on this computer with a localhost address, then retry.', '请在本机使用 localhost 地址打开 Eclipse，然后重试。');
     if (code === 'local_only') return kind && kind !== 'localhost' && address
-        ? t('On the computer that runs FreeVideo, open {address}, then retry.', '请在运行 FreeVideo 的电脑上打开 {address}，然后重试。', { address })
-        : t('An assistant can only be connected on the computer that runs FreeVideo.', '只能在运行 FreeVideo 的电脑上连接助手。');
-    if (code === 'not_ready') return t('The assistant connection service is not ready. Restart FreeVideo, then retry.', '助手连接服务尚未就绪，请重启 FreeVideo 后重试。');
+        ? t('On the computer that runs Eclipse, open {address}, then retry.', '请在运行 Eclipse 的电脑上打开 {address}，然后重试。', { address })
+        : t('An assistant can only be connected on the computer that runs Eclipse.', '只能在运行 Eclipse 的电脑上连接助手。');
+    if (code === 'not_ready') return t('The assistant connection service is not ready. Restart Eclipse, then retry.', '助手连接服务尚未就绪，请重启 Eclipse 后重试。');
     return '';
 }
 
@@ -84,17 +84,17 @@ export function linkReason(agent, t) {
         text: t('You disconnected the assistant.', '已断开与助手的连接。'),
         next: t('To connect it again, choose Reconnect, or ask it in its own window to continue.', '如需重新连接，请点“重新连接”，或在助手的窗口中让它继续。')};
     if (agent?.reason === 'refused') return {reason: 'refused', report: true,
-        text: t('The assistant used a connection key that is no longer valid, so FreeVideo refused it.', '助手使用的连接密钥已失效，FreeVideo 拒绝了它。'),
+        text: t('The assistant used a connection key that is no longer valid, so Eclipse refused it.', '助手使用的连接密钥已失效，Eclipse 拒绝了它。'),
         next: t('Choose Reconnect and paste the steps to it again. If it is still refused, restart the assistant.', '请点“重新连接”，把连接说明再粘贴给它一次；仍被拒绝时，请重启助手。')};
     if (agent?.reason === 'quiet') {
         const minutes = Math.max(10, Math.round((Number(agent.quiet_s) || 0) / 60)), hours = Math.round(minutes / 60);
         const span = minutes >= 120 ? t('{hours} hours', '{hours} 小时', { hours }) : t('{minutes} minutes', '{minutes} 分钟', { minutes });
         return {reason: 'quiet', report: false,
-            text: t('The assistant has not contacted FreeVideo for {span}; it may have finished or been closed.', '助手已有 {span}没有联系 FreeVideo，可能已经结束或被关闭。', { span }),
+            text: t('The assistant has not contacted Eclipse for {span}; it may have finished or been closed.', '助手已有 {span}没有联系 Eclipse，可能已经结束或被关闭。', { span }),
             next: reconnect};
     }
     if (agent?.reason === 'never') return {reason: 'never', report: false,
-        text: t('No assistant has connected since FreeVideo started.', 'FreeVideo 启动后还没有助手连接。'), next: reconnect};
+        text: t('No assistant has connected since Eclipse started.', 'Eclipse 启动后还没有助手连接。'), next: reconnect};
     return {reason: 'unknown', report: true, text: t('The assistant is not connected.', '助手未连接。'), next: reconnect};
 }
 

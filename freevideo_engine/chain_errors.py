@@ -13,9 +13,9 @@ ROUTE = {
                 '长视频请求无效。请刷新页面后重试；如果再次出现，请发送诊断报告。'),
     'disk_full': ('The disk is full, so the long video could not be saved. Free up disk space and try again.',
                   '磁盘空间不足，长视频没能保存。请清理磁盘空间后重试。'),
-    'storage_unreadable': ('FreeVideo could not read or write the long video files. Check that the FreeVideo folder '
+    'storage_unreadable': ('Eclipse could not read or write the long video files. Check that the Eclipse folder '
                            'can be opened and is not read-only, then try again.',
-                           '长视频文件读写失败。请确认 FreeVideo 文件夹可以打开且不是只读，然后重试。'),
+                           '长视频文件读写失败。请确认 Eclipse 文件夹可以打开且不是只读，然后重试。'),
     'unknown_chain': ('This long video was not found. Reload the page to see the current list.',
                       '找不到这个长视频。请刷新页面查看当前列表。'),
     # The failure card shows it in its own words (web/error_panel.js REDO_CHANGED).
@@ -25,19 +25,19 @@ ROUTE = {
                              '仍需要按现在的设置生成时，再点一次“从这段重新生成”。'),
 }
 HOST_UNAVAILABLE = {
-    'after': ('Extend is not available in this version. Update FreeVideo and try again.',
-              '当前版本不支持接着生成。请更新 FreeVideo 后重试。'),
-    'other': ('Generating a new part before an existing part is not available in this version. Update FreeVideo and try again.',
-              '当前版本不支持在已有片段前面生成新的一段。请更新 FreeVideo 后重试。'),
+    'after': ('Extend is not available in this version. Update Eclipse and try again.',
+              '当前版本不支持接着生成。请更新 Eclipse 后重试。'),
+    'other': ('Generating a new part before an existing part is not available in this version. Update Eclipse and try again.',
+              '当前版本不支持在已有片段前面生成新的一段。请更新 Eclipse 后重试。'),
 }
 BLOCK = {
     'generation_failed': ('This part could not be generated. Continue from this part; if it fails again, send a report.',
                           '这一段没能生成。请从这段继续；如果再次失败，请发送诊断报告。'),
     'disk_full': ('The disk is full, so this part could not be saved. Free up disk space, then continue from this part.',
                   '磁盘空间不足，这一段没能保存。请清理磁盘空间，然后从这段继续。'),
-    'storage_unreadable': ('FreeVideo could not read or write the long video files, so this part did not start. '
-                           'Check that the FreeVideo folder can be opened and is not read-only, then continue from this part.',
-                           '长视频文件读写失败，这一段没能开始。请确认 FreeVideo 文件夹可以打开且不是只读，然后从这段继续。'),
+    'storage_unreadable': ('Eclipse could not read or write the long video files, so this part did not start. '
+                           'Check that the Eclipse folder can be opened and is not read-only, then continue from this part.',
+                           '长视频文件读写失败，这一段没能开始。请确认 Eclipse 文件夹可以打开且不是只读，然后从这段继续。'),
 }
 JOIN = {
     'join_failed': ('The parts could not be joined into one video. Try again; if it fails again, send a report.',

@@ -4,7 +4,7 @@ import QtQuick.Layouts
 
 ApplicationWindow {
     id: win
-    title: unifiedChrome ? "" : "FreeVideo"
+    title: unifiedChrome ? "" : "Eclipse Image and Video Creator"
     readonly property bool unifiedChrome: Qt.platform.os === "osx"
     color: unifiedChrome ? theme.canvas : theme.bg
     width: 1280; height: 860
@@ -170,7 +170,7 @@ ApplicationWindow {
         if (!d) return ""
         var named = {name: d.name, free: d.free, need: d.need}
         if (d.problem === "fat32") return t("\"{name}\" can't store files over 4 GB. Choose another disk.", "“{name}” 不能存放 4 GB 以上的文件，请换一块硬盘。", named)
-        if (d.problem === "exfat") return t("\"{name}\" can't hold FreeVideo. Choose another disk.", "“{name}” 不能安装 FreeVideo，请换一块硬盘。", named)
+        if (d.problem === "exfat") return t("\"{name}\" can't hold Eclipse. Choose another disk.", "“{name}” 不能安装 Eclipse，请换一块硬盘。", named)
         if (d.problem === "disconnected") return t("\"{name}\" is not connected. Connect it to continue.", "“{name}”没有连接，请接上这块硬盘。", named)
         if (d.problem === "read-only") return t("\"{name}\" is read-only. Choose another disk.", "“{name}” 不能写入，请换一块硬盘。", named)
         if (d.short) return t("\"{name}\" has {free} available; this installation needs about {need}.", "“{name}”可用 {free}，这次安装需要约 {need}。", named)
@@ -198,7 +198,7 @@ ApplicationWindow {
         if (u.status === "available") return t("A faster model is available for your GPU", "有适合这张显卡的更快模型")
         if (u.status === "low-disk") return t("Not enough disk space for the faster model", "磁盘空间不够，暂时无法升级到更快的模型")
         if (u.status === "downloading") return t("Downloading the faster model", "正在下载更快的模型")
-        if (u.status === "downloaded" && u.waiting === "comfy") return t("Switching after FreeVideo is closed", "关闭 FreeVideo 后切换")
+        if (u.status === "downloaded" && u.waiting === "comfy") return t("Switching after Eclipse is closed", "关闭 Eclipse 后切换")
         if (u.status === "downloaded" || (u.status === "switching" && !s.busy)) return t("Switching after the current video", "当前视频完成后切换")
         if (u.status === "switching") return t("Switching to the faster model", "正在切换到更快的模型")
         if (u.status === "releasing") return u.waiting ? t("Removing the old model after the current video", "当前视频完成后删除旧模型") : t("Removing the old model", "正在删除旧模型")
@@ -211,10 +211,10 @@ ApplicationWindow {
         return ""
     }
     function upgradeBlocker(code) {
-        if (code === "prepared-folder-redirected") return t("The model folder is linked to another location, and FreeVideo never deletes through a link.", "模型文件夹被链接到了别的位置，FreeVideo 不会通过链接删除文件。")
+        if (code === "prepared-folder-redirected") return t("The model folder is linked to another location, and Eclipse never deletes through a link.", "模型文件夹被链接到了别的位置，Eclipse 不会通过链接删除文件。")
         if (code === "unexpected-active-variant") return t("The faster model is not in use, so the old model is kept.", "没有在用更快的模型，旧模型保留。")
         if (code === "active-variant-incomplete") return t("The faster model's files are incomplete, so the old model is kept.", "更快的模型文件不完整，旧模型保留。")
-        return t("The model in use is not a standard FreeVideo model, so nothing was deleted.", "当前使用的模型不是标准安装的模型，为安全起见没有删除任何文件。")
+        return t("The model in use is not a standard Eclipse model, so nothing was deleted.", "当前使用的模型不是标准安装的模型，为安全起见没有删除任何文件。")
     }
     function upgradeCause(code, step) {
         if (code === "disk") return t("There is not enough free disk space for the model files. Free some space first.", "磁盘可用空间不足，放不下模型文件。请先腾出空间。")
@@ -240,19 +240,19 @@ ApplicationWindow {
                         : t(", then removes the old model and frees about {size}.", "，完成后删除旧模型，释放约 {size}。", {size: bytes(u.release_bytes)}))
                 + t(" You can keep generating while it downloads.", "下载期间可以继续生成。")
         if (u.status === "low-disk")
-            return t("It needs about {required} free; {free} is free. Clean the download cache in Settings → Storage or free some space, then reopen FreeVideo.",
-                     "需要约 {required} 可用空间，目前剩 {free}。可以在 设置 → 存储 清理下载缓存，或者腾出空间后重新打开 FreeVideo。",
+            return t("It needs about {required} free; {free} is free. Clean the download cache in Settings → Storage or free some space, then reopen Eclipse.",
+                     "需要约 {required} 可用空间，目前剩 {free}。可以在 设置 → 存储 清理下载缓存，或者腾出空间后重新打开 Eclipse。",
                      {required: bytes(u.required_bytes), free: bytes(u.free_bytes)})
         if (u.status === "downloading")
             return u.progress && u.progress.unit === "bytes" && u.progress.total ? t("{done} / {total} · you can keep generating", "{done} / {total} · 可以继续生成", {done: bytes(u.progress.done), total: bytes(u.progress.total)})
                                                                                    : t("Checking the download…", "正在检查下载内容…")
         if (u.status === "downloaded" && u.waiting === "comfy")
-            return t("FreeVideo was not started by the launcher, so it cannot be restarted automatically. Once it is closed, the switch starts; until then the current model keeps working.",
-                     "FreeVideo 不是由启动器启动的，无法自动重启。关闭后会自动开始切换，在此之前当前模型照常可用。")
+            return t("Eclipse was not started by the launcher, so it cannot be restarted automatically. Once it is closed, the switch starts; until then the current model keeps working.",
+                     "Eclipse 不是由启动器启动的，无法自动重启。关闭后会自动开始切换，在此之前当前模型照常可用。")
         if (u.status === "downloaded" || u.status === "switching")
             return t("Generation pauses for about 2 minutes during the switch; settings and videos are kept.", "切换期间暂停生成约 2 分钟，设置和视频会保留。")
         if (u.status === "releasable" && u.in_use === "int8_convrot")
-            return t("FreeVideo now uses the faster model. Removing the old model frees about {size}; only its own files are removed.",
+            return t("Eclipse now uses the faster model. Removing the old model frees about {size}; only its own files are removed.",
                      "已在用更快的模型，删除旧模型可释放约 {size}，只删除旧模型自己的文件。", {size: bytes(u.release_bytes)})
         if (u.status === "releasable")
             return t("Removing unused model files frees about {size}; the model in use is not touched.", "删除未使用的模型文件可释放约 {size}，正在使用的模型不受影响。",
@@ -272,18 +272,18 @@ ApplicationWindow {
         var phase = s.update.phase
         if (phase === "downloading") return t("Downloading update {percent}", "正在下载更新 {percent}", {percent: percent(s.update.progress)})
         if (phase === "waiting") return t("Updating after the current video finishes", "当前视频生成完成后自动更新")
-        if (phase === "restarting") return t("Restarting FreeVideo…", "正在重启 FreeVideo…")
+        if (phase === "restarting") return t("Restarting Eclipse…", "正在重启 Eclipse…")
         if (phase === "engine") return t("Updating…", "正在更新…")
         if (phase === "checking") return t("Checking for updates…", "正在检查更新…")
         if (s.update.status === "error") return t("Update incomplete", "更新未完成")
-        if (s.update.candidate) return t("FreeVideo {version} is available", "FreeVideo {version} 可以更新", {version: releaseVersion(s.update.candidate)})
+        if (s.update.candidate) return t("Eclipse {version} is available", "Eclipse {version} 可以更新", {version: releaseVersion(s.update.candidate)})
         return t("New engine {version} is ready", "新版引擎 {version} 已就绪", {version: releaseVersion(currentRelease)})
     }
     function updateExplanation() {
         var phase = s.update.phase
-        if (phase === "downloading") return t("FreeVideo restarts when the download finishes. Models and settings are kept.", "下载完成后自动重启，模型和设置都会保留。")
-        if (phase === "waiting") return t("Running videos are not interrupted. FreeVideo restarts on its own afterwards.", "不会中断正在生成的视频，完成后自动重启更新。")
-        if (phase === "restarting" || phase === "engine") return t("FreeVideo restarts once; open pages refresh automatically.", "FreeVideo 会重启一次，已打开的页面会自动刷新。")
+        if (phase === "downloading") return t("Eclipse restarts when the download finishes. Models and settings are kept.", "下载完成后自动重启，模型和设置都会保留。")
+        if (phase === "waiting") return t("Running videos are not interrupted. Eclipse restarts on its own afterwards.", "不会中断正在生成的视频，完成后自动重启更新。")
+        if (phase === "restarting" || phase === "engine") return t("Eclipse restarts once; open pages refresh automatically.", "Eclipse 会重启一次，已打开的页面会自动刷新。")
         if (phase === "checking") return ""
         if (s.update.status === "error" && s.update.error) return s.update.error
         if (s.update.candidate && s.update.manual) return t("Current version {version}. Download it and replace this version; models and settings are kept.",
@@ -303,7 +303,7 @@ ApplicationWindow {
         if (needsPackages) return t("Choose offline packages", "选择离线包")
         if (s.page === "models") return usingRuntime && !offlineSelected ? t("Download models & continue", "下载模型并继续") : t("Check & continue", "检查并继续")
         if (updateFirst) return t("Update & launch", "更新并启动")
-        if (s.page === "launcher") return s.status === "open" ? t("Open FreeVideo", "打开 FreeVideo") : s.status === "restart-required" ? t("Connect again", "重新连接") : t("Launch FreeVideo", "启动 FreeVideo")
+        if (s.page === "launcher") return s.status === "open" ? t("Open Eclipse", "打开 Eclipse") : s.status === "restart-required" ? t("Connect again", "重新连接") : t("Launch Eclipse", "启动 Eclipse")
         return s.status === "review" ? t("Install & launch", "安装并启动") : s.status === "restart-required" ? t("Connect again", "重新连接") : t("Check & resume", "检查并继续")
     }
     function retryText() {
@@ -369,7 +369,7 @@ ApplicationWindow {
         Rectangle { width: 1; color: theme.border; anchors.right: parent.right; height: parent.height }
         ColumnLayout {
             anchors.fill: parent; anchors.margins: win.narrow ? 8 : 16; spacing: 4
-            // The FreeVideo wordmark, as in the creative workspace header.
+            // The Eclipse wordmark, as in the creative workspace header.
             Image {
                 objectName: "brandWordmark"
                 source: "../assets/wordmark.png"; fillMode: Image.PreserveAspectFit
@@ -377,7 +377,7 @@ ApplicationWindow {
                 Layout.preferredWidth: 150; Layout.preferredHeight: 25
                 Layout.topMargin: 14; Layout.leftMargin: 6; Layout.bottomMargin: 31
                 smooth: true; mipmap: true
-                Accessible.role: Accessible.Graphic; Accessible.name: "FreeVideo"
+                Accessible.role: Accessible.Graphic; Accessible.name: "Eclipse Image and Video Creator"
             }
             FNav { objectName: "navLauncher"; glyph: "play"; text: t("Launch", "启动"); iconOnly: win.narrow; Layout.fillWidth: true; selected: s.page === "launcher"; enabled: s.selected && !s.busy; onClicked: backend.action("launcher", false) }
             FNav { objectName: "navSetup"; glyph: "download"; text: t("Installation", "安装"); iconOnly: win.narrow; Layout.fillWidth: true; selected: s.page !== "launcher"; enabled: s.can_manage && !s.portable; onClicked: backend.action("setup", false) }
@@ -530,7 +530,7 @@ ApplicationWindow {
                 Item { height: shortWindow ? 0 : 16 }
                 ColumnLayout {
                     Layout.fillWidth: true; spacing: 8; Layout.bottomMargin: shortWindow ? 0 : 10
-                    FText { objectName: "pageHeading"; horizontalAlignment: Text.AlignHCenter; text: s.page === "launcher" ? t("Your workspace", "工作空间") : s.page === "comfy" ? t("Set up FreeVideo", "安装 FreeVideo") : s.page === "models" ? t("Set up your models", "准备模型") : s.status === "review" ? t("Ready to install", "确认安装") : s.busy ? t("Setting things up", "正在准备 FreeVideo") : t("Continue your setup", "继续安装"); font.pixelSize: win.compact ? 26 : theme.hero; font.weight: Font.DemiBold; font.letterSpacing: -0.6; Layout.fillWidth: true }
+                    FText { objectName: "pageHeading"; horizontalAlignment: Text.AlignHCenter; text: s.page === "launcher" ? t("Your workspace", "工作空间") : s.page === "comfy" ? t("Set up Eclipse", "安装 Eclipse") : s.page === "models" ? t("Set up your models", "准备模型") : s.status === "review" ? t("Ready to install", "确认安装") : s.busy ? t("Setting things up", "正在准备 Eclipse") : t("Continue your setup", "继续安装"); font.pixelSize: win.compact ? 26 : theme.hero; font.weight: Font.DemiBold; font.letterSpacing: -0.6; Layout.fillWidth: true }
                     FText { objectName: "actionNotice"; visible: !!s.action_notice; text: s.action_notice || ""; color: theme.muted; Layout.fillWidth: true; horizontalAlignment: Text.AlignHCenter }
                     RowLayout {
                         objectName: "mainPageAddress"; visible: s.action_notice_key === "update_page_failed" && !!(s.update && s.update.release_page); Layout.fillWidth: true; spacing: 8
@@ -663,7 +663,7 @@ ApplicationWindow {
                                 FToolTip { objectName: "installationPathTooltip"; text: parent.text; delay: 500; visible: parent.hovered && parent.text.length > 0 && !win.dialogShown } }
                             FButton { objectName: "installationBrowse"; text: t("Browse…", "浏览…"); enabled: s.can_manage; implicitHeight: theme.height + 4; onClicked: backend.browse(s.form.new_comfy ? "destination" : "comfy") }
                         }
-                        FText { visible: !s.form.new_comfy; text: t("Uses your existing Python when available. A separate environment loads only FreeVideo.", "优先使用已有 Python；独立环境仅加载 FreeVideo。"); color: theme.muted; font.pixelSize: theme.micro; Layout.fillWidth: true }
+                        FText { visible: !s.form.new_comfy; text: t("Uses your existing Python when available. A separate environment loads only Eclipse.", "优先使用已有 Python；独立环境仅加载 Eclipse。"); color: theme.muted; font.pixelSize: theme.micro; Layout.fillWidth: true }
                         RowLayout {
                             objectName: "installDisk"; visible: !!disk; Layout.fillWidth: true; spacing: 8
                             FIcon { kind: "disk"; ink: disk && (disk.problem || disk.short) ? theme.danger : theme.muted; Layout.preferredWidth: 16; Layout.preferredHeight: 16; Layout.alignment: Qt.AlignVCenter }
@@ -919,7 +919,7 @@ ApplicationWindow {
                             Layout.fillWidth: true; columns: win.narrow ? 1 : 2; columnSpacing: 16; rowSpacing: win.narrow ? 2 : 8
                             FText { text: "ComfyUI"; color: theme.muted; font.pixelSize: theme.micro + 1 }
                             FText { text: s.review.comfy; font.pixelSize: theme.micro + 1; Layout.fillWidth: true; elide: Text.ElideMiddle; maximumLineCount: 1; wrapMode: Text.NoWrap }
-                            FText { text: "FreeVideo"; color: theme.muted; font.pixelSize: theme.micro + 1 }
+                            FText { text: "Eclipse"; color: theme.muted; font.pixelSize: theme.micro + 1 }
                             FText { text: s.review.engine; font.pixelSize: theme.micro + 1; Layout.fillWidth: true; elide: Text.ElideMiddle; maximumLineCount: 1; wrapMode: Text.NoWrap }
                         }
                         Rectangle { Layout.fillWidth: true; height: 1; color: theme.border }
@@ -1001,7 +1001,7 @@ ApplicationWindow {
                             }
                             FButton { objectName: "cancelUpdateButton"; visible: s.update.phase === "waiting"; flat: true; text: t("Cancel update", "取消更新"); onClicked: { manualUpdate = false; backend.dismissUpdate() } }
                             FButton {
-                                // Repair and opening FreeVideo come first; the banner's colour already marks the update.
+                                // Repair and opening Eclipse come first; the banner's colour already marks the update.
                                 id: engineUpdate; objectName: "engineUpdateButton"; primary: !s.repair_offered && s.status !== "open" && !(updateFirst && !s.retry_kind); visible: !s.update.phase; enabled: !s.busy
                                 text: s.update.status === "error" ? t("Retry update", "重试更新") : s.update.status === "ready" && s.update.candidate ? t("Restart & update", "重启并更新") : s.update.manual && s.update.candidate ? t("Download ↗", "去下载 ↗") : t("Update now", "立即更新")
                                 onClicked: { manualUpdate = !!s.update.candidate && !s.update.manual; backend.update("") }
@@ -1068,10 +1068,10 @@ ApplicationWindow {
                             ColumnLayout {
                                 Layout.fillWidth: true; spacing: 6
                                 // A failed start stays failed while another task (an import, a cleanup) runs: the controller's own tasks clear it first.
-                                FText { objectName: "statusTitle"; text: s.status === "open" ? t("FreeVideo is ready", "FreeVideo 已就绪") : s.status === "failed" ? t("Startup interrupted", "启动未完成") : s.busy ? t("Starting FreeVideo", "正在启动 FreeVideo") : s.status === "restart-required" && s.engine_exit_text ? t("FreeVideo stopped", "FreeVideo 已停止") : s.status === "restart-required" ? t("Restart FreeVideo", "请重启 FreeVideo") : t("Ready to launch", "准备就绪"); font.pixelSize: theme.section + 2; font.weight: Font.DemiBold; Layout.fillWidth: true }
-                                FText { objectName: "statusDetail"; text: s.status === "open" ? s.url : s.status === "restart-required" && s.engine_exit_text ? s.engine_exit_text : s.status === "restart-required" ? t("Restart FreeVideo after the update, then select \"Connect again\".", "更新后需重启 FreeVideo，再点“重新连接”。") : s.status === "failed" ? t("FreeVideo did not start. See the message above.", "FreeVideo 未能启动，原因见上方。") : t("Your models and environment are connected.", "已连接模型与运行环境。"); color: theme.muted; Layout.fillWidth: true }
-                                FText { objectName: "portMovedNote"; visible: s.status === "open" && s.port_from > 0; text: t("Port %1 is in use by another program, so FreeVideo now uses port %2 and will keep using this address.", "端口 %1 已被其他程序占用，FreeVideo 改用端口 %2，以后也使用这个地址。").arg(s.port_from).arg(s.port_to); font.pixelSize: 13; color: theme.muted; wrapMode: Text.WordWrap; Layout.fillWidth: true; Layout.topMargin: -2 }
-                                FText { objectName: "pluginScopedNote"; visible: s.status === "open" && s.plugin_scoped; text: t("Some installed plugins are not compatible with FreeVideo, so only FreeVideo was loaded this time.", "部分已装的插件与 FreeVideo 不兼容，这次只载入了 FreeVideo。"); font.pixelSize: 13; color: theme.muted; wrapMode: Text.WordWrap; Layout.fillWidth: true; Layout.topMargin: -2 }
+                                FText { objectName: "statusTitle"; text: s.status === "open" ? t("Eclipse is ready", "Eclipse 已就绪") : s.status === "failed" ? t("Startup interrupted", "启动未完成") : s.busy ? t("Starting Eclipse", "正在启动 Eclipse") : s.status === "restart-required" && s.engine_exit_text ? t("Eclipse stopped", "Eclipse 已停止") : s.status === "restart-required" ? t("Restart Eclipse", "请重启 Eclipse") : t("Ready to launch", "准备就绪"); font.pixelSize: theme.section + 2; font.weight: Font.DemiBold; Layout.fillWidth: true }
+                                FText { objectName: "statusDetail"; text: s.status === "open" ? s.url : s.status === "restart-required" && s.engine_exit_text ? s.engine_exit_text : s.status === "restart-required" ? t("Restart Eclipse after the update, then select \"Connect again\".", "更新后需重启 Eclipse，再点“重新连接”。") : s.status === "failed" ? t("Eclipse did not start. See the message above.", "Eclipse 未能启动，原因见上方。") : t("Your models and environment are connected.", "已连接模型与运行环境。"); color: theme.muted; Layout.fillWidth: true }
+                                FText { objectName: "portMovedNote"; visible: s.status === "open" && s.port_from > 0; text: t("Port %1 is in use by another program, so Eclipse now uses port %2 and will keep using this address.", "端口 %1 已被其他程序占用，Eclipse 改用端口 %2，以后也使用这个地址。").arg(s.port_from).arg(s.port_to); font.pixelSize: 13; color: theme.muted; wrapMode: Text.WordWrap; Layout.fillWidth: true; Layout.topMargin: -2 }
+                                FText { objectName: "pluginScopedNote"; visible: s.status === "open" && s.plugin_scoped; text: t("Some installed plugins are not compatible with Eclipse, so only Eclipse was loaded this time.", "部分已装的插件与 Eclipse 不兼容，这次只载入了 Eclipse。"); font.pixelSize: 13; color: theme.muted; wrapMode: Text.WordWrap; Layout.fillWidth: true; Layout.topMargin: -2 }
                             }
                         }
                         FMeter { objectName: "statusMeter"; visible: s.busy && s.status !== "failed"; Layout.fillWidth: true; fraction: win.fraction(s.overall); active: visible }
@@ -1104,7 +1104,7 @@ ApplicationWindow {
                             // A row appears only when it has a value.
                             FText { visible: !!s.form.comfy; text: "ComfyUI"; color: theme.muted; font.pixelSize: theme.micro + 1 }
                             FText { visible: !!s.form.comfy; text: s.form.comfy; font.pixelSize: theme.micro + 1; Layout.fillWidth: true; elide: Text.ElideMiddle; maximumLineCount: 1 }
-                            FText { visible: !!s.form.engine; text: "FreeVideo"; color: theme.muted; font.pixelSize: theme.micro + 1 }
+                            FText { visible: !!s.form.engine; text: "Eclipse"; color: theme.muted; font.pixelSize: theme.micro + 1 }
                             FText { visible: !!s.form.engine; text: s.form.engine; font.pixelSize: theme.micro + 1; Layout.fillWidth: true; elide: Text.ElideMiddle; maximumLineCount: 1 }
                         }
                         RowLayout {
@@ -1431,7 +1431,7 @@ ApplicationWindow {
                             Layout.fillWidth: true; title: t("Local network", "局域网")
                             FSwitch { objectName: "lanAccessSwitch"; Layout.fillWidth: true; text: t("LAN access", "局域网访问"); checked: !!s.form.lan_access; enabled: !s.busy; onToggled: backend.edit("lan_access", checked) }
                             FText { objectName: "lanAccessMessage"; text: s.lan_message || ""; visible: !!text; color: theme.muted; font.pixelSize: theme.micro; Layout.fillWidth: true }
-                            FText { objectName: "lanAccessHint"; text: s.lan_password_set ? t("When on, other devices on the same network can open FreeVideo with the link below and enter the password the first time.", "开启后，同一网络中的其他设备可以用下面的链接打开 FreeVideo，第一次打开时要输入密码。") : t("When on, other devices on the same network can open FreeVideo with the link below. Anyone with the link can use it, so keep it private.", "开启后，同一网络中的其他设备可以用下面的链接打开 FreeVideo。拿到链接的人都能使用，请勿公开。"); color: theme.muted; font.pixelSize: theme.micro; Layout.fillWidth: true }
+                            FText { objectName: "lanAccessHint"; text: s.lan_password_set ? t("When on, other devices on the same network can open Eclipse with the link below and enter the password the first time.", "开启后，同一网络中的其他设备可以用下面的链接打开 Eclipse，第一次打开时要输入密码。") : t("When on, other devices on the same network can open Eclipse with the link below. Anyone with the link can use it, so keep it private.", "开启后，同一网络中的其他设备可以用下面的链接打开 Eclipse。拿到链接的人都能使用，请勿公开。"); color: theme.muted; font.pixelSize: theme.micro; Layout.fillWidth: true }
                             // The Chinese line breaks after the comma, keeping the second half whole.
                             Flow {
                                 objectName: "lanFirewallHint"
@@ -1481,7 +1481,7 @@ ApplicationWindow {
                                     ColumnLayout {
                                         Layout.fillWidth: true; spacing: 2
                                         FText { text: t("Password", "密码"); Layout.fillWidth: true }
-                                        FText { text: t("Optional. Once set, other devices enter it the first time they open FreeVideo. Not needed on this computer.", "可选。设置后，其他设备第一次打开时要输入，本机不用。"); color: theme.muted; font.pixelSize: theme.micro; Layout.fillWidth: true }
+                                        FText { text: t("Optional. Once set, other devices enter it the first time they open Eclipse. Not needed on this computer.", "可选。设置后，其他设备第一次打开时要输入，本机不用。"); color: theme.muted; font.pixelSize: theme.micro; Layout.fillWidth: true }
                                     }
                                     RowLayout {
                                         visible: !lanPasswordEditing
@@ -1624,7 +1624,7 @@ ApplicationWindow {
                             Layout.fillWidth: true; title: t("Server address", "服务地址")
                             FField { objectName: "listenAddress"; Layout.fillWidth: true; value: s.form.url; enabled: !s.form.lan_access; onEditingFinished: backend.edit("url", text) }
                             FText { objectName: "addressError"; visible: s.field_error.key === "url"; text: visible ? s.field_error.message : ""; color: theme.danger; font.pixelSize: theme.micro; Layout.fillWidth: true }
-                            FText { objectName: "listenAddressHint"; text: s.lan_password_set ? t("With 0.0.0.0 or this computer's LAN IP, devices on the same network can open FreeVideo without the password.", "填 0.0.0.0 或本机的局域网 IP 后，同一网络中的设备不用密码就能打开 FreeVideo。") : t("With 0.0.0.0 or this computer's LAN IP, devices on the same network can open FreeVideo without the access link.", "填 0.0.0.0 或本机的局域网 IP 后，同一网络中的设备不需要访问链接就能打开 FreeVideo。"); color: theme.muted; font.pixelSize: theme.micro; Layout.fillWidth: true }
+                            FText { objectName: "listenAddressHint"; text: s.lan_password_set ? t("With 0.0.0.0 or this computer's LAN IP, devices on the same network can open Eclipse without the password.", "填 0.0.0.0 或本机的局域网 IP 后，同一网络中的设备不用密码就能打开 Eclipse。") : t("With 0.0.0.0 or this computer's LAN IP, devices on the same network can open Eclipse without the access link.", "填 0.0.0.0 或本机的局域网 IP 后，同一网络中的设备不需要访问链接就能打开 Eclipse。"); color: theme.muted; font.pixelSize: theme.micro; Layout.fillWidth: true }
                             FText { visible: Qt.platform.os === "windows"; text: t("Windows will ask for permission. Check \"Private networks\", then click \"Allow access\".", "Windows 会弹出确认框，请勾选“专用网络”，再点“允许访问”。"); color: theme.muted; font.pixelSize: theme.micro; Layout.fillWidth: true }
                         }
                         FGroup {
@@ -1642,7 +1642,7 @@ ApplicationWindow {
                                 Layout.fillWidth: true; spacing: 16
                                 ColumnLayout {
                                     Layout.fillWidth: true; spacing: 2
-                                    FText { text: t("Repair FreeVideo", "修复 FreeVideo"); Layout.fillWidth: true; color: s.can_repair ? theme.text : theme.disabled }
+                                    FText { text: t("Repair Eclipse", "修复 Eclipse"); Layout.fillWidth: true; color: s.can_repair ? theme.text : theme.disabled }
                                     FText {
                                         visible: s.can_repair
                                         text: t("Checks this installation and reinstalls anything missing or changed. Models and videos are kept.", "检查这份安装，重新安装缺失或被改动的部分。模型和视频都会保留。")
@@ -1692,7 +1692,7 @@ ApplicationWindow {
             FText { text: t("Choose a disk", "选择安装硬盘"); font.pixelSize: theme.section + 2; font.weight: Font.DemiBold; Layout.fillWidth: true }
             FText { objectName: "diskDialogText"; Layout.fillWidth: true; color: theme.muted; font.pixelSize: theme.micro + 1
                     text: (disk && disk.need ? t("This installation needs about {size}.\n", "这次安装需要约 {size}。\n", {size: disk.need}) : "")
-                          + t("FreeVideo is installed in a FreeVideo folder on the disk you choose.", "FreeVideo 会装在所选硬盘的 FreeVideo 文件夹里。") }
+                          + t("Eclipse is installed in a Eclipse folder on the disk you choose.", "Eclipse 会装在所选硬盘的 Eclipse 文件夹里。") }
             Repeater {
                 model: diskChoices
                 delegate: Rectangle {
@@ -1963,7 +1963,7 @@ ApplicationWindow {
                 Item { visible: !!s.update.candidate; Layout.fillWidth: true }
                 FButton { objectName: "updateCloseButton"; text: "×"; flat: true; Accessible.name: t("Close", "关闭"); onClicked: { manualUpdate = false; backend.dismissUpdate() } }
             }
-            FText { objectName: "updateDialogText"; text: s.update.phase === "waiting" ? t("A video is still generating. FreeVideo restarts and updates as soon as it finishes.", "还有视频正在生成，完成后会自动重启并更新。") : s.update.status === "ready" && s.update.candidate ? t("Downloaded. Restart to finish; models and settings are kept.", "下载完成，重启可完成更新，模型和设置都会保留。") : s.update.candidate && s.update.manual ? t("FreeVideo ", "FreeVideo ") + releaseVersion(s.update.candidate) + t(" is available (current ", " 已发布（当前 ") + releaseVersion(currentRelease) + t("). Download it and replace this version; models and settings are kept.", "）。下载新版后替换当前版本，模型和设置会保留。") : s.update.candidate ? t("FreeVideo ", "FreeVideo ") + releaseVersion(s.update.candidate) + t(" is available (current ", " 已发布（当前 ") + releaseVersion(currentRelease) + t("). Updating keeps your models and settings. FreeVideo restarts after the download; running videos finish first.", "）。更新会保留模型和设置，下载完成后自动重启；正在生成的视频会先完成。") : s.update.engine ? t("This launcher already includes engine ", "启动器已带有新版引擎 ") + releaseVersion(currentRelease) + t(" (installed: ", "（已安装 ") + engineVersion + (s.status === "open" ? t("). Updating takes about a minute, restarts FreeVideo once and keeps your models and settings.", "）。更新约需 1 分钟，会重启一次 FreeVideo，模型和设置都会保留。") : t("). Updating takes about a minute, then FreeVideo starts; models and settings are kept.", "）。更新约需 1 分钟，完成后自动启动，模型和设置都会保留。")) : s.update.status === "current" ? t("You're up to date.", "已是最新版本。") : s.update.status === "development" ? t("Running from source. Update with Git.", "当前从源码运行，请通过 Git 更新。") : s.update.status === "error" ? t("Could not check for updates.", "暂时无法检查更新。") : t("Checking the latest release…", "正在检查最新版本…"); color: theme.muted; Layout.fillWidth: true }
+            FText { objectName: "updateDialogText"; text: s.update.phase === "waiting" ? t("A video is still generating. Eclipse restarts and updates as soon as it finishes.", "还有视频正在生成，完成后会自动重启并更新。") : s.update.status === "ready" && s.update.candidate ? t("Downloaded. Restart to finish; models and settings are kept.", "下载完成，重启可完成更新，模型和设置都会保留。") : s.update.candidate && s.update.manual ? t("Eclipse ", "Eclipse ") + releaseVersion(s.update.candidate) + t(" is available (current ", " 已发布（当前 ") + releaseVersion(currentRelease) + t("). Download it and replace this version; models and settings are kept.", "）。下载新版后替换当前版本，模型和设置会保留。") : s.update.candidate ? t("Eclipse ", "Eclipse ") + releaseVersion(s.update.candidate) + t(" is available (current ", " 已发布（当前 ") + releaseVersion(currentRelease) + t("). Updating keeps your models and settings. Eclipse restarts after the download; running videos finish first.", "）。更新会保留模型和设置，下载完成后自动重启；正在生成的视频会先完成。") : s.update.engine ? t("This launcher already includes engine ", "启动器已带有新版引擎 ") + releaseVersion(currentRelease) + t(" (installed: ", "（已安装 ") + engineVersion + (s.status === "open" ? t("). Updating takes about a minute, restarts Eclipse once and keeps your models and settings.", "）。更新约需 1 分钟，会重启一次 Eclipse，模型和设置都会保留。") : t("). Updating takes about a minute, then Eclipse starts; models and settings are kept.", "）。更新约需 1 分钟，完成后自动启动，模型和设置都会保留。")) : s.update.status === "current" ? t("You're up to date.", "已是最新版本。") : s.update.status === "development" ? t("Running from source. Update with Git.", "当前从源码运行，请通过 Git 更新。") : s.update.status === "error" ? t("Could not check for updates.", "暂时无法检查更新。") : t("Checking the latest release…", "正在检查最新版本…"); color: theme.muted; Layout.fillWidth: true }
             FText { objectName: "updateDialogError"; visible: !!s.update.error; text: s.update.error || ""; color: theme.danger; Layout.fillWidth: true; font.pixelSize: theme.micro }
             // Under the reason, one row from its left edge; the buttons wrap only when the window is too narrow.
             Flow {
@@ -2110,8 +2110,8 @@ ApplicationWindow {
     FDialog {
         objectName: "releaseConfirmation"; visible: releaseConfirm
         title: upgrade.in_use === "int8_convrot" ? t("Remove the old model?", "删除旧模型？") : t("Remove unused model files?", "删除没在使用的模型文件？")
-        text: (upgrade.in_use === "int8_convrot" ? t("Removes the old model files FreeVideo no longer uses, about ", "将删除不再使用的旧模型文件，释放约 ")
-                                                 : t("The model files FreeVideo does not use are removed, about ", "将删除 FreeVideo 没在使用的模型文件，释放约 ")) + bytes(upgrade.release_bytes || 0)
+        text: (upgrade.in_use === "int8_convrot" ? t("Removes the old model files Eclipse no longer uses, about ", "将删除不再使用的旧模型文件，释放约 ")
+                                                 : t("The model files Eclipse does not use are removed, about ", "将删除 Eclipse 没在使用的模型文件，释放约 ")) + bytes(upgrade.release_bytes || 0)
               + (upgrade.in_use === "int8_convrot" ? t(". The model in use, your videos and settings are not touched.", "。现在用的模型、视频和设置都不受影响。")
                                                    : t(". The model in use, your videos and settings are not touched.", "。正在使用的模型、视频和设置都不受影响。"))
         acceptText: t("Remove", "删除"); rejectText: t("Cancel", "取消"); destructive: true
@@ -2128,20 +2128,20 @@ ApplicationWindow {
     }
     FDialog {
         objectName: "closeChoiceDialog"; visible: closeChoice !== ""
-        title: t("Close FreeVideo?", "关闭 FreeVideo？")
+        title: t("Close Eclipse?", "关闭 Eclipse？")
         text: closeChoice === "generating"
-              ? (closePlace === "menubar" ? t("A video is being generated. Exit stops FreeVideo and this generation. In the background, the generation continues, and this window can be reopened from the menu bar icon.",
-                  "正在生成视频。退出会停止 FreeVideo 和这次生成；后台运行时生成会继续，可从菜单栏图标重新打开此窗口。")
-                : closePlace === "taskbar" ? t("A video is being generated. Exit stops FreeVideo and this generation. In the background, the generation continues, and this window can be reopened from the taskbar.",
-                  "正在生成视频。退出会停止 FreeVideo 和这次生成；后台运行时生成会继续，可从任务栏重新打开此窗口。")
-                : t("A video is being generated. Exit stops FreeVideo and this generation. In the background, the generation continues, and this window can be reopened from the tray icon.",
-                  "正在生成视频。退出会停止 FreeVideo 和这次生成；后台运行时生成会继续，可从托盘图标重新打开此窗口。"))
-              : (closePlace === "menubar" ? t("Exit stops FreeVideo. In the background, FreeVideo keeps running, and this window can be reopened from the menu bar icon.",
-                  "退出会停止 FreeVideo。后台运行时 FreeVideo 继续运行，可从菜单栏图标重新打开此窗口。")
-                : closePlace === "taskbar" ? t("Exit stops FreeVideo. In the background, FreeVideo keeps running, and this window can be reopened from the taskbar.",
-                  "退出会停止 FreeVideo。后台运行时 FreeVideo 继续运行，可从任务栏重新打开此窗口。")
-                : t("Exit stops FreeVideo. In the background, FreeVideo keeps running, and this window can be reopened from the tray icon.",
-                  "退出会停止 FreeVideo。后台运行时 FreeVideo 继续运行，可从托盘图标重新打开此窗口。"))
+              ? (closePlace === "menubar" ? t("A video is being generated. Exit stops Eclipse and this generation. In the background, the generation continues, and this window can be reopened from the menu bar icon.",
+                  "正在生成视频。退出会停止 Eclipse 和这次生成；后台运行时生成会继续，可从菜单栏图标重新打开此窗口。")
+                : closePlace === "taskbar" ? t("A video is being generated. Exit stops Eclipse and this generation. In the background, the generation continues, and this window can be reopened from the taskbar.",
+                  "正在生成视频。退出会停止 Eclipse 和这次生成；后台运行时生成会继续，可从任务栏重新打开此窗口。")
+                : t("A video is being generated. Exit stops Eclipse and this generation. In the background, the generation continues, and this window can be reopened from the tray icon.",
+                  "正在生成视频。退出会停止 Eclipse 和这次生成；后台运行时生成会继续，可从托盘图标重新打开此窗口。"))
+              : (closePlace === "menubar" ? t("Exit stops Eclipse. In the background, Eclipse keeps running, and this window can be reopened from the menu bar icon.",
+                  "退出会停止 Eclipse。后台运行时 Eclipse 继续运行，可从菜单栏图标重新打开此窗口。")
+                : closePlace === "taskbar" ? t("Exit stops Eclipse. In the background, Eclipse keeps running, and this window can be reopened from the taskbar.",
+                  "退出会停止 Eclipse。后台运行时 Eclipse 继续运行，可从任务栏重新打开此窗口。")
+                : t("Exit stops Eclipse. In the background, Eclipse keeps running, and this window can be reopened from the tray icon.",
+                  "退出会停止 Eclipse。后台运行时 Eclipse 继续运行，可从托盘图标重新打开此窗口。"))
         acceptText: t("Run in background", "后台运行"); altText: t("Exit", "退出"); rejectText: t("Cancel", "取消"); defaultFocus: true
         onAccepted: { closeChoice = ""; backend.runInBackground() }
         onAlternative: { closeChoice = ""; backend.close() }

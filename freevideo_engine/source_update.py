@@ -13,7 +13,7 @@ from .top_level_modules import update_modules
 ed25519, keys, source = update_modules()
 
 log = logging.getLogger(__name__)
-DOMAIN = b'FreeVideo source manifest v1\x00'
+DOMAIN = b'Eclipse source manifest v1\x00'
 
 
 def signed(value):

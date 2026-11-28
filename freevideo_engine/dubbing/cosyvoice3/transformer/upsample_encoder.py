@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # Modified from ESPnet(https://github.com/espnet/espnet)
-# Modified by FreeVideo: only PreLookaheadLayer is kept.
+# Modified by Eclipse: only PreLookaheadLayer is kept.
 import torch
 from torch import nn
 from torch.nn import functional as F

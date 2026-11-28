@@ -38,7 +38,7 @@ class SamplingMemory:
         self.previous_process = self.process_counters()
         self.poll()
         if self.reader is not None:
-            self.thread = threading.Thread(target=self.loop, name='FreeVideo WDDM diagnostics', daemon=True)
+            self.thread = threading.Thread(target=self.loop, name='Eclipse WDDM diagnostics', daemon=True)
             self.thread.start()
         self.persist()
         return self

@@ -23,7 +23,7 @@ def size(width, height):
 
 
 def work_request(output_directory, relative):
-    """A finished, non-preview FreeVideo work in this output folder: (video, saved state). One step needs the
+    """A finished, non-preview Eclipse work in this output folder: (video, saved state). One step needs the
     prompt and seed saved with the work, so a video without a saved request is refused."""
     if not isinstance(relative, str) or not relative.strip():
         raise NotUpscalable('outside')

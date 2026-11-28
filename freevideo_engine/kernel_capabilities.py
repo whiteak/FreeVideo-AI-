@@ -119,11 +119,11 @@ def withheld_without_receipt(hardware, discovered, receipt=None, expected=None):
     """Installed backends known not to run here although this GPU has no matching checks.
 
     Planning without a matching receipt offers what is installed, so the first
-    request after a driver or FreeVideo update, or on another card in the same
+    request after a driver or Eclipse update, or on another card in the same
     machine, keeps the backend its checks chose before. Two kinds of backend
     are left out: one whose package has no kernels for this compute capability,
     and one whose last check failed on the same architecture with the same
-    packages (only the card, driver or FreeVideo's own files differ). Returns
+    packages (only the card, driver or Eclipse's own files differ). Returns
     {backend: reason}.
     """
     withheld = {}

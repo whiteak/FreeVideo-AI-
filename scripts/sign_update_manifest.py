@@ -11,7 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import freevideo_ed25519 as ed25519
 import freevideo_source_bootstrap as source
 
-DOMAIN = b'FreeVideo source manifest v1\x00'
+DOMAIN = b'Eclipse source manifest v1\x00'
 
 
 def signing_bytes(value):
@@ -28,7 +28,7 @@ def sign_manifest(path, private_key):
     path.with_suffix('.json.sha256').write_text(source.sha(data) + '\n', encoding='ascii')
 
 
-UPDATE_DOMAIN = b'FreeVideo update manifest v1\x00'
+UPDATE_DOMAIN = b'Eclipse update manifest v1\x00'
 
 
 def sign_update_manifest(path, private_key):

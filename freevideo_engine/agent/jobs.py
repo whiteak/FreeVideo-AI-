@@ -1203,7 +1203,7 @@ class Jobs:
         runner = self.port.chain_runner()
         if runner is None:
             raise chain_error('chain_unavailable', 'The continuous generation backend is unavailable.',
-                              'Start FreeVideo with the continuous generation backend enabled, then retry.',
+                              'Start Eclipse with the continuous generation backend enabled, then retry.',
                               retryable=True)
         return runner
 
@@ -2533,7 +2533,7 @@ class Jobs:
 
 VLM_ERRORS = {
     'busy': 'The GPU was busy; the job can be submitted again',
-    'model_missing': 'The prompt VLM is not installed; install it from FreeVideo Settings or POST /freevideo/agent/v1/vlm/install',
+    'model_missing': 'The prompt VLM is not installed; install it from Eclipse Settings or POST /freevideo/agent/v1/vlm/install',
     'ram_space': 'The local VLM needs about 11 GiB of available RAM',
     'context_length': 'The question or images are too long for the local VLM',
     'invalid_output': 'The VLM answer did not follow the required format',

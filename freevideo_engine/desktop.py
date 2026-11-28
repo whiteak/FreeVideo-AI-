@@ -56,7 +56,7 @@ class Desktop:
         self.resource = tk.StringVar(value=self.t('Detect your hardware to see the installation plan.', '先检测配置，查看安装计划。'))
         self.buttons = []
         self.translated = []
-        window.title('FreeVideo')
+        window.title('Eclipse Image and Video Creator')
         from .windows_ux import window_size
         width, height = window_size(window)
         window.geometry('%dx%d' % (width, height))
@@ -104,7 +104,7 @@ class Desktop:
         # canvas completely; scrolling an unmapped canvas cannot reveal actions.
         self.log_window = tk.Toplevel(window)
         self.log_window.withdraw()
-        self.log_window.title(self.t('FreeVideo · Details', 'FreeVideo · 详情'))
+        self.log_window.title(self.t('Eclipse · Details', 'Eclipse · 详情'))
         self.log_window.geometry('%dx%d' % (min(860, width), min(440, height)))
         self.log_window.transient(window)
         self.log_window.protocol('WM_DELETE_WINDOW', self.log_window.withdraw)
@@ -337,7 +337,7 @@ class Desktop:
 
     def language(self):
         self.zh = not self.zh
-        self.log_window.title(self.t('FreeVideo · Details', 'FreeVideo · 详情'))
+        self.log_window.title(self.t('Eclipse · Details', 'Eclipse · 详情'))
         for widget, en, zh in self.translated:
             widget.configure(text=self.t(en, zh))
         for page, en, zh in self.pages:
@@ -418,7 +418,7 @@ class Desktop:
         except (OSError, ValueError):
             ready = False
         if not ready:
-            messagebox.showinfo('FreeVideo', self.t('Run setup/repair with this launcher first.', '请先使用此版本启动器完成安装／修复。'), parent=self.window)
+            messagebox.showinfo('Eclipse', self.t('Run setup/repair with this launcher first.', '请先使用此版本启动器完成安装／修复。'), parent=self.window)
             self.tabs.select(0)
             return False
         self.begin(action, arguments)
@@ -429,7 +429,7 @@ class Desktop:
         from tkinter import messagebox
         prompt = self.prompt.get('1.0', 'end-1c').strip()
         if not prompt:
-            messagebox.showinfo('FreeVideo', self.t('Describe the video first.', '请先填写视频描述。'), parent=self.window)
+            messagebox.showinfo('Eclipse', self.t('Describe the video first.', '请先填写视频描述。'), parent=self.window)
             return
         run = self.root() / 'outputs' / ('gui-' + time.strftime('%Y%m%d-%H%M%S') + '-' + uuid.uuid4().hex[:6])
         # Prompt text stays local and is excluded from the launcher command/log.
@@ -457,7 +457,7 @@ class Desktop:
     def licenses(self):
         from tkinter import messagebox
         if not self.plan:
-            messagebox.showinfo('FreeVideo', self.t('Detect configuration to load the pinned model licenses.', '先检测配置，获取固定模型的许可证。'), parent=self.window)
+            messagebox.showinfo('Eclipse', self.t('Detect configuration to load the pinned model licenses.', '先检测配置，获取固定模型的许可证。'), parent=self.window)
             return
         popup = self.tk.Toplevel(self.window)
         popup.title(self.t('Model licenses', '模型许可证'))
@@ -518,7 +518,7 @@ class Desktop:
         if path and io_path(path).exists():
             os.startfile(plain(path))
         else:
-            messagebox.showinfo('FreeVideo', self.t('No result yet.', '目前还没有结果。'), parent=self.window)
+            messagebox.showinfo('Eclipse', self.t('No result yet.', '目前还没有结果。'), parent=self.window)
 
     @plain_errors
     def open_report(self):
@@ -688,7 +688,7 @@ class Desktop:
     def close(self):
         from tkinter import messagebox
         if self.running:
-            if not messagebox.askyesno('FreeVideo', self.t('Stop the current task and close? All files are retained.', '停止当前任务并退出？所有文件会保留。'), parent=self.window):
+            if not messagebox.askyesno('Eclipse', self.t('Stop the current task and close? All files are retained.', '停止当前任务并退出？所有文件会保留。'), parent=self.window):
                 return
             self.closing = True
             self.cancel()
@@ -709,7 +709,7 @@ class Desktop:
         path = launcher_root() / 'errors' / ('error-' + uuid.uuid4().hex + '.log')
         io_path(path.parent).mkdir(parents=True, exist_ok=True)
         io_path(path).write_text(detail, encoding='utf-8')
-        messagebox.showerror('FreeVideo', plain_text(value) + '\n' + plain(path), parent=self.window)
+        messagebox.showerror('Eclipse', plain_text(value) + '\n' + plain(path), parent=self.window)
 
 
 def main():

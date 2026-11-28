@@ -1,11 +1,11 @@
-// FreeVideo's own right-click menu wherever a part has none of its own, so the browser's menu never shows over
-// FreeVideo. Works, pictures, videos and timeline clips keep their own menus (attachContextMenu and the views' own
+// Eclipse's own right-click menu wherever a part has none of its own, so the browser's menu never shows over
+// Eclipse. Works, pictures, videos and timeline clips keep their own menus (attachContextMenu and the views' own
 // handlers run first and take the event); this is what is left:
 //   - a text box: Cut, Copy, Paste, Select all (each greyed with the reason when it cannot be done);
 //   - selected text elsewhere: Copy;  a link: open it in a new tab, copy its address;  a picture: open it in a new tab;
 //   - anywhere else: Reload, the command palette, keyboard shortcuts, Settings.
-// The menu is the shared one (context_menu.js): the same glass and rows as every FreeVideo menu, arrow keys, Enter,
-// typing a letter, Esc to close. Shift+F10 and the menu key open it at the focused part. Only FreeVideo's own parts
+// The menu is the shared one (context_menu.js): the same glass and rows as every Eclipse menu, arrow keys, Enter,
+// typing a letter, Esc to close. Shift+F10 and the menu key open it at the focused part. Only Eclipse's own parts
 // are covered: the node view's canvas and ComfyUI's own panels keep theirs.
 import {openContextMenu, floatingHost, MAC} from './context_menu.js';
 
@@ -13,12 +13,12 @@ const root = document.documentElement;
 const TEXT_INPUTS = new Set(['text', 'search', 'url', 'tel', 'email', 'password', 'number']);
 const pair = (en, zh) => [en, zh];
 
-// FreeVideo's parts: a view or anything FreeVideo floats over the page (its classes start with fv-, its dialogs and
+// Eclipse's parts: a view or anything Eclipse floats over the page (its classes start with fv-, its dialogs and
 // popovers), the top bar of the node view. ComfyUI's canvas and panels are not.
 const OURS = 'dialog.fv-studio, .fv-view-navigation, .fv-topbar, .sgf, [class^="fv-"], [class*=" fv-"]';
 function ours(target) {
     if (!(target instanceof Element) || target.closest('[data-fv-native-menu]')) return false;
-    // The page root carries fv-app while FreeVideo is shown; only a part below it counts.
+    // The page root carries fv-app while Eclipse is shown; only a part below it counts.
     for (let node = target; node && node !== document.body && node !== root; node = node.parentElement) if (node.matches(OURS)) return true;
     return false;
 }

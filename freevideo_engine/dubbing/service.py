@@ -270,7 +270,7 @@ class Service:
         try:
             release_native(comfy_server())
         except Exception:  # only frees memory early; the worker's own allocation still decides
-            logging.warning('[FreeVideo] Could not unload ComfyUI models before dubbing', exc_info=True)
+            logging.warning('[Eclipse] Could not unload ComfyUI models before dubbing', exc_info=True)
 
     def output_folder(self, key_id):
         base = Path(self.input_directory()) / OUTPUT
@@ -337,7 +337,7 @@ class Service:
         except Exception as error:
             reason = str(error)
             if reason not in KNOWN:
-                logging.warning('[FreeVideo] Dubbing job %s failed: %s', action, type(error).__name__, exc_info=True)
+                logging.warning('[Eclipse] Dubbing job %s failed: %s', action, type(error).__name__, exc_info=True)
             self.progress(dict(phase='failed', exception=type(error).__name__,
                                error=reason if reason in KNOWN else 'disk_space' if isinstance(error, OSError) and ran_out(error)
                                else 'download_failed' if action == 'install'
@@ -570,5 +570,5 @@ def register():
             return web.json_response(result)
         except (ValueError, OSError) as error:
             if isinstance(error, OSError):
-                logging.warning('[FreeVideo] Dubbing request failed: %s', type(error).__name__, exc_info=True)
+                logging.warning('[Eclipse] Dubbing request failed: %s', type(error).__name__, exc_info=True)
             return web.json_response(dict(error=str(error) if str(error) in CODES else 'invalid_media'), status=400)

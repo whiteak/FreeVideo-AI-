@@ -98,9 +98,9 @@ const VALUE_WORDS = {
 const LABEL_WORDS = {audio_use: ['Audio use', '音频用途']};
 // Node titles in the page's language, shown on the canvas and in search only: the saved title stays as it is, and a
 // title the user typed is shown as typed.
-const TITLE_WORDS = {'FreeVideo · Generate & Preview': ['FreeVideo · Generate & Preview', 'FreeVideo · 生成与预览'], 'FreeVideo · Video + Audio': ['FreeVideo · Video + Audio', 'FreeVideo · 视频 + 音频'],
-    'FreeVideo · Media': ['FreeVideo · Media', 'FreeVideo · 素材'], 'FreeVideo · LoRA': ['FreeVideo · LoRA', 'FreeVideo · LoRA'], 'FreeVideo · LoRAs': ['FreeVideo · LoRA', 'FreeVideo · LoRA'],
-    'FreeVideo · First / Last Frame': ['FreeVideo · First / Last Frame', 'FreeVideo · 首尾帧'], 'FreeVideo · Reference (experimental)': ['FreeVideo · Reference (experimental)', 'FreeVideo · 参考（实验）']};
+const TITLE_WORDS = {'Eclipse · Generate & Preview': ['Eclipse · Generate & Preview', 'Eclipse · 生成与预览'], 'Eclipse · Video + Audio': ['Eclipse · Video + Audio', 'Eclipse · 视频 + 音频'],
+    'Eclipse · Media': ['Eclipse · Media', 'Eclipse · 素材'], 'Eclipse · LoRA': ['Eclipse · LoRA', 'Eclipse · LoRA'], 'Eclipse · LoRAs': ['Eclipse · LoRA', 'Eclipse · LoRA'],
+    'Eclipse · First / Last Frame': ['Eclipse · First / Last Frame', 'Eclipse · 首尾帧'], 'Eclipse · Reference (experimental)': ['Eclipse · Reference (experimental)', 'Eclipse · 参考（实验）']};
 // The generate node's inputs: the English is the name and tip the node itself has (freevideo_engine/comfy_nodes.py).
 const INPUT_WORDS = [
     ['width', ['Width', '宽度']],
@@ -285,7 +285,7 @@ function mediaPanel(node, mount = null) {
         }
         return null;
     };
-    // One file into ComfyUI's input folder, through FreeVideo's streaming upload.
+    // One file into ComfyUI's input folder, through Eclipse's streaming upload.
     async function uploadOne(file, onProgress = null) {
         return uploadMedia(api, file, {onProgress});
     }
@@ -919,7 +919,7 @@ window.addEventListener('freevideo-media', () => syncPrompts());
 // health.js names what failed; files loaded before it queue their reports.
 const health = item => (window.__freevideoHealth ||= []).push(item);
 function showStudio(node) {
-    try { return openStudio(node); } catch (error) { console.error('FreeVideo workspace:', error); health({type: 'error', where: 'studio', error}); }
+    try { return openStudio(node); } catch (error) { console.error('Eclipse workspace:', error); health({type: 'error', where: 'studio', error}); }
 }
 
 const progressConnection = createProgressConnection(api, message => {
@@ -950,7 +950,7 @@ const progressConnection = createProgressConnection(api, message => {
 
 const isGenerate = node => node?.comfyClass === 'FreeVideoGenerate' || node?.type === 'FreeVideoGenerate';
 const isFreeVideoNode = id => /^FreeVideo/.test(String(app.graph?.getNodeById(id)?.comfyClass || app.graph?.getNodeById(id)?.type || ''));
-// Only the FreeVideo launcher brings a workspace over a page; any other way of opening ComfyUI leaves it as it is.
+// Only the Eclipse launcher brings a workspace over a page; any other way of opening ComfyUI leaves it as it is.
 const launchVisit = isLaunchVisit(globalThis.location?.search, globalThis.sessionStorage);
 const inFront = freeVideoInFront(launchVisit);
 
@@ -958,10 +958,10 @@ const inFront = freeVideoInFront(launchVisit);
 async function openFromMenu() {
     try {
         const node = (app.graph?._nodes || []).find(isGenerate) || await openFreeVideoWorkflow();
-        if (!node) throw new Error('The FreeVideo workflow loaded without a FreeVideoGenerate node');
+        if (!node) throw new Error('The Eclipse workflow loaded without a FreeVideoGenerate node');
         showStudio(node);
     } catch (error) {
-        console.warn('FreeVideo menu:', error);
+        console.warn('Eclipse menu:', error);
         health({type: 'error', where: 'menu', error});
     }
 }
@@ -975,7 +975,7 @@ app.registerExtension({
         // ComfyUI calls onChange(value, undefined) while registering; only a switch from off to on is a user request.
         onChange: (value, oldValue) => { if (oldValue === false && value === true) askDesktopPermission(window, {explicit: true}); }}],
     // The one entry that stays in ComfyUI's own menu, whatever workflow is in front.
-    commands: [{id: 'FreeVideo.Open', label: 'FreeVideo', function: openFromMenu}],
+    commands: [{id: 'FreeVideo.Open', label: 'Eclipse Image and Video Creator', function: openFromMenu}],
     menuCommands: [{path: ['Extensions'], commands: ['FreeVideo.Open']}],
     beforeConfigureGraph() { configuringGraph = true; configuration++; },
     async setup() {
@@ -1112,7 +1112,7 @@ app.registerExtension({
         refreshNavigation();
         const rememberedView = preferredView();
         const node = (app.graph?._nodes || []).find(isGenerate);
-        // ComfyUI is shown as it is. A FreeVideo workspace opens over it only for a visit the FreeVideo launcher
+        // ComfyUI is shown as it is. A Eclipse workspace opens over it only for a visit the Eclipse launcher
         // made (and a refresh of that tab); a click or a key in the user's own ComfyUI never brings it. The startup
         // cover follows this same decision and is always released here when the workspace will not open.
         const opens = !!node && app.graph?.extra?.freevideo_studio && rememberedView !== 'nodes' && launchVisit;
@@ -1181,7 +1181,7 @@ installNativeErrorGuard({api, app, describe: detail => {
     return [advice.title, advice.summary].filter(Boolean).join('\n');
 }});
 api.addEventListener('execution_error', event => {
-    // An upstream loader/media node can stop FreeVideo before its own node is
+    // An upstream loader/media node can stop Eclipse before its own node is
     // entered. Retain that error even while the creative workspace is closed.
     for (const node of app.graph?._nodes || []) {
         if (!node.freevideoShowFailure) continue;

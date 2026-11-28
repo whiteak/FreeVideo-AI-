@@ -294,7 +294,7 @@ class MusicQueue:
                     else:
                         code = getattr(error, 'code', None)
                         if code not in REASONS:
-                            logging.warning('[FreeVideo] Editor music failed', exc_info=error)
+                            logging.warning('[Eclipse] Editor music failed', exc_info=error)
                             code = _disk_or_network_reason(error) or 'music_failed'
                         job.update(state='failed', phase=None, reason=code)
                 if not isinstance(error, Exception):
@@ -397,7 +397,7 @@ class MusicPack:
         except service.MusicError as error:
             reason = error.reason or 'failed'
         except Exception as error:  # noqa: BLE001 - the page says it did not download; the log keeps why
-            logging.warning('[FreeVideo] Music model download failed', exc_info=True)
+            logging.warning('[Eclipse] Music model download failed', exc_info=True)
             reason = _disk_or_network_reason(error, download=True) or 'failed'
         with self.lock:
             self.value = dict(running=False, fraction=0. if reason or stop.is_set() else 1., reason=reason)

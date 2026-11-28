@@ -180,7 +180,7 @@ export function createEditorLibrary(host, {store, t, actions, state}) {
         if (kind !== 'work' && row.state === 'failed' && row.reason !== 'disk_full') container.append(issueButton(t, () => ({where: LIBRARY_ISSUE, message: t('Cannot open', '打不开'), kind: row.detail || null})));
         return container;
     }
-    // Asked inside the card, so a list that redraws keeps the question. Only FreeVideo's copy goes; the original file stays where it is.
+    // Asked inside the card, so a list that redraws keeps the question. Only Eclipse's copy goes; the original file stays where it is.
     function removeStrip(row, asking) {
         const strip = el('div', 'fv-ed-source-confirm'); strip.setAttribute('role', 'group'); strip.dataset.id = row.id;
         strip.setAttribute('aria-label', t('Delete this clip', '删除这个素材'));

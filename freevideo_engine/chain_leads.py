@@ -94,4 +94,4 @@ def prune(directory, chains):
             if chain not in chains and not (Path(directory) / (chain + '.json')).exists():
                 path.unlink(missing_ok=True)
     except OSError:
-        logging.warning('[FreeVideo] Chain seam sound could not be removed')
+        logging.warning('[Eclipse] Chain seam sound could not be removed')

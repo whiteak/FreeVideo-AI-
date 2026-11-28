@@ -2,8 +2,8 @@
 
 Windows reports "[WinError 5] Access is denied" for many different operations, and when the call
 names no file the message says nothing else. The launcher keeps this description next to the
-message: the folder as the drive letter plus the part inside FreeVideo's own folders, and the last
-FreeVideo functions that were running.
+message: the folder as the drive letter plus the part inside Eclipse's own folders, and the last
+Eclipse functions that were running.
 """
 import errno
 import os
@@ -17,7 +17,7 @@ DENIED_ERRNO = (errno.EACCES, errno.EPERM)
 OWN_NAME = re.compile(r'^(?:freevideo|fv$)', re.I)
 # The installation folder the launcher creates by default; it is kept even where no installation root is known.
 ENGINE_NAME = re.compile(r'^freevideo-engine$', re.I)
-# Folders named below FreeVideo's own folder: user-named files (models, inputs, outputs) sit deeper.
+# Folders named below Eclipse's own folder: user-named files (models, inputs, outputs) sit deeper.
 INSIDE = 2
 STEPS = 3
 SOCKET_DENIED = 10013
@@ -47,7 +47,7 @@ def _under(parts, root):
 
 
 def _inside(parts):
-    """The first folders below one of FreeVideo's own, then an ellipsis where more follow."""
+    """The first folders below one of Eclipse's own, then an ellipsis where more follow."""
     return parts[:INSIDE] + (['…'] if len(parts) > INSIDE else [])
 
 
@@ -63,7 +63,7 @@ def default_roots():
 
 def location(path, roots=()):
     """A path as "[D:] INSTALL\\launcher": the drive letter and a placeholder in place of every folder that
-    is not FreeVideo's own. The installation root is the engine folder itself, so no folder above it is named,
+    is not Eclipse's own. The installation root is the engine folder itself, so no folder above it is named,
     and nothing below it deeper than INSIDE folders. The text does not look like a path to the launcher's redaction."""
     path = str(path or '')
     if not path:
@@ -74,13 +74,13 @@ def location(path, roots=()):
     best = None
     for label, root in list(roots) + default_roots():
         root_drive, root_parts = _segments(root)
-        # A root with no folder (a whole drive) would make every path on it FreeVideo's own.
+        # A root with no folder (a whole drive) would make every path on it Eclipse's own.
         if root_parts and root_drive == drive and _under(parts, root_parts) and (
                 best is None or len(root_parts) > len(best[1])):
             best = (label, root_parts)
     prefix = '[%s] ' % drive if drive else ''
     if best is None:
-        # A name outside FreeVideo's folders may be a person, a project or a video, so none is kept,
+        # A name outside Eclipse's folders may be a person, a project or a video, so none is kept,
         # except the engine folder the launcher creates by default.
         own = next((index for index, part in enumerate(parts) if ENGINE_NAME.match(part)), None)
         if own is not None:
@@ -89,7 +89,7 @@ def location(path, roots=()):
     label, root_parts = best
     rest = parts[len(root_parts):]
     if label in ('HOME', 'TEMP'):
-        # Only what FreeVideo created below the user's folder is named.
+        # Only what Eclipse created below the user's folder is named.
         own = next((index for index, part in enumerate(rest) if OWN_NAME.match(part)), None)
         rest = ['…'] + ([rest[own]] + _inside(rest[own + 1:]) if own is not None else [])
     elif label == 'INSTALL':
@@ -106,7 +106,7 @@ def _chain(error):
 
 
 def steps(error):
-    """The innermost FreeVideo functions of the traceback, newest first: "processes.popen:211"."""
+    """The innermost Eclipse functions of the traceback, newest first: "processes.popen:211"."""
     rows, tb = [], error.__traceback__
     while tb is not None:
         module = str(tb.tb_frame.f_globals.get('__name__') or '')
@@ -130,7 +130,7 @@ def describe(error, roots=()):
 
 
 def text(info, zh=False):
-    """The line kept in the report: what was denied, where, and the FreeVideo steps that were running."""
+    """The line kept in the report: what was denied, where, and the Eclipse steps that were running."""
     if not info:
         return ''
     label = (('Windows 错误 %s' if zh else 'Windows error %s') if info.get('windows') else ('错误 %s' if zh else 'error %s'))

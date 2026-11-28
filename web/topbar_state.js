@@ -19,7 +19,7 @@ export function words(t = t0, mac = MAC) {
         feedback: [t('Feedback', '反馈'), t('Tell us a problem or an idea', '把问题或想法告诉我们')],
         settings: [t('Settings', '设置'), t('Models, downloads, storage, look', '模型、下载、存储和外观')],
         menu: [t('Menu', '菜单'), t('Search, phone, version, tutorials, feedback, settings', '搜索、手机、版本、教程、反馈和设置')],
-        logo: [t('FreeVideo', 'FreeVideo'), t("Back to this view's start", '回到当前视图的首屏')],
+        logo: [t('Eclipse', 'Eclipse'), t("Back to this view's start", '回到当前视图的首屏')],
         picker: [t('Switch view', '切换视图'), t('Choose one of the five views', '在五个视图之间切换')],
         views: {
             studio: [t('Create', '创作面板'), t('Make a video from one sentence', '写一句话，生成一段视频'), `${alt} 1`],

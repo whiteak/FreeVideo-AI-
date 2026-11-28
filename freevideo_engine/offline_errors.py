@@ -9,8 +9,8 @@ from .system import windows as is_windows
 COPY = {
     'title': ('Couldn’t complete this step', '暂时未能完成'),
     'runtime-alias': ("The installation folder's path is too long. "
-                      'Install FreeVideo in a folder with a shorter path, such as D:\\FreeVideo.',
-                      '安装文件夹的路径太长。请把 FreeVideo 安装到路径较短的文件夹，例如 D:\\FreeVideo。'),
+                      'Install Eclipse in a folder with a shorter path, such as D:\\FreeVideo.',
+                      '安装文件夹的路径太长。请把 Eclipse 安装到路径较短的文件夹，例如 D:\\FreeVideo。'),
     'permission': ('The offline package could not be imported: this account cannot write to the chosen folder. '
                    'Choose another folder and import again.',
                    '离线包未能导入：当前账户没有所选文件夹的写入权限。请换一个文件夹再导入。'),

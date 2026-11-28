@@ -5,4 +5,4 @@
 # LICENSE file in the root directory of this source tree.
 
 
-# FreeVideo: fixed CPU image model; no Hydra initialization or hub downloads.
+# Eclipse: fixed CPU image model; no Hydra initialization or hub downloads.

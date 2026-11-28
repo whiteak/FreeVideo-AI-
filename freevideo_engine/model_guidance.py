@@ -24,8 +24,8 @@ LIST_FAMILIES = tuple(name for name in FAMILIES if name != 'image')
 DOWNLOAD_COPY = {
     'title': ('Download list', '下载清单'),
     'guide': ('The list is filtered for this GPU, so the whole model repository is not needed. '
-              'When the download finishes, choose "Use downloaded folder"; FreeVideo checks every file before using it.',
-              '清单已按显卡筛选，无需下载整个模型仓库。下载完成后点“使用已下载的文件夹”，FreeVideo 会逐个校验后使用。'),
+              'When the download finishes, choose "Use downloaded folder"; Eclipse checks every file before using it.',
+              '清单已按显卡筛选，无需下载整个模型仓库。下载完成后点“使用已下载的文件夹”，Eclipse 会逐个校验后使用。'),
     'export': ('Export download list', '导出下载清单'),
     'use_folder': ('Use downloaded folder', '使用已下载的文件夹'),
     'checking': ('Checking the hardware and the downloaded files…', '正在检查硬件和已下载的文件…'),
@@ -44,8 +44,8 @@ DOWNLOAD_COPY = {
     'error_changed': ('The required files have changed. Choose "Check again", then export the download list.',
                       '所需文件有变化。请点“重新检查”，再导出下载清单。'),
     'error_write': ('The download list could not be saved in this folder: {reason}', '下载清单未能保存到这个文件夹：{reason}'),
-    'error_read': ('FreeVideo does not have permission to read some files in the selected folder. Choose another folder, or download the files again without administrator rights.',
-                   'FreeVideo 没有权限读取所选文件夹里的部分文件。请选择其他文件夹，或不使用管理员身份重新下载。'),
+    'error_read': ('Eclipse does not have permission to read some files in the selected folder. Choose another folder, or download the files again without administrator rights.',
+                   'Eclipse 没有权限读取所选文件夹里的部分文件。请选择其他文件夹，或不使用管理员身份重新下载。'),
     'write_permission': ('this account cannot write to it. Choose another folder.', '当前账户没有写入权限，请换一个文件夹。'),
     'write_disk_full': ('the drive is full. Free up space, or choose a folder on another drive.', '磁盘空间不足。请腾出空间，或换一个其他磁盘上的文件夹。'),
     'write_in_use': ('a file there is in use by another program. Close that program, then try again.', '该文件夹中有文件被其他程序占用。请关闭该程序后再试。'),
@@ -54,26 +54,26 @@ DOWNLOAD_COPY = {
     'write_other': ('the system did not allow the file to be written. Choose another folder and try again.', '系统不允许写入文件。请换一个文件夹再试一次。'),
     'video': NAMES['video'], 'text': NAMES['text'], 'decoder': NAMES['decoder'], 'sampling': NAMES['sampling'],
     'readme': (
-        'FreeVideo download list\n'
+        'Eclipse download list\n'
         '\n'
         'Run this command in this folder:\n'
         'aria2c --input-file=aria2.txt --continue=true --check-integrity=true\n'
         '\n'
         'You can also import urls.txt into another download tool. urls.txt uses the download source chosen in Settings (Automatic uses Hugging Face); a few files are only available from Hugging Face. Keep all downloaded files in this folder or its subfolders.\n'
         '\n'
-        'When the download finishes, return to the launcher, choose "Use downloaded folder", then "Check & continue". FreeVideo recognizes files by size and full checksum, so different file names are fine; missing or damaged files are downloaded as usual.\n'
+        'When the download finishes, return to the launcher, choose "Use downloaded folder", then "Check & continue". Eclipse recognizes files by size and full checksum, so different file names are fine; missing or damaged files are downloaded as usual.\n'
         '\n'
         'The paths in SHA256SUMS are where aria2 saves the files. With urls.txt the file names may differ, which does not matter.\n'
         '\n'
         'There is no need to download the whole model repository. This folder is not an offline package; do not import it with "Choose offline packages".\n',
-        'FreeVideo 下载清单\n'
+        'Eclipse 下载清单\n'
         '\n'
         '在这个文件夹里运行下面的命令：\n'
         'aria2c --input-file=aria2.txt --continue=true --check-integrity=true\n'
         '\n'
         '也可以把 urls.txt 导入其他下载工具。urls.txt 用的是设置里选中的下载源（选“自动”时用 Hugging Face）；个别文件只能从 Hugging Face 下载。请把下载的文件都放在这个文件夹或它的子文件夹里。\n'
         '\n'
-        '下载完成后，回到启动器点“使用已下载的文件夹”，再点“检查并继续”。FreeVideo 按文件大小和完整校验值识别文件，文件名不同也可以；缺少或损坏的文件会照常下载。\n'
+        '下载完成后，回到启动器点“使用已下载的文件夹”，再点“检查并继续”。Eclipse 按文件大小和完整校验值识别文件，文件名不同也可以；缺少或损坏的文件会照常下载。\n'
         '\n'
         'SHA256SUMS 里的路径是 aria2 的存放路径。用 urls.txt 下载时文件名可能不同，不影响使用。\n'
         '\n'
@@ -85,7 +85,7 @@ DOWNLOAD_COPY = {
 # The export goes into a folder of its own inside the chosen one, so files the
 # user keeps there (a README.txt, say) are never overwritten.
 EXPORT_FOLDER = 'FreeVideo-download-list'
-GENERATOR = 'FreeVideo download list'
+GENERATOR = 'Eclipse download list'
 EXPORT_FILES = ('manifest.json', 'aria2.txt', 'SHA256SUMS', 'urls.txt', 'README.txt')
 
 
@@ -245,22 +245,22 @@ def publish_export(folder, documents, folder_name=EXPORT_FOLDER, generator=GENER
     return str(target)
 
 
-# The optional image model has its own list: files laid out as FreeVideo keeps them, one export folder of its own.
+# The optional image model has its own list: files laid out as Eclipse keeps them, one export folder of its own.
 IMAGE_FOLDER = 'image_gen'
 IMAGE_EXPORT_FOLDER = 'FreeVideo-image-model-download-list'
-IMAGE_GENERATOR = 'FreeVideo image model download list'
+IMAGE_GENERATOR = 'Eclipse image model download list'
 IMAGE_COPY = {
     'image': NAMES['image'],
     'guide': ('Download the files with the exported list and place them as its README.txt describes. '
-              'Back in the launcher, choose Resume on Image generation models; FreeVideo checks every file before using it.',
+              'Back in the launcher, choose Resume on Image generation models; Eclipse checks every file before using it.',
               '用导出的清单下载这些文件，按清单里 README.txt 的说明放好。'
-              '回到启动器，在“图像生成模型”处点“继续”，FreeVideo 校验每个文件后才会使用。'),
+              '回到启动器，在“图像生成模型”处点“继续”，Eclipse 校验每个文件后才会使用。'),
     # The list needs no re-check, so the shared "Check again" text does not apply.
     'error_changed': ('The download list could not be generated. Restart the launcher and try again.',
                       '下载清单未能生成，请重启启动器后再试。'),
     # {model_folder} is replaced with the folder that holds image_gen.
     'readme': (
-        'FreeVideo image generation models download list\n'
+        'Eclipse image generation models download list\n'
         '\n'
         'Run this command in this folder:\n'
         'aria2c --input-file=aria2.txt --continue=true --check-integrity=true\n'
@@ -270,10 +270,10 @@ IMAGE_COPY = {
         'When the download finishes, copy the image_gen folder inside payload into the folder below, merging it with any image_gen folder already there:\n'
         '{model_folder}\n'
         'Then return to the launcher and choose "Resume" on Image generation models. '
-        'FreeVideo checks every file by its checksum and downloads again any file that is missing or damaged.\n'
+        'Eclipse checks every file by its checksum and downloads again any file that is missing or damaged.\n'
         '\n'
         'SHA256SUMS lists the checksum of every file. This list covers only the image generation models; the video model list is exported separately.\n',
-        'FreeVideo 图像生成模型下载清单\n'
+        'Eclipse 图像生成模型下载清单\n'
         '\n'
         '在这个文件夹里运行下面的命令：\n'
         'aria2c --input-file=aria2.txt --continue=true --check-integrity=true\n'
@@ -282,7 +282,7 @@ IMAGE_COPY = {
         '\n'
         '下载完成后，把 payload 里的 image_gen 文件夹复制到下面这个文件夹，和其中已有的 image_gen 合并：\n'
         '{model_folder}\n'
-        '然后回到启动器，在“图像生成模型”处点“继续”。FreeVideo 会按校验值逐个检查文件，缺少或损坏的文件会重新下载。\n'
+        '然后回到启动器，在“图像生成模型”处点“继续”。Eclipse 会按校验值逐个检查文件，缺少或损坏的文件会重新下载。\n'
         '\n'
         'SHA256SUMS 列出每个文件的校验值。这份清单只含图像生成模型，视频模型的清单另外导出。\n'),
 }
@@ -509,7 +509,7 @@ def show_component(app, component):
                     '下载 vae 和 audio_vae 文件夹。'),
     }
     dialog = app.tk.Toplevel(app.window)
-    dialog.title('FreeVideo · ' + app.t(*titles[component])); dialog.transient(app.window)
+    dialog.title('Eclipse · ' + app.t(*titles[component])); dialog.transient(app.window)
     dialog.configure(bg=b.BACKGROUND)
     body = app.ttk.Frame(dialog, padding=24); body.pack(fill='both', expand=True)
     app.ttk.Label(body, text=app.t(*titles[component]), style='Heading.TLabel').pack(anchor='w')

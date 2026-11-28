@@ -28,7 +28,7 @@ def resource_arguments(parser):
 
 def main():
     if os.environ.get('FREEVIDEO_HOME'):
-        # Without a system compiler, run-time builds (Triton) in this process use the one FreeVideo installed.
+        # Without a system compiler, run-time builds (Triton) in this process use the one Eclipse installed.
         from .comfy_environment import with_private_compiler
         with_private_compiler(os.environ['FREEVIDEO_HOME'], os.environ)
     if len(sys.argv) > 1 and sys.argv[1] in ('projects', 'sessions'):

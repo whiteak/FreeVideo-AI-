@@ -1,13 +1,13 @@
 """FreeVideo's opening screen from the page's first frame.
 
-ComfyUI serves its own index.html; FreeVideo's interface arrives later, as an extension. Without help, a visit that
-opens FreeVideo first shows ComfyUI's loading screen and only then FreeVideo. This module adds a small inline style
-and script at the very start of that page's <head>. When the visit opens FreeVideo (the launcher's
+ComfyUI serves its own index.html; Eclipse's interface arrives later, as an extension. Without help, a visit that
+opens Eclipse first shows ComfyUI's loading screen and only then Eclipse. This module adds a small inline style
+and script at the very start of that page's <head>. When the visit opens Eclipse (the launcher's
 ``?freevideo=launch``, or a refresh of such a tab, unless its last view was the node view), the
-first frame is FreeVideo's ground with its top bar outline, and ComfyUI stays out of sight until FreeVideo's shell has
-put its first view in front (shell.js calls ``__freevideoBoot.done()``). If FreeVideo's scripts never load, ComfyUI is
+first frame is Eclipse's ground with its top bar outline, and ComfyUI stays out of sight until Eclipse's shell has
+put its first view in front (shell.js calls ``__freevideoBoot.done()``). If Eclipse's scripts never load, ComfyUI is
 shown after 10 s with a short note, so nobody is left in front of an empty screen. Any other way of opening ComfyUI
-(a bare address, another launcher) is not changed: only the FreeVideo launcher opens FreeVideo.
+(a bare address, another launcher) is not changed: only the Eclipse launcher opens Eclipse.
 """
 import logging
 import os
@@ -56,8 +56,8 @@ BOOT_HTML = (
     'if(!b.active)return;b.active=false;el.classList.add("fv-boot-out");'
     'setTimeout(function(){el.remove();r.classList.remove("fv-boot")},220)}};'
     'function note(){var zh=/^zh/i.test(navigator.language||""),p=d.createElement("div");p.className="fv-boot-note";'
-    'p.setAttribute("role","status");p.textContent=zh?"FreeVideo 界面没有及时打开，已显示 ComfyUI。":'
-    '"FreeVideo did not open in time, so ComfyUI is shown.";var k=d.createElement("button");k.type="button";'
+    'p.setAttribute("role","status");p.textContent=zh?"Eclipse 界面没有及时打开，已显示 ComfyUI。":'
+    '"Eclipse did not open in time, so ComfyUI is shown.";var k=d.createElement("button");k.type="button";'
     'k.textContent=zh?"重新加载":"Reload";k.onclick=function(){location.reload()};p.appendChild(k);'
     '(d.body||r).appendChild(p);setTimeout(function(){p.remove()},12000)}'
     'function late(){if(b.active){b.done();note()}}'
@@ -114,7 +114,7 @@ def middleware_for(root):
         except Exception as error:  # ComfyUI's own page is always better than none.
             if not failed:
                 failed.append(error)
-                logging.warning('[FreeVideo] Opening screen not added to the page: %s', error)
+                logging.warning('[Eclipse] Opening screen not added to the page: %s', error)
             return response
         headers = {name: value for name, value in response.headers.items()
                    if name.lower() in ('cache-control', 'pragma', 'expires')}
@@ -133,7 +133,7 @@ def register(server=None):
     root = getattr(server, 'web_root', None)
     app = getattr(server, 'app', None)
     if not root or app is None or app.frozen:
-        logging.warning('[FreeVideo] Opening screen not added: the page server is not open for additions')
+        logging.warning('[Eclipse] Opening screen not added: the page server is not open for additions')
         return False
     app.middlewares.append(middleware_for(root))
     server._freevideo_boot = True

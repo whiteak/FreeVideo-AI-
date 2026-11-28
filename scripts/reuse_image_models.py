@@ -1,4 +1,4 @@
-"""Hardlink picture, music, MOSS and prompt model files from another FreeVideo install into this one.
+"""Hardlink picture, music, MOSS and prompt model files from another Eclipse install into this one.
 
 `setup --reuse-models` only links the video models. The picture models (H3 Image, Qwen Image, MOSS, music) are
 downloaded later from the app, as is the prompt model (Qwen3-VL) that writes prompts and captions, so a second install on the same PC would download tens of GB it already has.
@@ -141,7 +141,7 @@ def main(argv=None):
     print(f'\n{verb} {linked} files ({gb(saved)}). Already here: {present}. Not in the other install: {missing}.'
           f' Different version: {different}.' + (f' Failed: {failed} (both folders must be on the same drive).' if failed else ''))
     if linked and not args.dry_run:
-        print('Open FreeVideo and start the picture model download as usual: it checks these files and fetches only the rest.')
+        print('Open Eclipse and start the picture model download as usual: it checks these files and fetches only the rest.')
     return 1 if failed else 0
 
 

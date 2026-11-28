@@ -1,8 +1,8 @@
-/* One focus ring for every FreeVideo control (a11y.js loads this sheet).
+/* One focus ring for every Eclipse control (a11y.js loads this sheet).
    Shown on keyboard focus (:focus-visible), and on typing fields whenever they hold the caret. Accent colour, 2 px, 2 px
    away from the control, following its corners. It is drawn inside the control where an ancestor would cut it off
    (a11y.js sets data-fv-ring=inset), and for typing fields, menu rows and options, which sit flush in their containers.
-   The scope is FreeVideo's own surfaces (an fv- or sgf- class, or data-fv-tip-scope), so ComfyUI keeps its own rings. */
+   The scope is Eclipse's own surfaces (an fv- or sgf- class, or data-fv-tip-scope), so ComfyUI keeps its own rings. */
 :where(body [class^="fv-"],body [class*=" fv-"],body [class^="sgf"],body [class*=" sgf"],body [data-fv-tip-scope])
   :is(a[href],button,input:not([type=hidden]),select,textarea,summary,video[controls],audio[controls],[tabindex]:not([tabindex="-1"]),[role=button],[role=tab],[role=switch],[role=checkbox],
       [role=radio],[role=slider],[role=menuitem],[role=menuitemradio],[role=menuitemcheckbox],[role=option],[role=link],[contenteditable=""],[contenteditable=true]):focus-visible,
@@ -28,7 +28,7 @@
 /* Video and sound with built-in controls, reached by Tab (a11y.js marks them; their own controls take the focus). */
 :where(body [class^="fv-"],body [class*=" fv-"]) :is(video,audio)[data-fv-kbd]{outline:2px solid var(--fv-focus,var(--fv-accent,#4f8cff))!important;outline-offset:-2px!important}
 
-/* FreeVideo's node view: the graph canvas, reached by Tab, shows the ring inside its edge. */
+/* Eclipse's node view: the graph canvas, reached by Tab, shows the ring inside its edge. */
 html[data-fv-shell=nodes] canvas[tabindex]:not([tabindex="-1"]):focus-visible{outline:2px solid var(--fv-focus,var(--fv-accent,#4f8cff))!important;outline-offset:-2px!important}
 
 /* A view dialog takes focus itself while it opens; it never wears the ring. */
@@ -62,7 +62,7 @@ html[data-fv-shell=nodes] canvas[tabindex]:not([tabindex="-1"]):focus-visible{ou
 
 /* Number fields carry no browser-drawn up/down arrows (small, hard to hit, white on the dark theme). The value is typed;
    ↑/↓ still step it, and a field meant to be stepped by pointer has its own − and + (the creation panel's duration, the
-   settings steppers). FreeVideo's own surfaces only, as above. */
+   settings steppers). Eclipse's own surfaces only, as above. */
 :where(body [class^="fv-"],body [class*=" fv-"],body [class^="sgf"],body [class*=" sgf"],body [data-fv-tip-scope]) input[type=number],
 :where(body) input[type=number]:is([class^="fv-"],[class*=" fv-"]){-moz-appearance:textfield;appearance:textfield}
 :where(body [class^="fv-"],body [class*=" fv-"],body [class^="sgf"],body [class*=" sgf"],body [data-fv-tip-scope]) input[type=number]::-webkit-inner-spin-button,
